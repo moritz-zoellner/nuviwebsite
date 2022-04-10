@@ -1,6 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:noviwebsite/firebase_options.dart';
+import 'package:noviwebsite/placeOrder.dart';
+import 'OfferContent.dart';
+import 'signIn.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 
@@ -34,40 +44,174 @@ class MyHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool signedIn = FirebaseAuth.instance.currentUser != null;
     return CupertinoPageScaffold(
         child: CustomScrollView(slivers: [
       CupertinoSliverNavigationBar(
           largeTitle: const Text("Novi Corp"),
           trailing: CupertinoButton(
             padding: EdgeInsets.zero,
-            child: const Text("Anmelden"),
-            onPressed: () => Navigator.push(context,
-                CupertinoPageRoute(builder: ((context) => LoginScreen()))),
+            child: Text(signedIn ? "Abmelden" : "Anmelden"),
+            onPressed: () async {
+              Widget helper;
+              if (signedIn) {
+                await FirebaseAuth.instance.signOut();
+                helper = const MyHome();
+              } else {
+                helper = const LoginScreen();
+              }
+              Navigator.push(
+                  context, CupertinoPageRoute(builder: ((context) => helper)));
+            },
           )),
       SliverList(
-        delegate: SliverChildListDelegate([
-          Padding(
-            padding: const EdgeInsets.only(top: 32, left: 32, right: 32),
-            child: Text(
-              "Tclub",
-              style:
-                  CupertinoTheme.of(context).textTheme.navLargeTitleTextStyle,
-            ),
+          delegate: SliverChildListDelegate([
+        signedIn
+            ? Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          top: 32, left: 16, right: 16, bottom: 16),
+                      child: Text(
+                        "Ihre Buchungen",
+                        style: CupertinoTheme.of(context)
+                            .textTheme
+                            .navLargeTitleTextStyle,
+                      ),
+                    ),
+                    FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                        future: FirebaseFirestore.instance
+                            .collection("clubs")
+                            .where("user-Email",
+                                isEqualTo:
+                                    FirebaseAuth.instance.currentUser!.email)
+                            .get(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return const Center(
+                                child: CupertinoActivityIndicator());
+                          }
+                          List<DocumentSnapshot<Map<String, dynamic>>>
+                              listOfClubs = snapshot.data!.docs;
+                          if (listOfClubs.isEmpty) {
+                            return const Padding(
+                              padding: EdgeInsets.only(left: 64, right: 64),
+                              child: Text(
+                                  "Hier stehen bald ihre Buchungen. Starten Sie jetzt."),
+                            );
+                          }
+                          return GridView.builder(
+                              shrinkWrap: true,
+                              itemCount: listOfClubs.length,
+                              gridDelegate:
+                                  const SliverGridDelegateWithMaxCrossAxisExtent(
+                                      maxCrossAxisExtent: 1000,
+                                      mainAxisExtent: 200),
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                  padding: const EdgeInsets.all(16),
+                                  child: NoviTile(SizedBox(
+                                    height: 100,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      mainAxisSize: MainAxisSize.max,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
+                                      children: [
+                                        Image.network(
+                                          listOfClubs[index].data()!["logo"],
+                                          width: 100,
+                                        ),
+                                        Expanded(
+                                          child: Padding(
+                                              padding: const EdgeInsets.all(16),
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.max,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.stretch,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Text(listOfClubs[index].id,
+                                                      style: const TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 28)),
+                                                  Text(
+                                                    listOfClubs[index]
+                                                        .data()!["abo"],
+                                                  ),
+                                                ],
+                                              )),
+                                        ),
+                                        Align(
+                                            alignment: Alignment.bottomRight,
+                                            child: CupertinoButton(
+                                              padding: EdgeInsets.zero,
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: const [
+                                                  Text("Verwalten"),
+                                                  Icon(CupertinoIcons.forward)
+                                                ],
+                                              ),
+                                              onPressed: () => print(
+                                                  "Hier ist die AdminApp"),
+                                            )),
+                                      ],
+                                    ),
+                                  )),
+                                );
+                              });
+                        }),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 32, left: 16, right: 16),
+                      child: Divider(
+                        height: 0,
+                        thickness: 2,
+                        color: CupertinoColors.systemBlue,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            : const SizedBox.shrink(),
+        Padding(
+          padding: const EdgeInsets.only(top: 32, left: 32, right: 32),
+          child: Text(
+            "Tclub",
+            style: CupertinoTheme.of(context).textTheme.navLargeTitleTextStyle,
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 32, left: 64, right: 64),
-            child: Text(
-              "Tclub ist eine App für Tennisclubs, welche die Verwaltung von Plätzen und Mitgliedern übernimmt. Dadurch werden viele Vorgänge sowohl für Spieler als auch für Organisatoren drastisch vereinfacht. Tclub ist DER Schritt in Richtung Digitalisierung für Tennisclubs. Einfach. Innovativ. Günstig. Die zentralisierte Verwaltung von Benutzerdaten ermöglicht einen sicheren und zuverlässigen Umgang und ermöglicht auch anstrebenden Tennisspielern einen komfortablen und schnellen Einstieg in den ersten Club.",
-              style: CupertinoTheme.of(context).textTheme.textStyle,
-            ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 32, left: 64, right: 64),
+          child: Text(
+            "Tclub ist eine App für Tennisclubs, welche die Verwaltung von Plätzen und Mitgliedern übernimmt. Dadurch werden viele Vorgänge sowohl für Spieler als auch für Organisatoren drastisch vereinfacht. Tclub ist DER Schritt in Richtung Digitalisierung für Tennisclubs. Einfach. Innovativ. Günstig. Die zentralisierte Verwaltung von Benutzerdaten garantiert einen sicheren und zuverlässigen Umgang und ermöglicht auch anstrebenden Tennisspielern einen komfortablen und schnellen Einstieg in den ersten Club.",
+            style: CupertinoTheme.of(context).textTheme.textStyle,
           ),
-        ]),
-      ),
+        ),
+        const Padding(
+          padding: EdgeInsets.only(top: 32, left: 32, right: 32),
+          child: Divider(
+            height: 0,
+            thickness: 2,
+            color: CupertinoColors.systemBlue,
+          ),
+        ),
+        const Padding(
+          padding: EdgeInsets.only(top: 32, left: 32, right: 32),
+          child: Text("Unsere Angebote", style: TextStyle(fontSize: 28)),
+        ),
+      ])),
       SliverPadding(
         padding: const EdgeInsets.all(16),
         sliver: SliverGrid(
           gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 500, mainAxisExtent: 500),
+              maxCrossAxisExtent: 1000, mainAxisExtent: 500),
           delegate: SliverChildListDelegate([
             Tile("Plätzeverwaltung", const CourtPrice(), CupertinoIcons.person,
                 CourtDescription(), () {}),
@@ -79,23 +223,6 @@ class MyHome extends StatelessWidget {
         ),
       ),
     ]));
-  }
-}
-
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomScrollView(slivers: [
-      const CupertinoSliverNavigationBar(
-        largeTitle: Text("Novi Corp"),
-      ),
-      SliverList(
-          delegate: SliverChildListDelegate([
-        const Text("Hallo"),
-      ]))
-    ]);
   }
 }
 
@@ -114,6 +241,12 @@ class Tile extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.all(16),
       decoration: const BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+                blurRadius: 10,
+                spreadRadius: 0.2,
+                color: CupertinoColors.systemGrey3)
+          ],
           borderRadius: BorderRadius.all(Radius.circular(16)),
           color: CupertinoColors.systemGrey6),
       child: Column(children: [
@@ -147,263 +280,34 @@ class Tile extends StatelessWidget {
                 child: CupertinoButton.filled(
                   padding: const EdgeInsets.all(16),
                   child: const Text("Jetzt kaufen"),
-                  onPressed: () => Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                          builder: (context) => const LoginScreen())),
+                  onPressed: () {
+                    Widget helper;
+                    if (FirebaseAuth.instance.currentUser != null) {
+                      switch (name) {
+                        case ("Plätzeverwaltung"):
+                          helper = const CourtOrder();
+                          break;
+                        case ("Mitgliederverwaltung"):
+                          helper = const MemberOrder();
+                          break;
+                        case ("Plätze- & Mitgliederverwaltung"):
+                          helper = const BothOrder();
+                          break;
+                        default:
+                          helper = const LoginScreen();
+                      }
+                    } else {
+                      helper = const LoginScreen();
+                    }
+                    Navigator.push(context,
+                        CupertinoPageRoute(builder: (context) => helper));
+                  },
                 ),
               ),
             ),
           ),
         ]),
       ]),
-    );
-  }
-}
-
-class CourtPrice extends StatelessWidget {
-  const CourtPrice({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        const Text(
-          "7",
-          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-        ),
-        Column(
-          children: const [
-            Text(
-              "€ / Platz",
-              style: TextStyle(fontSize: 15),
-            ),
-            Text(
-              "/ Monat",
-              style: TextStyle(fontSize: 15),
-            )
-          ],
-        )
-      ],
-    );
-  }
-}
-
-class MemberPrice extends StatelessWidget {
-  const MemberPrice({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        const Text(
-          "40",
-          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            Text(
-              "€",
-              style: TextStyle(fontSize: 15),
-            ),
-            Text(
-              "/ Monat",
-              style: TextStyle(fontSize: 15),
-            )
-          ],
-        )
-      ],
-    );
-  }
-}
-
-class BothPrice extends StatelessWidget {
-  const BothPrice({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        const Text(
-          "30",
-          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            Text(
-              "€",
-              style: TextStyle(fontSize: 15),
-            ),
-            Text(
-              "/ Monat",
-              style: TextStyle(fontSize: 15),
-            ),
-          ],
-        ),
-        const SizedBox(width: 16),
-        const Icon(CupertinoIcons.add),
-        const SizedBox(width: 16),
-        const Text(
-          "5",
-          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-        ),
-        Column(
-          children: const [
-            Text(
-              "€ / Platz",
-              style: TextStyle(fontSize: 15),
-            ),
-            Text(
-              "/ Monat",
-              style: TextStyle(fontSize: 15),
-            )
-          ],
-        )
-      ],
-    );
-  }
-}
-
-class CourtDescription extends StatelessWidget {
-  CourtDescription({Key? key}) : super(key: key);
-  TextEditingController nameController = TextEditingController();
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        Row(children: const [
-          Flexible(
-            child: Text(
-                "Plätzeverwaltung war noch nie so einach - wir kümmern uns um:"),
-          ),
-        ]),
-        const SizedBox(height: 16),
-        Row(children: const [
-          Icon(CupertinoIcons.check_mark, color: CupertinoColors.activeGreen),
-          SizedBox(width: 16),
-          Flexible(
-            child: Text(
-                "Mitglieder können jederzeit Platzbuchungen vornehmen und diese bei Bedarf wieder stonieren"),
-          )
-        ]),
-        const SizedBox(height: 16),
-        Row(children: const [
-          Icon(CupertinoIcons.check_mark, color: CupertinoColors.activeGreen),
-          SizedBox(width: 16),
-          Flexible(
-            child: Text(
-                "Wochenstunden von Mitgliedern werden von uns überwacht und verwaltet"),
-          )
-        ]),
-        const SizedBox(height: 16),
-        Row(children: const [
-          Icon(CupertinoIcons.check_mark, color: CupertinoColors.activeGreen),
-          SizedBox(width: 16),
-          Flexible(
-              child: Text(
-                  "Die AdminApp ermöglicht dem Verein die individuelle Verwaltung von Benutzerdaten und uneingeschränkten Zugriff auf alle Plätze"))
-        ]),
-      ],
-    );
-  }
-}
-
-class MemberDescription extends StatelessWidget {
-  const MemberDescription({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        Row(children: const [
-          Flexible(
-            child:
-                Text("Mitgliederverwaltung simpler denn je - das bieten wir:"),
-          ),
-        ]),
-        const SizedBox(height: 16),
-        Row(children: const [
-          Icon(CupertinoIcons.check_mark, color: CupertinoColors.activeGreen),
-          SizedBox(width: 16),
-          Flexible(
-            child: Text(
-                "Praktischer Aufnahmeantrag von überall für neue Mitglieder, Registrierung und Anmeldung für bestehende Mitglieder"),
-          )
-        ]),
-        const SizedBox(height: 16),
-        Row(children: const [
-          Icon(CupertinoIcons.check_mark, color: CupertinoColors.activeGreen),
-          SizedBox(width: 16),
-          Flexible(
-            child: Text(
-                "Komfortable Bearbeitung der eigenen Daten für die Mitglieder mit nur wenigen Klicks"),
-          )
-        ]),
-        const SizedBox(height: 16),
-        Row(children: const [
-          Icon(CupertinoIcons.check_mark, color: CupertinoColors.activeGreen),
-          SizedBox(width: 16),
-          Flexible(
-            child: Text(
-                "Abbuchung der Mitgliedsbeiträge per Lastschriftverfahren wird gewährleistet"),
-          )
-        ]),
-        const SizedBox(height: 16),
-        Row(children: const [
-          Icon(CupertinoIcons.check_mark, color: CupertinoColors.activeGreen),
-          SizedBox(width: 16),
-          Flexible(
-              child: Text(
-                  "Übersicht und Zugriff auf angegebene Daten aller Mitglieder in der AdminApp"))
-        ]),
-      ],
-    );
-  }
-}
-
-class BothDescription extends StatelessWidget {
-  const BothDescription({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        Row(children: const [
-          Flexible(
-            child:
-                Text("Bessere Verwaltung geht nicht - beide Vorteile vereint:"),
-          ),
-        ]),
-        const SizedBox(height: 16),
-        Row(children: const [
-          Icon(CupertinoIcons.check_mark, color: CupertinoColors.activeGreen),
-          SizedBox(width: 16),
-          Flexible(
-            child: Text(
-                "Mitglieder und Admins können Funktionen der Plätze- und der Mitgliederverwaltung nutzen ..."),
-          )
-        ]),
-        const SizedBox(height: 16),
-        Row(children: const [
-          Icon(CupertinoIcons.check_mark, color: CupertinoColors.activeGreen),
-          SizedBox(width: 16),
-          Flexible(child: Text("... trotzdem ist alles in einer App vereint"))
-        ]),
-        SizedBox(height: 16),
-        Row(children: const [
-          Icon(CupertinoIcons.check_mark, color: CupertinoColors.activeGreen),
-          SizedBox(width: 16),
-          Flexible(
-            child: Text(
-                "Upgrade von Teilverwaltung auf das volle Paket jederzeit Problemlos möglich"),
-          )
-        ]),
-      ],
     );
   }
 }
