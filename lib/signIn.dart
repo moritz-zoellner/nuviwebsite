@@ -4,153 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:noviwebsite/main.dart';
 //import 'package:flutter/material.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
-
-  @override
-  State<LoginScreen> createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwController = TextEditingController();
-  bool passwVisible = false;
-  bool validEmail = false;
-  bool validPassword = false;
-  @override
-  Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-        child: CustomScrollView(slivers: [
-      const CupertinoSliverNavigationBar(largeTitle: Text("Login")),
-      SliverList(
-        delegate: SliverChildListDelegate([
-          Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 800),
-              child: Padding(
-                padding: const EdgeInsets.only(top: 32, left: 32, right: 32),
-                child: NoviTile(
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: CupertinoTextField.borderless(
-                          placeholder: "Email oder Telefon",
-                          controller: emailController,
-                          prefix: const Icon(CupertinoIcons.person),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: CupertinoTextField.borderless(
-                            obscureText: !passwVisible,
-                            placeholder: "Passwort",
-                            controller: passwController,
-                            prefix: const Icon(CupertinoIcons.lock),
-                            suffix: Row(children: [
-                              CupertinoButton(
-                                  onPressed: () => setState(() {
-                                        passwVisible = !passwVisible;
-                                      }),
-                                  child: Icon(passwVisible
-                                      ? CupertinoIcons.eye
-                                      : CupertinoIcons.eye_slash)),
-                            ])),
-                      ),
-                      CupertinoButton(
-                          child: const Text(
-                            "Passwort vergessen?",
-                            style: TextStyle(
-                                color: CupertinoColors.systemGrey,
-                                fontSize: 15),
-                            textAlign: TextAlign.end,
-                          ),
-                          onPressed: () => Navigator.push(
-                              context,
-                              CupertinoPageRoute(
-                                  builder: (_) => const forgotPasswort()))),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                maxWidth: 800,
-                minWidth: 800,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.only(top: 32, left: 32, right: 32),
-                child: CupertinoButton.filled(
-                    padding: EdgeInsets.zero,
-                    onPressed: () {
-                      String email = emailController.text;
-                      String password = passwController.text;
-                      if (invalidMailAdress(email)) {
-                        //ungültige Mail
-                        showMyCupDialog(context, 'Ungültige Mailadresse');
-                      } else if (invalidPW(password)) {
-                        //ungültiges Passwort
-                        showMyCupDialog(context, 'Ungültiges Passwort');
-                      } else {
-                        // einfügen der Daten in firebase
-                        Future<bool> success = signIn(email, password);
-                        waitDialog(context);
-                        success.then((success) {
-                          Navigator.pop(context);
-                          if (success) {
-                            Navigator.pushAndRemoveUntil(
-                                context,
-                                CupertinoPageRoute(
-                                    builder: (_) => const MyHome()),
-                                (route) => false);
-                          } else {
-                            showMyCupDialog(context, 'Ungültige Anmeldedaten');
-                          }
-                        });
-                      }
-                    },
-                    child: const Text("Anmelden")),
-              ),
-            ),
-          ),
-          Center(
-            child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 800),
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 16, left: 74),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "Zum ersten mal auf unserer Website?",
-                        style: TextStyle(
-                            color: CupertinoColors.systemGrey, fontSize: 15),
-                      ),
-                      const SizedBox(
-                        width: 8,
-                      ),
-                      CupertinoButton(
-                          padding: EdgeInsets.zero,
-                          child: const Text("Registrieren",
-                              style: TextStyle(fontSize: 16)),
-                          onPressed: () => Navigator.push(
-                              context,
-                              CupertinoPageRoute(
-                                  builder: (_) => const RegistrierScreen()))),
-                    ],
-                  ),
-                )),
-          )
-        ]),
-      ),
-    ]));
-  }
-}
-
 class RegistrierScreen extends StatefulWidget {
   const RegistrierScreen({Key? key}) : super(key: key);
 
@@ -234,14 +87,13 @@ class _RegistrierScreenState extends State<RegistrierScreen> {
                               String clubName = clubNameController.text;
                               if (invalidMailAdress(email)) {
                                 //ungültige Mail
-                                showMyCupDialog(
-                                    context, 'Ungültige Mailadresse');
+                                myCustomError(context, 'Ungültige Mailadresse');
                               } else if (invalidPW(password)) {
                                 //ungültiges Passwort
-                                showMyCupDialog(context, 'Ungültiges Passwort');
+                                myCustomError(context, 'Ungültiges Passwort');
                               } else if (clubName.isEmpty) {
                                 //clubname darf nicht leer sein
-                                showMyCupDialog(
+                                myCustomError(
                                     context, 'Bitte Name des Vereins eingeben');
                               } else {
                                 // einfügen der Daten in firebase
@@ -254,7 +106,7 @@ class _RegistrierScreenState extends State<RegistrierScreen> {
                                     Navigator.pushAndRemoveUntil(
                                         context,
                                         CupertinoPageRoute(
-                                            builder: (_) => const MyHome()),
+                                            builder: (_) => const TClub()),
                                         (route) => false);
                                   }
                                 });
@@ -287,47 +139,6 @@ class _RegistrierScreenState extends State<RegistrierScreen> {
               // )
             ],
           ),
-        ),
-      ]),
-    );
-  }
-}
-
-class forgotPasswort extends StatelessWidget {
-  const forgotPasswort({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    TextEditingController emailController = TextEditingController();
-    return CupertinoPageScaffold(
-      child: CustomScrollView(slivers: [
-        CupertinoSliverNavigationBar(largeTitle: Text("Passwort schicken")),
-        SliverList(
-          delegate: SliverChildListDelegate([
-            Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 800),
-                child: Padding(
-                  padding: const EdgeInsets.all(32),
-                  child: NoviTile(
-                    CupertinoTextField.borderless(
-                        placeholder: "Email oder Telefon",
-                        controller: emailController,
-                        prefix: const Icon(CupertinoIcons.person)),
-                  ),
-                ),
-              ),
-            ),
-            Center(
-                child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 800, minWidth: 800),
-              child: Padding(
-                padding: const EdgeInsets.only(left: 32, right: 32),
-                child: CupertinoButton.filled(
-                    onPressed: () {}, child: const Text("Passwort senden")),
-              ),
-            ))
-          ]),
         ),
       ]),
     );
@@ -395,12 +206,12 @@ Future waitDialog(BuildContext context) {
       builder: (context) => const Center(child: CupertinoActivityIndicator()));
 }
 
-void showMyCupDialog(context, content) {
+void myCustomError(context, content) {
   showCupertinoDialog(
       context: context,
       builder: (context) {
         return CupertinoAlertDialog(
-          title: Text('Fehler bei der Anmeldung!'),
+          title: const Text('Fehler aufgetreten'),
           content: Text(content),
           actions: <Widget>[
             CupertinoDialogAction(

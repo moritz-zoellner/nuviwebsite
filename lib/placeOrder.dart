@@ -418,7 +418,7 @@ class FinalOrderScreen extends StatelessWidget {
                 onPressed: () {
                   Navigator.pushAndRemoveUntil(
                       context,
-                      CupertinoPageRoute(builder: (_) => const MyHome()),
+                      CupertinoPageRoute(builder: (_) => const TClub()),
                       (route) => false);
                 }),
           ),

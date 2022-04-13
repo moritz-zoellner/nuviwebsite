@@ -7,22 +7,9 @@ class CourtPrice extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const Text(
-          "7",
-          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-        ),
-        Column(
-          children: const [
-            Text(
-              "€ / Platz",
-              style: TextStyle(fontSize: 15),
-            ),
-            Text(
-              "/ Monat",
-              style: TextStyle(fontSize: 15),
-            )
-          ],
-        )
+        Text("7 ",
+            style: CupertinoTheme.of(context).textTheme.navLargeTitleTextStyle),
+        const Text("€ / Platz\n/ Monat")
       ],
     );
   }
@@ -35,23 +22,9 @@ class MemberPrice extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const Text(
-          "40",
-          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            Text(
-              "€",
-              style: TextStyle(fontSize: 15),
-            ),
-            Text(
-              "/ Monat",
-              style: TextStyle(fontSize: 15),
-            )
-          ],
-        )
+        Text("40 ",
+            style: CupertinoTheme.of(context).textTheme.navLargeTitleTextStyle),
+        const Text("€\n/ Monat"),
       ],
     );
   }
@@ -64,42 +37,12 @@ class BothPrice extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const Text(
-          "30",
-          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            Text(
-              "€",
-              style: TextStyle(fontSize: 15),
-            ),
-            Text(
-              "/ Monat",
-              style: TextStyle(fontSize: 15),
-            ),
-          ],
-        ),
-        const SizedBox(width: 16),
-        const Icon(CupertinoIcons.add),
-        const SizedBox(width: 16),
-        const Text(
-          "5",
-          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-        ),
-        Column(
-          children: const [
-            Text(
-              "€ / Platz",
-              style: TextStyle(fontSize: 15),
-            ),
-            Text(
-              "/ Monat",
-              style: TextStyle(fontSize: 15),
-            )
-          ],
-        )
+        Text("40 ",
+            style: CupertinoTheme.of(context).textTheme.navLargeTitleTextStyle),
+        const Text("€\n/ Monat"),
+        Text(" + 5 ",
+            style: CupertinoTheme.of(context).textTheme.navLargeTitleTextStyle),
+        const Text("€ / Platz\n/ Monat")
       ],
     );
   }
