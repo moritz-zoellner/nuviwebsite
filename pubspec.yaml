@@ -37,6 +37,7 @@ dependencies:
   firebase_core: ^1.14.0
   cloud_firestore: ^3.1.11
   firebase_auth: ^3.3.13
+  url_launcher: ^6.0.20
 
 dev_dependencies:
   flutter_test:
@@ -65,6 +66,8 @@ flutter:
     - assets/novi_logo.jpeg
     - assets/novi_logo.png
     - assets/background_tennis.jpg
+    - assets/entry_image.webp
+    - assets/lp_image.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

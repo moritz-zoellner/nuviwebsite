@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:noviwebsite/main.dart';
+import 'package:noviwebsite/old/projects.dart';
 //import 'package:flutter/material.dart';
 
 class RegistrierScreen extends StatefulWidget {
@@ -154,7 +156,7 @@ class NoviTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: const BoxDecoration(
-          color: CupertinoColors.systemGroupedBackground,
+          color: Colors.white70,
           borderRadius: BorderRadius.all(Radius.circular(16))),
       child: child,
     );
