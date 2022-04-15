@@ -15,45 +15,10 @@ class DesktopNavBar extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: const [
                 MenuBar(),
-                SizedBox(width: 30),
-                RegistrierenButton(),
-                SizedBox(width: 10),
-                AnmeldenButton()
               ],
             ),
           ),
         ]));
-  }
-}
-
-class RegistrierenButton extends StatelessWidget {
-  const RegistrierenButton({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return TextButton(
-        //padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-        child: const Text("Sign Up",
-            style: TextStyle(color: Colors.white, fontSize: 14)),
-        //color: Colors.pink,
-        //shape: const RoundedRectangleBorder(
-        //    borderRadius: BorderRadius.all(Radius.circular(16))),
-        onPressed: () {});
-  }
-}
-
-class AnmeldenButton extends StatelessWidget {
-  const AnmeldenButton({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialButton(
-        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-        child: const Text("Sign In", style: TextStyle(color: Colors.white)),
-        color: Colors.pink,
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(16))),
-        onPressed: () {});
   }
 }
 
@@ -69,7 +34,7 @@ class MobileNavBar extends StatelessWidget {
           const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [MenuBar(), SizedBox(width: 20), AnmeldenButton()],
+            children: const [MenuBar()],
           ),
         ]));
   }
