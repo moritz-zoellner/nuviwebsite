@@ -6,34 +6,14 @@ class DesktopNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
-        child: Flexible(
-            child: SingleChildScrollView(
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
-                Title(),
-                Flexible(child: MenuBar()),
-              ]),
-        )));
-  }
-}
-
-class MobileNavBar extends StatelessWidget {
-  const MobileNavBar({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
-      child: Flexible(
-          child: SingleChildScrollView(
-        child: Column(mainAxisSize: MainAxisSize.min, children: const [
-          Title(),
-          SizedBox(height: 20),
-          MenuBar(),
-        ]),
-      )),
+      child: OverflowBar(
+          overflowAlignment: OverflowBarAlignment.center,
+          alignment: MainAxisAlignment.spaceBetween,
+          children: const [
+            Title(),
+            Flexible(child: MenuBar()),
+          ]),
     );
   }
 }

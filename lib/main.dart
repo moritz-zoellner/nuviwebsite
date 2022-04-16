@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
               if (constraints.maxWidth < 800) {
                 return Column(
                   children: const [
-                    MobileNavBar(),
+                    DesktopNavBar(),
                     MobileLandingPage(),
                   ],
                 );
