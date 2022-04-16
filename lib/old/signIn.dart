@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:noviwebsite/main.dart';
-import 'package:noviwebsite/old/projects.dart';
+import 'package:noviwebsite/ld_page/projects.dart';
 //import 'package:flutter/material.dart';
 
 class RegistrierScreen extends StatefulWidget {
@@ -209,21 +209,13 @@ Future waitDialog(BuildContext context) {
 }
 
 void myCustomError(context, content) {
-  showCupertinoDialog(
+  showDialog(
       context: context,
-      builder: (context) {
-        return CupertinoAlertDialog(
-          title: const Text('Fehler aufgetreten'),
-          content: Text(content),
-          actions: <Widget>[
-            CupertinoDialogAction(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
+      builder: (context) => AlertDialog(title: Text(content), actions: [
+            MaterialButton(
+                onPressed: () => Navigator.of(context).pop(),
                 child: const Text('OK'))
-          ],
-        );
-      });
+          ]));
 }
 
 Future<bool> signIn(final String email, final String password) async {

@@ -7,18 +7,14 @@ class DesktopNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
-        child:
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          const Title(),
-          Flexible(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: const [
-                MenuBar(),
-              ],
-            ),
-          ),
-        ]));
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: const [
+              Title(),
+              Flexible(
+                child: MenuBar(),
+              ),
+            ]));
   }
 }
 
@@ -29,13 +25,10 @@ class MobileNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
-        child: Column(mainAxisSize: MainAxisSize.min, children: [
-          const Title(),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [MenuBar()],
-          ),
+        child: Column(mainAxisSize: MainAxisSize.min, children: const [
+          Title(),
+          SizedBox(height: 20),
+          MenuBar(),
         ]));
   }
 }
@@ -65,6 +58,7 @@ class MenuBar extends StatelessWidget {
             Tab(text: "About Us"),
             Tab(text: "Impressum"),
             Tab(text: "Blog"),
+            Tab(text: "Products"),
           ]),
     );
   }
