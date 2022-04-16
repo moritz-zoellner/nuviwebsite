@@ -23,10 +23,10 @@ class DesktopLandingPage extends StatelessWidget {
                   SizedBox(width: 40),
                   Expanded(child: SignUpSide())
                 ])),
+        const ProjectsScreen(),
+        const BlogScreen(),
         const Center(child: Text("About us")),
         const ImpressumDescription(),
-        const BlogScreen(),
-        const ProjectsScreen(),
       ]),
     );
   }
@@ -51,10 +51,10 @@ class MobileLandingPage extends StatelessWidget {
                     SignUpSide()
                   ])),
         ),
+        const ProjectsScreen(),
+        const BlogScreen(),
         const Center(child: Text("About us")),
         const ImpressumDescription(),
-        const BlogScreen(),
-        const ProjectsScreen(),
       ]),
     );
   }

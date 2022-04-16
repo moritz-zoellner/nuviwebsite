@@ -55,10 +55,10 @@ class MenuBar extends StatelessWidget {
           isScrollable: true,
           tabs: [
             Tab(text: "Home"),
+            Tab(text: "Products"),
+            Tab(text: "Blog"),
             Tab(text: "About Us"),
             Tab(text: "Impressum"),
-            Tab(text: "Blog"),
-            Tab(text: "Products"),
           ]),
     );
   }
