@@ -14,15 +14,23 @@ class DesktopLandingPage extends StatelessWidget {
     return Expanded(
       child:
           TabBarView(physics: const NeverScrollableScrollPhysics(), children: [
-        Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 40),
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Expanded(child: LeftSide()),
-                  SizedBox(width: 40),
-                  Expanded(child: SignUpSide())
-                ])),
+        Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: 400),
+            child: SingleChildScrollView(
+              child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 60, vertical: 40),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Expanded(child: LeftSide()),
+                        SizedBox(width: 40),
+                        Expanded(child: SignUpSide())
+                      ])),
+            ),
+          ),
+        ),
         const ProjectsScreen(),
         const BlogScreen(),
         const Center(child: Text("About us")),

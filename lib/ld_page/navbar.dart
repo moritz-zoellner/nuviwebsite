@@ -7,14 +7,13 @@ class DesktopNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
-        child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
+        child: Flexible(
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: const [
               Title(),
-              Flexible(
-                child: MenuBar(),
-              ),
-            ]));
+              Flexible(child: MenuBar()),
+            ])));
   }
 }
 
@@ -24,12 +23,14 @@ class MobileNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
-        child: Column(mainAxisSize: MainAxisSize.min, children: const [
-          Title(),
-          SizedBox(height: 20),
-          MenuBar(),
-        ]));
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+      child: Flexible(
+          child: Column(mainAxisSize: MainAxisSize.min, children: const [
+        Title(),
+        SizedBox(height: 20),
+        MenuBar(),
+      ])),
+    );
   }
 }
 

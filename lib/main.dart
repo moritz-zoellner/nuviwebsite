@@ -30,28 +30,21 @@ class MyApp extends StatelessWidget {
                     colors: [Colors.pink, Colors.blue],
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight)),
-            child: SingleChildScrollView(
-              child: LayoutBuilder(builder: (context, constraints) {
-                if (constraints.maxWidth < 800) {
-                  return ConstrainedBox(
-                    constraints: BoxConstraints(
-                        maxHeight: MediaQuery.of(context).size.height),
-                    child: Column(children: const [
-                      MobileNavBar(),
-                      MobileLandingPage(),
-                    ]),
-                  );
-                } else {
-                  return ConstrainedBox(
-                      constraints: BoxConstraints(
-                          maxHeight: MediaQuery.of(context).size.height),
-                      child: Column(children: const [
-                        DesktopNavBar(),
-                        DesktopLandingPage(),
-                      ]));
-                }
-              }),
-            ),
+            child: LayoutBuilder(builder: (context, constraints) {
+              if (constraints.maxWidth < 800) {
+                return Column(
+                  children: const [
+                    MobileNavBar(),
+                    MobileLandingPage(),
+                  ],
+                );
+              } else {
+                return Column(children: const [
+                  DesktopNavBar(),
+                  DesktopLandingPage(),
+                ]);
+              }
+            }),
           ),
         ));
   }

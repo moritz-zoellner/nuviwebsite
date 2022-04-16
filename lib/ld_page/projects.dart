@@ -299,50 +299,54 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
   }
 
   Widget projectList() {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Wrap(
-          children: List.generate(
-            tabs.length,
-            (index) => Padding(
-                padding: const EdgeInsets.all(20),
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 400),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Flexible(
-                        child: Text(tabs[index].title,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                                fontSize: 24)),
-                      ),
-                      const SizedBox(height: 20),
-                      NoviTile(
-                        Text(
-                          tabs[index].content,
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                          style: CupertinoTheme.of(context).textTheme.textStyle,
+    return SingleChildScrollView(
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Wrap(
+            children: List.generate(
+              tabs.length,
+              (index) => Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 400),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Flexible(
+                          child: Text(tabs[index].title,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  fontSize: 24)),
                         ),
-                      ),
-                      const SizedBox(height: 20),
-                      MaterialButton(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 32, vertical: 24),
-                          color: Colors.blue,
-                          shape: const RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(16))),
-                          child: const Text("Weiteres",
-                              style: TextStyle(color: Colors.white)),
-                          onPressed: () => setState(() => currentTab = index)),
-                    ],
-                  ),
-                )),
+                        const SizedBox(height: 20),
+                        NoviTile(
+                          Text(
+                            tabs[index].content,
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                            style:
+                                CupertinoTheme.of(context).textTheme.textStyle,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        MaterialButton(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 32, vertical: 24),
+                            color: Colors.blue,
+                            shape: const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(16))),
+                            child: const Text("Weiteres",
+                                style: TextStyle(color: Colors.white)),
+                            onPressed: () =>
+                                setState(() => currentTab = index)),
+                      ],
+                    ),
+                  )),
+            ),
           ),
         ),
       ),
