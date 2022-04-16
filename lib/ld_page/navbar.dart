@@ -8,12 +8,14 @@ class DesktopNavBar extends StatelessWidget {
     return Padding(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
         child: Flexible(
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-              Title(),
-              Flexible(child: MenuBar()),
-            ])));
+            child: SingleChildScrollView(
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: const [
+                Title(),
+                Flexible(child: MenuBar()),
+              ]),
+        )));
   }
 }
 
@@ -25,11 +27,13 @@ class MobileNavBar extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
       child: Flexible(
-          child: Column(mainAxisSize: MainAxisSize.min, children: const [
-        Title(),
-        SizedBox(height: 20),
-        MenuBar(),
-      ])),
+          child: SingleChildScrollView(
+        child: Column(mainAxisSize: MainAxisSize.min, children: const [
+          Title(),
+          SizedBox(height: 20),
+          MenuBar(),
+        ]),
+      )),
     );
   }
 }
