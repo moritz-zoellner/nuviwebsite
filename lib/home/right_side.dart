@@ -42,7 +42,7 @@ class _RightSide extends State<RightSide> {
       FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
           future: FirebaseFirestore.instance
               .collection("apps")
-              .where(useremail)
+              .where("useremail", isEqualTo: useremail)
               .get(),
           builder: ((context, snapshot) {
             if (!snapshot.hasData) {
