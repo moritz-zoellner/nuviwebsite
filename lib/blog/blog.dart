@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:noviwebsite/old/signIn.dart';
+import 'package:noviwebsite/styling.dart';
 
 class BlogScreen extends StatelessWidget {
   const BlogScreen({Key? key}) : super(key: key);
@@ -15,17 +15,17 @@ class BlogScreen extends StatelessWidget {
           }
           List<DocumentSnapshot<Map<String, dynamic>>> list =
               snapshot.data!.docs;
-          return Center(
-              child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 800),
-                  child: Flexible(
-                      child: ListView.builder(
-                          itemCount: list.length,
-                          itemBuilder: (_, index) {
-                            Map<String, dynamic> post = list[index].data()!;
-                            return Padding(
+          return ListView.builder(
+              itemCount: list.length,
+              itemBuilder: (_, index) {
+                Map<String, dynamic> post = list[index].data()!;
+                return Center(
+                    child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 800),
+                        child: Flexible(
+                            child: Padding(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 60, vertical: 40),
+                                    horizontal: 40, vertical: 20),
                                 child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -44,8 +44,8 @@ class BlogScreen extends StatelessWidget {
                                                   style: const TextStyle(
                                                       color: Colors.black,
                                                       fontSize: 16)))))
-                                    ]));
-                          }))));
+                                    ])))));
+              });
         });
   }
 }

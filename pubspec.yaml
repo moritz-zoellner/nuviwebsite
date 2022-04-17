@@ -68,6 +68,7 @@ flutter:
     - assets/background_tennis.jpg
     - assets/entry_image.webp
     - assets/lp_image.png
+    - assets/imprint.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
