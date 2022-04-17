@@ -41,22 +41,21 @@ class MyCourtGrid extends StatelessWidget {
                     minutes: 30 + ((index + 1) ~/ (courts.length + 1) * 30))));
             return TimeTextGridItem(time);
           }
-          return const CourtTextGridItem("H");
 
-          // try {
-          //   DocumentSnapshot<Map<String, dynamic>> court = dailyCourts
-          //       .where((element) =>
-          //           element.id ==
-          //           "{$index|${dateToString(DateTime.now().add(Duration(days: day)))}")
-          //       .toList()
-          //       .first;
+          try {
+            DocumentSnapshot<Map<String, dynamic>> court = dailyCourts
+                .where((element) =>
+                    element.id ==
+                    "{$index|${dateToString(DateTime.now().add(Duration(days: day)))}")
+                .toList()
+                .first;
 
-          //   return ReservedGridItem(projectInfo.id, index,
-          //       dateToString(DateTime.now().add(Duration(days: day))));
-          // } on StateError {
-          //   return EmptyGridItem(projectInfo.id, index,
-          //       dateToString(DateTime.now().add(Duration(days: day))));
-          // }
+            return ReservedGridItem(projectInfo.id, index,
+                dateToString(DateTime.now().add(Duration(days: day))));
+          } on StateError {
+            return EmptyGridItem(projectInfo.id, index,
+                dateToString(DateTime.now().add(Duration(days: day))));
+          }
         });
   }
 }

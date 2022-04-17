@@ -22,21 +22,24 @@ class BlogScreen extends StatelessWidget {
                 return Center(
                     child: ConstrainedBox(
                         constraints: const BoxConstraints(maxWidth: 800),
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(height: 20),
-                              Text(post["Title"],
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 24,
-                                      color: Colors.white)),
-                              const SizedBox(height: 20),
-                              NoviTile(Text(post["Content"],
-                                  style: const TextStyle(
-                                      color: Colors.black, fontSize: 16))),
-                              const SizedBox(height: 20),
-                            ])));
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 20, right: 20),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(height: 20),
+                                Text(post["Title"],
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 24,
+                                        color: Colors.white)),
+                                const SizedBox(height: 20),
+                                NoviTile(Text(post["Content"],
+                                    style: const TextStyle(
+                                        color: Colors.black, fontSize: 16))),
+                                const SizedBox(height: 20),
+                              ]),
+                        )));
               });
         });
   }
