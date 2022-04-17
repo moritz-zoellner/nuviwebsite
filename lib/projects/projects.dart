@@ -151,18 +151,20 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(tabs[currentTab].title,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      fontSize: 30)),
-              TextButton(
-                  style: ButtonStyle(
-                      padding: MaterialStateProperty.all(
-                          const EdgeInsets.symmetric(vertical: 4))),
-                  child: const Text("Go Back to Product overview",
-                      style: TextStyle(color: Colors.white, fontSize: 16)),
-                  onPressed: () => setState(() => currentTab = -1)),
+              Row(
+                children: [
+                  IconButton(
+                      onPressed: () => setState(() => currentTab = -1),
+                      icon: const Icon(Icons.arrow_back_ios_new_rounded,
+                          color: Colors.blue)),
+                  const SizedBox(width: 20),
+                  Text(tabs[currentTab].title,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: 30)),
+                ],
+              ),
               const SizedBox(height: 20),
               tabs[currentTab],
             ],
@@ -222,4 +224,3 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
     );
   }
 }
-
