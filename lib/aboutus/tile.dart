@@ -17,7 +17,7 @@ class AboutUsTile extends StatelessWidget {
             padding: const EdgeInsets.all(20),
             child: ClipRRect(
               child: Image.asset('assets/novi_logo.jpeg'),
-              borderRadius: const BorderRadius.all(Radius.circular(50)),
+              borderRadius: const BorderRadius.all(Radius.circular(150)),
             ),
           ),
         ),

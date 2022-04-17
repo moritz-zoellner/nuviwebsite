@@ -14,11 +14,26 @@ class TClub extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         const SizedBox(height: 20),
-        const Text("Our Solutions",
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
+        Row(
+          children: [
+            const Text("Our Solutions",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    fontSize: 24)),
+            const SizedBox(
+              width: 20,
+            ),
+            IconButton(
+              onPressed: () => DefaultTabController.of(context)!.animateTo(4),
+              icon: const Icon(
+                Icons.help_outline_rounded,
                 color: Colors.white,
-                fontSize: 24)),
+              ),
+              tooltip: "Beraten lassen!",
+            )
+          ],
+        ),
         const SizedBox(height: 20),
         LayoutBuilder(builder: (context, constraints) {
           List<Widget> widgets = [
@@ -32,7 +47,7 @@ class TClub extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                             fontSize: 20)),
-                    Text("€ / Platz\n/ Monat")
+                    Text("€ / Platz\n/ Monat"),
                   ],
                 ),
                 "Plätzeverwaltung war noch nie so einach - wir kümmern uns um:",
@@ -63,7 +78,7 @@ class TClub extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                             fontSize: 20)),
-                    Text("€\n/ Monat"),
+                    Text("€ / Platz\n/ Monat")
                   ],
                 ),
                 "Mitgliederverwaltung simpler denn je - das bieten wir:",
@@ -102,7 +117,7 @@ class TClub extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                             fontSize: 20)),
-                    Text("€ / Platz\n/ Monat")
+                    Text("€ / Platz\n/ Monat"),
                   ],
                 ),
                 "Bessere Verwaltung geht nicht - beide Vorteile vereint:",
