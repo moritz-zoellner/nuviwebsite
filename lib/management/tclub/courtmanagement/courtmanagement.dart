@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:noviwebsite/management/tclub/courtmanagement/myappbar.dart';
 import 'package:noviwebsite/styling.dart';
 
 const int DAYS_FOREWARD = 8;
@@ -24,11 +23,159 @@ class _CourtManagementState extends State<CourtManagement> {
     return DefaultTabController(
         length: DAYS_FOREWARD,
         child: Column(
-            mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              MyAppBar(widget.projectInfo["appname"]),
+              Padding(
+                  padding: const EdgeInsets.only(
+                      top: 20, left: 20, right: 20, bottom: 20),
+                  child: OverflowBar(
+                      alignment: MainAxisAlignment.spaceBetween,
+                      overflowAlignment: OverflowBarAlignment.center,
+                      spacing: 40,
+                      overflowSpacing: 10,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  icon: const Icon(
+                                      Icons.arrow_back_ios_new_rounded,
+                                      color: Colors.white)),
+                              const SizedBox(width: 20),
+                              Flexible(
+                                child: Text(widget.projectInfo["appname"],
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        overflow: TextOverflow.ellipsis,
+                                        color: Colors.white,
+                                        fontSize: 30)),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Flexible(
+                          child: TabBar(
+                              physics: const NeverScrollableScrollPhysics(),
+                              isScrollable: true,
+                              tabs: List.generate(
+                                  DAYS_FOREWARD,
+                                  (index) => Tab(
+                                      text: dateToString(DateTime.now()
+                                          .add(Duration(days: index)))))),
+                        ),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            IconButton(
+                                tooltip: "Help",
+                                onPressed: () {
+                                  showGeneralDialog(
+                                      context: context,
+                                      pageBuilder: (c, a1, a2) => Center(
+                                          child: Padding(
+                                              padding: const EdgeInsets.all(20),
+                                              child: ClipRRect(
+                                                  borderRadius:
+                                                      const BorderRadius.all(
+                                                          Radius.circular(20)),
+                                                  child: ConstrainedBox(
+                                                      constraints:
+                                                          const BoxConstraints(
+                                                              maxHeight: 600,
+                                                              maxWidth: 600),
+                                                      child: Scaffold(
+                                                          body: SingleChildScrollView(
+                                                              child: Padding(
+                                                                  padding: const EdgeInsets.all(20),
+                                                                  child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+                                                                    Row(
+                                                                      children: [
+                                                                        IconButton(
+                                                                            onPressed: () =>
+                                                                                Navigator.pop(context),
+                                                                            icon: const Icon(Icons.close)),
+                                                                        const SizedBox(
+                                                                            width:
+                                                                                20),
+                                                                        const Text(
+                                                                            "How to use",
+                                                                            style:
+                                                                                TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
+                                                                      ],
+                                                                    ),
+                                                                    const Padding(
+                                                                      padding:
+                                                                          EdgeInsets.all(
+                                                                              20),
+                                                                      child: Text(
+                                                                          "Labeling",
+                                                                          style: TextStyle(
+                                                                              fontSize: 16,
+                                                                              fontWeight: FontWeight.bold)),
+                                                                    ),
+                                                                    SizedBox(
+                                                                      height:
+                                                                          100,
+                                                                      width:
+                                                                          280,
+                                                                      child:
+                                                                          Column(
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.stretch,
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.center,
+                                                                        children: [
+                                                                          Expanded(
+                                                                            child:
+                                                                                Container(
+                                                                              padding: const EdgeInsets.only(left: 10, right: 10),
+                                                                              child: const Center(
+                                                                                child: Text("Reservations made by administrator", overflow: TextOverflow.fade, style: TextStyle(color: Colors.black)),
+                                                                              ),
+                                                                              decoration: BoxDecoration(
+                                                                                  color: Colors.cyan.shade200,
+                                                                                  borderRadius: const BorderRadius.only(
+                                                                                    topLeft: Radius.circular(20),
+                                                                                    topRight: Radius.circular(20),
+                                                                                  )),
+                                                                            ),
+                                                                          ),
+                                                                          Expanded(
+                                                                            child: Container(
+                                                                                padding: const EdgeInsets.only(left: 10, right: 10),
+                                                                                child: const Center(
+                                                                                  child: Text("Cannot Reserve", overflow: TextOverflow.fade, style: TextStyle(color: Colors.black)),
+                                                                                ),
+                                                                                decoration: BoxDecoration(color: Colors.grey.shade200)),
+                                                                          ),
+                                                                          Expanded(
+                                                                            child:
+                                                                                Container(
+                                                                              padding: const EdgeInsets.only(left: 10, right: 10),
+                                                                              child: const Center(
+                                                                                child: Text("Reservations made by clubmember", overflow: TextOverflow.fade, style: TextStyle(color: Colors.black)),
+                                                                              ),
+                                                                              decoration: BoxDecoration(color: Colors.pink.shade100, borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20))),
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  ])))))))));
+                                },
+                                icon: const Icon(
+                                  Icons.info_outline_rounded,
+                                  color: Colors.white,
+                                )),
+                            myButton()
+                          ],
+                        ),
+                      ])),
               Expanded(
                 child: CourtGridCover(
                     child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
@@ -42,189 +189,176 @@ class _CourtManagementState extends State<CourtManagement> {
                             return const Center(
                                 child: CircularProgressIndicator());
                           }
-                                  
+
                           return TabBarView(
                               physics: const NeverScrollableScrollPhysics(),
                               children: List.generate(DAYS_FOREWARD, (day) {
-                                return Column(
-                                  children: [
-                                    Expanded(
-                                      child: GridView.builder(
-                                          padding: const EdgeInsets.all(10),
-                                          shrinkWrap: true,
-                                          scrollDirection: Axis.horizontal,
-                                          itemCount: 33 * courts.length,
-                                          gridDelegate:
-                                              SliverGridDelegateWithFixedCrossAxisCount(
-                                                  mainAxisExtent: 80,
-                                                  mainAxisSpacing: 10,
-                                                  crossAxisSpacing: 10,
-                                                  crossAxisCount:
-                                                      courts.length),
-                                          itemBuilder: (context, index) {
-                                            if (currentIndex == index) {}
-                                            if (index < courts.length) {
-                                              return MyGridItem(
-                                                  text: courts[index]);
-                                            } else if (index % courts.length ==
-                                                0) {
-                                              return MyGridItem(
-                                                  text: dateToStringTime(
-                                                      index, courts.length));
-                                            }
-                                            int option = -1;
-                                            try {
-                                              if (snapshot.data!.docs
-                                                      .firstWhere((element) =>
-                                                          element.id ==
-                                                          "$index;${dateToString(DateTime.now().add(Duration(days: day)))}")
-                                                      .data()["players"]
-                                                      .first ==
-                                                  "Admin") {
-                                                option = 0;
-                                                // Deine Reservierungen
-                                              } else {
-                                                // Andrere Reservierngen
-                                                option = 1;
-                                              }
-                                            } catch (e) {
-                                              // Keine Reservierungen
-                                              option = 2;
-                                            }
-                                            if (DateTime.now().isAfter(
-                                                    getTimeByIndex(index,
-                                                        courts.length)) &&
-                                                day == 0) {
-                                              return MyGridItem(
-                                                color: Colors.black12,
-                                                onPressed: () {
-                                                  setState(() {
-                                                    operation = NONE;
-                                                    currentIndex = -1;
-                                                    currentDay = -1;
-                                                  });
-                                                },
-                                              );
-                                            }
+                                return GridView.builder(
+                                    padding: const EdgeInsets.only(
+                                        bottom: 10,
+                                        top: 10,
+                                        left: 10,
+                                        right: 10),
+                                    shrinkWrap: true,
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: 33 * courts.length,
+                                    gridDelegate:
+                                        SliverGridDelegateWithFixedCrossAxisCount(
+                                            mainAxisSpacing: 10,
+                                            crossAxisSpacing: 10,
+                                            crossAxisCount: courts.length),
+                                    itemBuilder: (context, index) {
+                                      if (currentIndex == index) {}
+                                      if (index < courts.length) {
+                                        return MyGridItem(text: courts[index]);
+                                      } else if (index % courts.length == 0) {
+                                        return MyGridItem(
+                                            text: dateToStringTime(
+                                                index, courts.length));
+                                      }
+                                      int option = -1;
+                                      try {
+                                        if (snapshot.data!.docs
+                                                .firstWhere((element) =>
+                                                    element.id ==
+                                                    "$index;${dateToString(DateTime.now().add(Duration(days: day)))}")
+                                                .data()["players"]
+                                                .first ==
+                                            "Admin") {
+                                          option = 0;
+                                          // Deine Reservierungen
+                                        } else {
+                                          // Andrere Reservierngen
+                                          option = 1;
+                                        }
+                                      } catch (e) {
+                                        // Keine Reservierungen
+                                        option = 2;
+                                      }
+                                      if (DateTime.now().isAfter(getTimeByIndex(
+                                              index, courts.length)) &&
+                                          day == 0) {
+                                        return MyGridItem(
+                                            color: Colors.grey.shade100,
+                                            onPressed: null);
+                                        //   () {
+                                        //     setState(() {
+                                        //       operation = NONE;
+                                        //       currentIndex = -1;
+                                        //       currentDay = -1;
+                                        //     });
+                                        //   },
+                                      }
 
-                                            Color color = (option == 0
-                                                ? Colors.green
-                                                : option == 1
-                                                    ? Colors.cyan
-                                                    : Colors.white10);
-                                            return MyGridItem(
-                                              color: (currentIndex == index)
-                                                  ? color.withAlpha(50)
-                                                  : color,
-                                              onPressed: () {
-                                                (currentIndex == index)
-                                                    ? setState(() {
-                                                        operation = NONE;
-                                                        currentIndex = -1;
-                                                        currentDay = -1;
-                                                      })
-                                                    : setState(() {
-                                                        currentIndex = index;
-                                                        currentDay = day;
+                                      Color color = (option == 0
+                                          ? Colors.cyan.shade200
+                                          : option == 1
+                                              ? Colors.pink.shade100
+                                              : Colors.cyan.shade50);
+                                      return MyGridItem(
+                                        color: (currentIndex == index)
+                                            ? Color.alphaBlend(
+                                                Colors.black12, color)
+                                            : color,
+                                        onPressed: () {
+                                          (currentIndex == index)
+                                              ? setState(() {
+                                                  operation = NONE;
+                                                  currentIndex = -1;
+                                                  currentDay = -1;
+                                                })
+                                              : setState(() {
+                                                  currentIndex = index;
+                                                  currentDay = day;
 
-                                                        operation = option == 0
-                                                            ? DELETE
-                                                            : option == 1
-                                                                ? DELETE
-                                                                : SET;
-                                                      });
-                                              },
-                                            );
-                                          }),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          bottom: 10, right: 10),
-                                      child: SizedBox(
-                                        height: 50,
-                                        child: OverflowBar(
-                                          alignment: MainAxisAlignment.end,
-                                          spacing: 20,
-                                          overflowSpacing: 20,
-                                          children: [
-                                            (operation == DELETE)
-                                                ? MyBlueButton("Platz löschen",
-                                                    onPressed: () {
-                                                    String courtId =
-                                                        "$currentIndex;${dateToString(DateTime.now().add(Duration(days: currentDay)))}";
-
-                                                    // Andrere Reservierungen
-                                                    // Deine Reservierungen
-                                                    waitDialog(context);
-                                                    FirebaseFirestore.instance
-                                                        .collection("tclub")
-                                                        .doc(widget
-                                                            .projectInfo.id)
-                                                        .collection("courts")
-                                                        .doc(courtId)
-                                                        .delete()
-                                                        .then((value) {
-                                                      closeDialog(context);
-                                                      setState(() {
-                                                        // operation = SET;
-                                                        operation = NONE;
-                                                        currentIndex = -1;
-                                                        currentDay = -1;
-                                                      });
-                                                    }).catchError((e) {
-                                                      closeDialog(context);
-                                                    });
-                                                  })
-                                                : (operation == SET)
-                                                    ? MyBlueButton(
-                                                        "Platz reservieren",
-                                                        onPressed: () {
-                                                        String courtId =
-                                                            "$currentIndex;${dateToString(DateTime.now().add(Duration(days: currentDay)))}";
-
-                                                        // Keine Reservierungen
-                                                        waitDialog(context);
-
-                                                        FirebaseFirestore
-                                                            .instance
-                                                            .collection("tclub")
-                                                            .doc(widget
-                                                                .projectInfo.id)
-                                                            .collection(
-                                                                "courts")
-                                                            .doc(courtId)
-                                                            .set({
-                                                          "index": currentIndex,
-                                                          "date": dateToString(
-                                                              DateTime.now()
-                                                                  .add(Duration(
-                                                                      days:
-                                                                          currentDay))),
-                                                          "players": ["Admin"]
-                                                        }).then((value) {
-                                                          closeDialog(context);
-                                                          setState(() {
-                                                            //operation = DELETE;
-                                                            operation = NONE;
-                                                            currentIndex = -1;
-                                                            currentDay = -1;
-                                                          });
-                                                        }).catchError((e) {
-                                                          closeDialog(context);
-                                                        });
-                                                      })
-                                                    : const SizedBox.shrink(),
-                                          ],
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                );
+                                                  operation = option == 0
+                                                      ? DELETE
+                                                      : option == 1
+                                                          ? DELETE
+                                                          : SET;
+                                                });
+                                        },
+                                      );
+                                    });
                               }, growable: false));
                         })),
-              )
+              ),
             ]));
   }
+
+  Widget myButton() => Padding(
+      padding: const EdgeInsets.only(left: 10, right: 10),
+      child: (operation == DELETE)
+          ? MaterialButton(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              padding: const EdgeInsets.all(20),
+              color: Colors.pink,
+              child: const Text("Platz stornieren",
+                  style: TextStyle(color: Colors.white)),
+              onPressed: () {
+                String courtId =
+                    "$currentIndex;${dateToString(DateTime.now().add(Duration(days: currentDay)))}";
+
+                // Andrere Reservierungen
+                // Deine Reservierungen
+                waitDialog(context);
+                FirebaseFirestore.instance
+                    .collection("tclub")
+                    .doc(widget.projectInfo.id)
+                    .collection("courts")
+                    .doc(courtId)
+                    .delete()
+                    .then((value) {
+                  closeDialog(context);
+                  setState(() {
+                    // operation = SET;
+                    operation = NONE;
+                    currentIndex = -1;
+                    currentDay = -1;
+                  });
+                }).catchError((e) {
+                  closeDialog(context);
+                });
+              })
+          : (operation == SET)
+              ? MaterialButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20)),
+                  padding: const EdgeInsets.all(20),
+                  color: Colors.pink,
+                  child: const Text("Platz reservieren",
+                      style: TextStyle(color: Colors.white)),
+                  onPressed: () {
+                    String courtId =
+                        "$currentIndex;${dateToString(DateTime.now().add(Duration(days: currentDay)))}";
+
+                    // Keine Reservierungen
+                    waitDialog(context);
+
+                    FirebaseFirestore.instance
+                        .collection("tclub")
+                        .doc(widget.projectInfo.id)
+                        .collection("courts")
+                        .doc(courtId)
+                        .set({
+                      "index": currentIndex,
+                      "date": dateToString(
+                          DateTime.now().add(Duration(days: currentDay))),
+                      "players": ["Admin"]
+                    }).then((value) {
+                      closeDialog(context);
+                      setState(() {
+                        //operation = DELETE;
+                        operation = NONE;
+                        currentIndex = -1;
+                        currentDay = -1;
+                      });
+                    }).catchError((e) {
+                      closeDialog(context);
+                    });
+                  })
+              : const SizedBox.shrink());
 }
 
 class MyGridItem extends StatelessWidget {
@@ -245,7 +379,11 @@ class MyGridItem extends StatelessWidget {
         hoverElevation: 0,
         highlightElevation: 0,
         color: color,
-        child: Text(text, style: const TextStyle(fontSize: 16)));
+        disabledColor: color,
+        child: Text(text,
+            overflow: TextOverflow.clip,
+            maxLines: 1,
+            style: const TextStyle(fontSize: 16)));
   }
 }
 
@@ -256,17 +394,24 @@ class CourtGridCover extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding:
-            const EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 20),
+        padding: const EdgeInsets.only(),
         child: ClipRRect(
-            borderRadius: const BorderRadius.all(Radius.circular(20)),
-            child: Container(color: Colors.white70, child: child)));
+            borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+            child: Container(color: Colors.grey.shade50, child: child)));
   }
 }
 
 String dateToStringTime(int index, int crossAxisCount) {
   DateTime d = getTimeByIndex(index, crossAxisCount);
-  return "${d.hour}:${d.minute}";
+  String time = "${d.hour}:${d.minute}";
+  if (time.split(":").first.length == 1) {
+    time = "0" + time;
+  }
+  if (time.split(":").last.length == 1) {
+    time = time + "0";
+  }
+  return time;
 }
 
 DateTime getTimeByIndex(int index, int crossAxisCount) {

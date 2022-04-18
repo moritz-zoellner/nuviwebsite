@@ -12,11 +12,15 @@ class AboutUsTile extends StatelessWidget {
     return Column(
       children: [
         ConstrainedBox(
-          constraints: const BoxConstraints(minWidth: 300, maxWidth: 300),
+          constraints: const BoxConstraints(
+              minWidth: 300, maxWidth: 300, minHeight: 300, maxHeight: 300),
           child: Container(
             padding: const EdgeInsets.all(20),
             child: ClipRRect(
-              child: Image.asset('assets/novi_logo.jpeg'),
+              child: Image.asset(
+                'assets/Vadim1.jpg',
+                fit: BoxFit.cover,
+              ),
               borderRadius: const BorderRadius.all(Radius.circular(150)),
             ),
           ),
@@ -36,7 +40,7 @@ class AboutUsTile extends StatelessWidget {
                 Text(name,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
-                        color: Colors.black,
+                        color: Colors.white,
                         fontWeight: FontWeight.bold,
                         fontSize: 16)),
                 const SizedBox(height: 16),
@@ -99,7 +103,9 @@ class DenisDescription extends StatelessWidget {
         Row(children: const [
           Flexible(
             child: Text(
-                "Sexy Boy halt. Hat ein riesen Coq. Macht sogar Lesben straight. Ansonsten auch genug Erfahrung in Programmierung."),
+              "Professioneller Blunt Roller. Du denkst Sexy Boy? Hab nicht mal ein riesen Coq. Macht sogar straighte Frauen zu lesben. Kein bisschen Ahnung von Programmieren und Leben.",
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ]),
       ],

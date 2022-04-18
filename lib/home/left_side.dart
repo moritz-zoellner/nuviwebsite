@@ -67,7 +67,7 @@ class CreateAppDialog extends StatelessWidget {
         child: ClipRRect(
           borderRadius: const BorderRadius.all(Radius.circular(20)),
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 600),
+            constraints: const BoxConstraints(maxWidth: 600, maxHeight: 600),
             child: ScaffoldMessenger(
               child: Builder(builder: (context) {
                 return Scaffold(

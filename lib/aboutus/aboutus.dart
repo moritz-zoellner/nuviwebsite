@@ -17,37 +17,22 @@ class AboutUsScreen extends StatelessWidget {
               Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 60, vertical: 40),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                  child: Wrap(spacing: 20, children: [
+                    const SizedBox(width: 400, child: AboutNoviDescription()),
+                    const SizedBox(width: 400, child: OurHistoryDescription()),
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: const [
-                        Expanded(child: AboutNoviDescription()),
-                        SizedBox(width: 40),
-                        Expanded(child: OurHistoryDescription())
-                      ])),
-              const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text("Unser Team",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 40,
-                          color: Colors.white))),
-              Center(
-                  child: SingleChildScrollView(
-                      padding: const EdgeInsets.only(
-                          left: 24, right: 24, top: 8, bottom: 8),
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [
-                            AboutUsTile("Moritz Zöllner", Icons.person,
-                                MoritzDescription()),
-                            AboutUsTile("Vadime Novikau", Icons.person,
-                                VadimeDescription()),
-                            AboutUsTile("Denis Novikau", Icons.person,
-                                DenisDescription()),
-                          ])))
+                        Text("Team",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 40,
+                                color: Colors.white)),
+                        AboutUsTile(
+                            "Denis Novikau", Icons.person, DenisDescription()),
+                      ],
+                    ),
+                  ])),
             ]))));
   }
 }

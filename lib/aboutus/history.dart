@@ -8,6 +8,7 @@ class OurHistoryDescription extends StatelessWidget {
     return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: const [
           Text("Unsere Geschichte",
               style: TextStyle(
