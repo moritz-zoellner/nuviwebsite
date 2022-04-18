@@ -55,10 +55,15 @@ class _CourtOrderState extends State<CourtOrder> {
                                                     : Icons
                                                         .arrow_back_ios_new_rounded)),
                                             const SizedBox(width: 20),
-                                            const Text("Courtmanagement",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 30)),
+                                            const Flexible(
+                                              child: Text("Courtmanagement",
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 30)),
+                                            ),
                                           ],
                                         ),
                                         currentState == 0
@@ -253,12 +258,14 @@ class _CourtOrderState extends State<CourtOrder> {
       ]);
 
   void doneWithFuture() {
+    List<String> courts = allCourts.text.split(",");
+    courts.insert(0, "");
     FirebaseFirestore.instance.collection("apps").add({
       "projectfamily": "Tclub",
       "appname": clubNameCon.text,
       "useremail": FirebaseAuth.instance.currentUser!.email,
       "logo": clubLogoCon.text,
-      "courts": allCourts.text.split(","),
+      "courts": courts,
       "h/week": hoursPerWeek.text,
       "phone": phoneCon.text,
       "abo": "Courtmanagment",

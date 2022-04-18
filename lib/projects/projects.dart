@@ -180,7 +180,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
           child: GridView(
             shrinkWrap: true,
             gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                mainAxisExtent: 240, maxCrossAxisExtent: 1000),
+                mainAxisExtent: 270, maxCrossAxisExtent: 1000),
             children: List.generate(
               tabs.length,
               (index) => Padding(
@@ -196,7 +196,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                                 color: Colors.white,
                                 fontSize: 24)),
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 10),
                       NoviTile(
                         SizedBox(
                           height: 50,

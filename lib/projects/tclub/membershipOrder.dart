@@ -54,10 +54,16 @@ class _MembershipOrderState extends State<MembershipOrder> {
                                                     : Icons
                                                         .arrow_back_ios_new_rounded)),
                                             const SizedBox(width: 20),
-                                            const Text("Membershipmanagement",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 30)),
+                                            const Flexible(
+                                              child: Text(
+                                                  "Membershipmanagement",
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 30)),
+                                            ),
                                           ],
                                         ),
                                         currentState == 0

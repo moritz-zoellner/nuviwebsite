@@ -48,28 +48,30 @@ class MenuBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
-      child: OverflowBar(
-          overflowAlignment: OverflowBarAlignment.center,
-          alignment: MainAxisAlignment.spaceBetween,
-          children: const [
-            Text("Novi Corp.",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    fontSize: 30)),
-            TabBar(
-                physics: NeverScrollableScrollPhysics(),
-                isScrollable: true,
-                tabs: [
-                  Tab(text: "Home"),
-                  Tab(text: "Products"),
-                  Tab(text: "Blog"),
-                  Tab(text: "About Us"),
-                  Tab(text: "Contact"),
-                ])
-          ]),
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+        child: OverflowBar(
+            overflowAlignment: OverflowBarAlignment.center,
+            alignment: MainAxisAlignment.spaceBetween,
+            children: const [
+              Text("Novi Corp.",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 30)),
+              TabBar(
+                  physics: NeverScrollableScrollPhysics(),
+                  isScrollable: true,
+                  tabs: [
+                    Tab(text: "Home"),
+                    Tab(text: "Products"),
+                    Tab(text: "Blog"),
+                    Tab(text: "About Us"),
+                    Tab(text: "Contact"),
+                  ])
+            ]),
+      ),
     );
   }
 }
