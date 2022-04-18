@@ -4,6 +4,7 @@ import 'package:noviwebsite/management/tclub/both.dart';
 import 'package:noviwebsite/management/tclub/courtmanagement/courtmanagement.dart';
 import 'package:noviwebsite/management/tclub/membershipmanagement.dart';
 import 'package:noviwebsite/styling.dart';
+import 'package:noviwebsite/management/overview.dart';
 
 class EmptyProject extends StatelessWidget {
   final DocumentSnapshot<Map<String, dynamic>> projectInfo;
@@ -27,7 +28,7 @@ class EmptyProject extends StatelessWidget {
             child: Text("Sorry, this Project has no subscription"));
       }
     } else {
-      child = const Center(child: Text("It's an empty Project"));
+      child = PrivateProject(projectInfo.data()!["appname"], projectInfo.id);
     }
     return MyScaffold(child: child);
   }

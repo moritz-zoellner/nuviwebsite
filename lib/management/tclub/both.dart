@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:noviwebsite/management/overview.dart';
 import 'package:noviwebsite/management/tclub/courtmanagement/courtmanagement.dart';
 import 'package:noviwebsite/management/tclub/membershipmanagement.dart';
 import 'package:noviwebsite/styling.dart';
@@ -19,8 +20,10 @@ class _BothManagementState extends State<BothManagement> {
   Widget build(BuildContext context) {
     return MyScaffold(
       child: currentIndex == 0
-          ? CourtManagement(widget.projectInfo)
-          : MembershipManagement(widget.projectInfo),
+          ? PrivateProject(widget.projectInfo["appname"], widget.projectInfo.id)
+          : (currentIndex == 1)
+              ? MembershipManagement(widget.projectInfo)
+              : CourtManagement(widget.projectInfo),
       bBar: BottomNavigationBar(
         currentIndex: currentIndex,
         onTap: (index) {
@@ -29,6 +32,7 @@ class _BothManagementState extends State<BothManagement> {
           });
         },
         items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.message), label: "Overview"),
           BottomNavigationBarItem(
               icon: Icon(Icons.date_range_rounded), label: "Courts"),
           BottomNavigationBarItem(
