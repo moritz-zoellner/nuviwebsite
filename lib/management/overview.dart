@@ -155,7 +155,7 @@ class ChatDescription extends StatelessWidget {
               .snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
-              return const CircularProgressIndicator();
+              return const Center(child: CircularProgressIndicator());
             }
             List<DocumentSnapshot<Map<String, dynamic>>> messages =
                 snapshot.data!.docs;
@@ -194,6 +194,8 @@ class ChatDescription extends StatelessWidget {
                                       color: Colors.blue.shade200,
                                       borderRadius: BorderRadius.circular(20)),
                                   child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: const [
                                       Text(
                                         "Admin",
@@ -222,6 +224,8 @@ class ChatDescription extends StatelessWidget {
                                       color: Colors.blue.shade200,
                                       borderRadius: BorderRadius.circular(20)),
                                   child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         mes["sender"],
@@ -246,6 +250,8 @@ class ChatDescription extends StatelessWidget {
                                       color: Colors.pink.shade200,
                                       borderRadius: BorderRadius.circular(20)),
                                   child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         mes["sender"],

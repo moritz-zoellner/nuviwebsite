@@ -30,11 +30,9 @@ class MembershipManagement extends StatelessWidget {
               ])),
           const Expanded(
               child: Padding(
-            padding: EdgeInsets.only(top: 20),
+            padding: EdgeInsets.all(20),
             child: ClipRRect(
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20)),
+                borderRadius: BorderRadius.all(Radius.circular(20)),
                 child: Table()),
           ))
         ]);
