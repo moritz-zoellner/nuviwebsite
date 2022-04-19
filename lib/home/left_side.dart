@@ -85,9 +85,12 @@ class CreateAppDialog extends StatelessWidget {
                                 onPressed: () => Navigator.pop(context),
                                 icon: const Icon(Icons.close)),
                             const SizedBox(width: 20),
-                            const Text("App erstellen",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 30)),
+                            const Flexible(
+                              child: Text("App erstellen",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 30)),
+                            ),
                           ],
                         ),
                         notLoggedIn

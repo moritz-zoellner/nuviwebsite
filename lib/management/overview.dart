@@ -10,33 +10,30 @@ class PrivateProject extends StatelessWidget {
   final int? businessplan;
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        MyAppBar(name),
-        Center(
-            child: ConstrainedBox(
-                constraints: const BoxConstraints(minHeight: 400),
-                child: SingleChildScrollView(
-                    child: Column(children: [
-                  Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 60, vertical: 40),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            (businessplan == -1)
-                                ? const SizedBox.shrink()
-                                : Expanded(
-                                    child:
-                                        BusinessPlanDescription(businessplan)),
-                            const SizedBox(width: 40),
-                            Expanded(child: Center(child: ChatDescription(uid)))
-                          ])),
-                ]))))
+    return NestedScrollView(
+      headerSliverBuilder: (c, b) => [
+        SliverToBoxAdapter(child: MyAppBar(name)),
       ],
+      body: Center(
+          child: ConstrainedBox(
+              constraints: const BoxConstraints(minHeight: 400),
+              child: SingleChildScrollView(
+                  child: Column(children: [
+                Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 60, vertical: 40),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          (businessplan == -1)
+                              ? const SizedBox.shrink()
+                              : Expanded(
+                                  child: BusinessPlanDescription(businessplan)),
+                          const SizedBox(width: 40),
+                          Expanded(child: Center(child: ChatDescription(uid)))
+                        ])),
+              ])))),
     );
   }
 }
@@ -61,11 +58,13 @@ class MyAppBar extends StatelessWidget {
                       icon: const Icon(Icons.arrow_back_ios_new_rounded,
                           color: Colors.blue)),
                   const SizedBox(width: 20),
-                  Text(name,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          fontSize: 30)),
+                  Flexible(
+                    child: Text(name,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 30)),
+                  ),
                 ],
               ),
             ]));

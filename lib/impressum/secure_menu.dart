@@ -10,9 +10,9 @@ class SecureMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 4, left: 4, right: 4),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.end,
+      child: OverflowBar(
+        alignment: MainAxisAlignment.center,
+        overflowAlignment: OverflowBarAlignment.start,
         children: [
           TextButton(
               onPressed: () {
@@ -23,11 +23,14 @@ class SecureMenu extends StatelessWidget {
                         const ImpressumDescription());
               },
               child: Row(
+                mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Image.asset("assets/imprint.png",
                       color: Colors.white, width: 18, height: 15),
                   const Text("Impressum",
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(color: Colors.white)),
                 ],
               )),
@@ -41,12 +44,16 @@ class SecureMenu extends StatelessWidget {
                         const PrivacyDescription());
               },
               child: Row(
+                mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: const [
                   Icon(Icons.privacy_tip_rounded,
                       color: Colors.white, size: 16),
                   SizedBox(width: 4),
-                  Text("Datenschutz", style: TextStyle(color: Colors.white)),
+                  Text("Datenschutz",
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(color: Colors.white)),
                 ],
               )),
           const SizedBox(width: 20),
@@ -58,11 +65,15 @@ class SecureMenu extends StatelessWidget {
                     pageBuilder: (context, a1, a2) => const TermsDescription());
               },
               child: Row(
+                mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: const [
                   Icon(Icons.policy, color: Colors.white, size: 16),
                   SizedBox(width: 4),
-                  Text("AGB", style: TextStyle(color: Colors.white)),
+                  Text("AGB",
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(color: Colors.white)),
                 ],
               )),
         ],

@@ -22,11 +22,10 @@ class _CourtManagementState extends State<CourtManagement> {
     List<dynamic> courts = widget.projectInfo["courts"];
     return DefaultTabController(
         length: DAYS_FOREWARD,
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Padding(
+        child: NestedScrollView(
+          headerSliverBuilder: (c, b) => [
+            SliverToBoxAdapter(
+              child: Padding(
                   padding: const EdgeInsets.only(
                       top: 20, left: 20, right: 20, bottom: 20),
                   child: OverflowBar(
@@ -50,7 +49,6 @@ class _CourtManagementState extends State<CourtManagement> {
                                 child: Text(widget.projectInfo["appname"],
                                     style: const TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        overflow: TextOverflow.ellipsis,
                                         color: Colors.white,
                                         fontSize: 30)),
                               ),
@@ -176,118 +174,114 @@ class _CourtManagementState extends State<CourtManagement> {
                           ],
                         ),
                       ])),
-              Expanded(
-                child: CourtGridCover(
-                    child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                        stream: FirebaseFirestore.instance
-                            .collection("tclub")
-                            .doc(widget.projectInfo.id)
-                            .collection("courts")
-                            .snapshots(),
-                        builder: (context, snapshot) {
-                          if (!snapshot.hasData) {
-                            return const Center(
-                                child: CircularProgressIndicator());
-                          }
+            )
+          ],
+          body: Expanded(
+            child: CourtGridCover(
+                child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                    stream: FirebaseFirestore.instance
+                        .collection("tclub")
+                        .doc(widget.projectInfo.id)
+                        .collection("courts")
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
 
-                          return Expanded(
-                            child: TabBarView(
-                                physics: const NeverScrollableScrollPhysics(),
-                                children: List.generate(DAYS_FOREWARD, (day) {
-                                  return GridView.builder(
-                                      padding: const EdgeInsets.only(
-                                          bottom: 10,
-                                          top: 10,
-                                          left: 10,
-                                          right: 10),
-                                      shrinkWrap: true,
-                                      scrollDirection: Axis.horizontal,
-                                      itemCount: 33 * courts.length,
-                                      gridDelegate:
-                                          SliverGridDelegateWithFixedCrossAxisCount(
-                                              mainAxisSpacing: 10,
-                                              crossAxisSpacing: 10,
-                                              crossAxisCount: courts.length),
-                                      itemBuilder: (context, index) {
-                                        if (currentIndex == index) {}
-                                        if (index < courts.length) {
-                                          return MyGridItem(
-                                              text: courts[index]);
-                                        } else if (index % courts.length == 0) {
-                                          return MyGridItem(
-                                              text: dateToStringTime(
-                                                  index, courts.length));
-                                        }
-                                        int option = -1;
-                                        try {
-                                          if (snapshot.data!.docs
-                                                  .firstWhere((element) =>
-                                                      element.id ==
-                                                      "$index;${dateToString(DateTime.now().add(Duration(days: day)))}")
-                                                  .data()["players"]
-                                                  .first ==
-                                              "Admin") {
-                                            option = 0;
-                                            // Deine Reservierungen
-                                          } else {
-                                            // Andrere Reservierngen
-                                            option = 1;
-                                          }
-                                        } catch (e) {
-                                          // Keine Reservierungen
-                                          option = 2;
-                                        }
-                                        if (DateTime.now().isAfter(
-                                                getTimeByIndex(
-                                                    index, courts.length)) &&
-                                            day == 0) {
-                                          return MyGridItem(
-                                              color: Colors.grey.shade100,
-                                              onPressed: null);
-                                          //   () {
-                                          //     setState(() {
-                                          //       operation = NONE;
-                                          //       currentIndex = -1;
-                                          //       currentDay = -1;
-                                          //     });
-                                          //   },
-                                        }
+                      return Expanded(
+                        child: TabBarView(
+                            physics: const NeverScrollableScrollPhysics(),
+                            children: List.generate(DAYS_FOREWARD, (day) {
+                              return GridView.builder(
+                                  padding: const EdgeInsets.only(
+                                      bottom: 10, top: 10, left: 10, right: 10),
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: 33 * courts.length,
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                          mainAxisSpacing: 10,
+                                          crossAxisSpacing: 10,
+                                          crossAxisCount: courts.length),
+                                  itemBuilder: (context, index) {
+                                    if (currentIndex == index) {}
+                                    if (index < courts.length) {
+                                      return MyGridItem(text: courts[index]);
+                                    } else if (index % courts.length == 0) {
+                                      return MyGridItem(
+                                          text: dateToStringTime(
+                                              index, courts.length));
+                                    }
+                                    int option = -1;
+                                    try {
+                                      if (snapshot.data!.docs
+                                              .firstWhere((element) =>
+                                                  element.id ==
+                                                  "$index;${dateToString(DateTime.now().add(Duration(days: day)))}")
+                                              .data()["players"]
+                                              .first ==
+                                          "Admin") {
+                                        option = 0;
+                                        // Deine Reservierungen
+                                      } else {
+                                        // Andrere Reservierngen
+                                        option = 1;
+                                      }
+                                    } catch (e) {
+                                      // Keine Reservierungen
+                                      option = 2;
+                                    }
+                                    if (DateTime.now().isAfter(getTimeByIndex(
+                                            index, courts.length)) &&
+                                        day == 0) {
+                                      return MyGridItem(
+                                          color: Colors.grey.shade100,
+                                          onPressed: null);
+                                      //   () {
+                                      //     setState(() {
+                                      //       operation = NONE;
+                                      //       currentIndex = -1;
+                                      //       currentDay = -1;
+                                      //     });
+                                      //   },
+                                    }
 
-                                        Color color = (option == 0
-                                            ? Colors.cyan.shade200
-                                            : option == 1
-                                                ? Colors.pink.shade100
-                                                : Colors.cyan.shade50);
-                                        return MyGridItem(
-                                          color: (currentIndex == index)
-                                              ? Color.alphaBlend(
-                                                  Colors.black12, color)
-                                              : color,
-                                          onPressed: () {
-                                            (currentIndex == index)
-                                                ? setState(() {
-                                                    operation = NONE;
-                                                    currentIndex = -1;
-                                                    currentDay = -1;
-                                                  })
-                                                : setState(() {
-                                                    currentIndex = index;
-                                                    currentDay = day;
+                                    Color color = (option == 0
+                                        ? Colors.cyan.shade200
+                                        : option == 1
+                                            ? Colors.pink.shade100
+                                            : Colors.cyan.shade50);
+                                    return MyGridItem(
+                                      color: (currentIndex == index)
+                                          ? Color.alphaBlend(
+                                              Colors.black12, color)
+                                          : color,
+                                      onPressed: () {
+                                        (currentIndex == index)
+                                            ? setState(() {
+                                                operation = NONE;
+                                                currentIndex = -1;
+                                                currentDay = -1;
+                                              })
+                                            : setState(() {
+                                                currentIndex = index;
+                                                currentDay = day;
 
-                                                    operation = option == 0
+                                                operation = option == 0
+                                                    ? DELETE
+                                                    : option == 1
                                                         ? DELETE
-                                                        : option == 1
-                                                            ? DELETE
-                                                            : SET;
-                                                  });
-                                          },
-                                        );
-                                      });
-                                }, growable: false)),
-                          );
-                        })),
-              ),
-            ]));
+                                                        : SET;
+                                              });
+                                      },
+                                    );
+                                  });
+                            }, growable: false)),
+                      );
+                    })),
+          ),
+        ));
   }
 
   Widget myButton() => Padding(
@@ -398,19 +392,14 @@ class CourtGridCover extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: ClipRRect(
-          borderRadius: const BorderRadius.all(Radius.circular(20)),
-          child: SingleChildScrollView(
-            child: Center(
-              child: Container(
-                  constraints: const BoxConstraints(maxHeight: 800),
-                  color: Colors.grey.shade50,
-                  child: Expanded(child: child)),
-            ),
-          ),
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: ClipRRect(
+        borderRadius: const BorderRadius.all(Radius.circular(20)),
+        child: Container(
+          constraints: const BoxConstraints(maxHeight: 800),
+          color: Colors.grey.shade50,
+          child: Expanded(child: child),
         ),
       ),
     );

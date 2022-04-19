@@ -189,7 +189,7 @@ class _RightSide extends State<RightSide> {
                 color: Colors.white,
                 fontSize: 30)),
         const SizedBox(height: 0),
-        Row(
+        OverflowBar(
           children: [
             const Text("Ich habe keinen Account!",
                 maxLines: 4,
@@ -261,19 +261,22 @@ class _RightSide extends State<RightSide> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         const Text("Registrieren",
+            overflow: TextOverflow.ellipsis,
             style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
                 fontSize: 30)),
         const SizedBox(height: 0),
-        Row(
+        OverflowBar(
           children: [
             const Text("Habe bereits einen Account?",
+                overflow: TextOverflow.ellipsis,
                 maxLines: 4,
                 style: TextStyle(color: Colors.white, fontSize: 16)),
             TextButton(
                 onPressed: () => setState(() => currentState = SIGNIN),
                 child: const Text("Anmelden",
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(color: Colors.white, fontSize: 16)))
           ],
         ),
