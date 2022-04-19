@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:noviwebsite/management/tclub/both.dart';
 import 'package:noviwebsite/projects/tclub/bothOrder.dart';
 import 'package:noviwebsite/projects/tclub/courtOrder.dart';
 import 'package:noviwebsite/projects/tclub/membershipOrder.dart';
@@ -78,7 +77,7 @@ class TClub extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                             fontSize: 20)),
-                    Text("€ / Platz\n/ Monat")
+                    Text("€ \n/ Monat")
                   ],
                 ),
                 "Mitgliederverwaltung simpler denn je - das bieten wir:",

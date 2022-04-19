@@ -8,6 +8,7 @@ class AboutNoviDescription extends StatelessWidget {
     return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: const [
           Text("Über Novi",
               style: TextStyle(

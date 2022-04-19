@@ -5,12 +5,6 @@ import 'package:noviwebsite/firebase_options.dart';
 import 'package:noviwebsite/aboutus/aboutus.dart';
 import 'package:noviwebsite/blog/blog.dart';
 import 'package:noviwebsite/home/home.dart';
-import 'package:noviwebsite/home/left_side.dart';
-import 'package:noviwebsite/impressum/impressum.dart';
-import 'package:noviwebsite/home/right_side.dart';
-import 'package:noviwebsite/impressum/privacy.dart';
-import 'package:noviwebsite/impressum/secure_menu.dart';
-import 'package:noviwebsite/impressum/terms.dart';
 import 'package:noviwebsite/projects/projects.dart';
 import 'package:noviwebsite/styling.dart';
 
@@ -54,29 +48,30 @@ class MenuBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
-      child: OverflowBar(
-          overflowAlignment: OverflowBarAlignment.center,
-          alignment: MainAxisAlignment.spaceBetween,
-          children: const [
-            Text("Novi Corp.",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    fontSize: 30)),
-            Flexible(
-                child: TabBar(
-                    physics: NeverScrollableScrollPhysics(),
-                    isScrollable: true,
-                    tabs: [
-                  Tab(text: "Home"),
-                  Tab(text: "Products"),
-                  Tab(text: "Blog"),
-                  Tab(text: "About Us"),
-                  Tab(text: "Contact"),
-                ]))
-          ]),
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+        child: OverflowBar(
+            overflowAlignment: OverflowBarAlignment.center,
+            alignment: MainAxisAlignment.spaceBetween,
+            children: const [
+              Text("Novi Corp.",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 30)),
+              TabBar(
+                  physics: NeverScrollableScrollPhysics(),
+                  isScrollable: true,
+                  tabs: [
+                    Tab(text: "Home"),
+                    Tab(text: "Products"),
+                    Tab(text: "Blog"),
+                    Tab(text: "About Us"),
+                    Tab(text: "Contact"),
+                  ])
+            ]),
+      ),
     );
   }
 }

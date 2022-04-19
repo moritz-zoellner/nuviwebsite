@@ -67,7 +67,7 @@ class CreateAppDialog extends StatelessWidget {
         child: ClipRRect(
           borderRadius: const BorderRadius.all(Radius.circular(20)),
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 600),
+            constraints: const BoxConstraints(maxWidth: 600, maxHeight: 600),
             child: ScaffoldMessenger(
               child: Builder(builder: (context) {
                 return Scaffold(
@@ -187,7 +187,10 @@ class CreateAppDialog extends StatelessWidget {
                                 FirebaseFirestore.instance
                                     .collection("apps")
                                     .add({
-                                  "useremail": emailController.text,
+                                  "useremail": notLoggedIn
+                                      ? emailController.text
+                                      : FirebaseAuth
+                                          .instance.currentUser!.email,
                                   "appname": appNameController.text,
                                   "projectfamily": "private",
                                   "description": dreamController.text
