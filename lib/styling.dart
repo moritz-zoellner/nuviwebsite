@@ -31,6 +31,7 @@ void closeDialog(context) {
 }
 
 void myCustomError(context, content) {
+  ScaffoldMessenger.of(context).clearSnackBars();
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(content),
       action: SnackBarAction(

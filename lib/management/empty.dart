@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:noviwebsite/management/tclub/courtmanagement/courtmanagement.dart';
-import 'package:noviwebsite/management/tclub/membershipmanagement.dart';
+import 'package:noviwebsite/management/tclub/membershipmanagement/membershipmanagement.dart';
 import 'package:noviwebsite/styling.dart';
 import 'package:noviwebsite/management/overview.dart';
 

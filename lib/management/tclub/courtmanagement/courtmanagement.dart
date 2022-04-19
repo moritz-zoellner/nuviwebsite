@@ -401,9 +401,9 @@ class CourtGridCover extends StatelessWidget {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(20),
-        child: SingleChildScrollView(
-          child: ClipRRect(
-            borderRadius: const BorderRadius.all(Radius.circular(20)),
+        child: ClipRRect(
+          borderRadius: const BorderRadius.all(Radius.circular(20)),
+          child: SingleChildScrollView(
             child: Center(
               child: Container(
                   constraints: const BoxConstraints(maxHeight: 800),
