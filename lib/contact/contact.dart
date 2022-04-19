@@ -23,7 +23,7 @@ class KontaktFormular extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        const Text("Contact",
+                        const Text("Kontakt",
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 30,
@@ -62,7 +62,7 @@ class KontaktFormular extends StatelessWidget {
                         const Padding(
                           padding: EdgeInsets.only(
                               left: 16, right: 16, top: 16, bottom: 16),
-                          child: Text("Your concern",
+                          child: Text("Ihr Anliegen",
                               style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -70,14 +70,14 @@ class KontaktFormular extends StatelessWidget {
                         ),
                         NoviTile(CupertinoTextField.borderless(
                           maxLines: 5,
-                          placeholder: "Start here...",
+                          placeholder: "Beginne hier...",
                           controller: concernController,
                         )),
                         const SizedBox(height: 20),
                         MaterialButton(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 32, vertical: 24),
-                            child: const Text("Send",
+                            child: const Text("Senden",
                                 style: TextStyle(color: Colors.white)),
                             color: Colors.blue,
                             shape: const RoundedRectangleBorder(

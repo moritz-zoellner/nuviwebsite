@@ -14,14 +14,14 @@ class LeftSide extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: const [
-          Text("We turn\nyour ideas into reality",
+          Text("Ihre Ideen zur Realität programmieren lassen",
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 40,
                   color: Colors.white)),
           SizedBox(height: 20),
           Text(
-              "Check out our already developed Products.\nWant something personal? We create Apps for Web, IOS and Android on demand.",
+              "Checken Sie unsere bereits entwickelten Anwendungen.\nWollen Sie etwas Für sich oder Ihr Unternehmen? Wir entwickeln Apps für Web, IOS and Android auf Anfrage.",
               maxLines: 4,
               style: TextStyle(color: Colors.white, fontSize: 16)),
           SizedBox(height: 20),
@@ -38,7 +38,8 @@ class CreateAppButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialButton(
         padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
-        child: const Text("Create App", style: TextStyle(color: Colors.pink)),
+        child:
+            const Text("App erstellen", style: TextStyle(color: Colors.pink)),
         color: Colors.white,
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(20))),
@@ -84,7 +85,7 @@ class CreateAppDialog extends StatelessWidget {
                                 onPressed: () => Navigator.pop(context),
                                 icon: const Icon(Icons.close)),
                             const SizedBox(width: 20),
-                            const Text("Create App",
+                            const Text("App erstellen",
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 30)),
                           ],
@@ -92,7 +93,7 @@ class CreateAppDialog extends StatelessWidget {
                         notLoggedIn
                             ? const Padding(
                                 padding: EdgeInsets.all(20),
-                                child: Text("Sign Up",
+                                child: Text("Registrieren",
                                     style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold)),
@@ -125,7 +126,7 @@ class CreateAppDialog extends StatelessWidget {
                                         padding: const EdgeInsets.all(20),
                                         child: CupertinoTextField.borderless(
                                           obscureText: true,
-                                          placeholder: "Password",
+                                          placeholder: "Passwort",
                                           controller: passwController,
                                           prefix: const Icon(
                                             CupertinoIcons.lock,
@@ -138,7 +139,7 @@ class CreateAppDialog extends StatelessWidget {
                             : const SizedBox.shrink(),
                         const Padding(
                           padding: EdgeInsets.all(20),
-                          child: Text("Appname",
+                          child: Text("App-Name",
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -151,12 +152,13 @@ class CreateAppDialog extends StatelessWidget {
                                 borderRadius: const BorderRadius.all(
                                     Radius.circular(20))),
                             child: CupertinoTextField.borderless(
-                              placeholder: "MyDreamApp",
+                              placeholder: "MeineTraumApp",
                               controller: appNameController,
                             )),
                         const Padding(
                           padding: EdgeInsets.all(20),
-                          child: Text("Describe your app in a 100 words",
+                          child: Text(
+                              "Beschreiben Sie Ihre App in ca. 100 Wörtern",
                               style: TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.bold)),
                         ),
@@ -168,14 +170,14 @@ class CreateAppDialog extends StatelessWidget {
                                     Radius.circular(20))),
                             child: CupertinoTextField.borderless(
                               maxLines: 5,
-                              placeholder: "Start here...",
+                              placeholder: "Beginne hier...",
                               controller: dreamController,
                             )),
                         const SizedBox(height: 20),
                         MaterialButton(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 32, vertical: 24),
-                            child: const Text("Create an app request",
+                            child: const Text("Eine App-Anfrage erstellen",
                                 style: TextStyle(color: Colors.white)),
                             color: Colors.blue,
                             shape: const RoundedRectangleBorder(
@@ -193,7 +195,8 @@ class CreateAppDialog extends StatelessWidget {
                                           .instance.currentUser!.email,
                                   "appname": appNameController.text,
                                   "projectfamily": "private",
-                                  "description": dreamController.text
+                                  "description": dreamController.text,
+                                  "businessplan": 0
                                 }).then((value) {
                                   closeDialog(context);
                                   closeDialog(context);

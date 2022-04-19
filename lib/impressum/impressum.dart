@@ -30,7 +30,7 @@ class ImpressumDescription extends StatelessWidget {
                                                 Navigator.pop(context),
                                             icon: const Icon(Icons.close)),
                                         const SizedBox(width: 20),
-                                        const Text("Imprint",
+                                        const Text("Impressum",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 30)),

@@ -24,10 +24,17 @@ class _EmptyProjectState extends State<EmptyProject> {
       // Tclub Management
       String abo = widget.projectInfo.data()!["abo"];
       if (abo == "Courtmanagment") {
+        int businessplan;
+        if (widget.projectInfo.data()!.containsKey('businessplan')) {
+          businessplan = widget.projectInfo["businessplan"];
+        } else {
+          businessplan = -1;
+        }
+
         child = MyScaffold(
           child: currentIndex == 0
-              ? PrivateProject(
-                  widget.projectInfo["appname"], widget.projectInfo.id)
+              ? PrivateProject(widget.projectInfo["appname"],
+                  widget.projectInfo.id, businessplan)
               : CourtManagement(widget.projectInfo),
           bBar: BottomNavigationBar(
             currentIndex: currentIndex,
@@ -45,10 +52,17 @@ class _EmptyProjectState extends State<EmptyProject> {
           ),
         );
       } else if (abo == "Membershipmanagment") {
+        int businessplan;
+        if (widget.projectInfo.data()!.containsKey('businessplan')) {
+          businessplan = widget.projectInfo["businessplan"];
+        } else {
+          businessplan = -1;
+        }
+
         child = MyScaffold(
           child: currentIndex == 0
-              ? PrivateProject(
-                  widget.projectInfo["appname"], widget.projectInfo.id)
+              ? PrivateProject(widget.projectInfo["appname"],
+                  widget.projectInfo.id, businessplan)
               : MembershipManagement(widget.projectInfo),
           bBar: BottomNavigationBar(
             currentIndex: currentIndex,
@@ -66,10 +80,17 @@ class _EmptyProjectState extends State<EmptyProject> {
           ),
         );
       } else if (abo == "Bothmanagment") {
+        int businessplan;
+        if (widget.projectInfo.data()!.containsKey('businessplan')) {
+          businessplan = widget.projectInfo["businessplan"];
+        } else {
+          businessplan = -1;
+        }
+
         child = MyScaffold(
           child: currentIndex == 0
-              ? PrivateProject(
-                  widget.projectInfo["appname"], widget.projectInfo.id)
+              ? PrivateProject(widget.projectInfo["appname"],
+                  widget.projectInfo.id, businessplan)
               : (currentIndex == 1)
                   ? CourtManagement(widget.projectInfo)
                   : MembershipManagement(widget.projectInfo),
@@ -95,8 +116,15 @@ class _EmptyProjectState extends State<EmptyProject> {
             child: Text("Sorry, this Project has no subscription"));
       }
     } else {
-      child = PrivateProject(
-          widget.projectInfo.data()!["appname"], widget.projectInfo.id);
+      int businessplan;
+      if (widget.projectInfo.data()!.containsKey('businessplan')) {
+        businessplan = widget.projectInfo["businessplan"];
+      } else {
+        businessplan = 0;
+      }
+
+      child = PrivateProject(widget.projectInfo.data()!["appname"],
+          widget.projectInfo.id, businessplan);
     }
     return MyScaffold(child: child);
   }

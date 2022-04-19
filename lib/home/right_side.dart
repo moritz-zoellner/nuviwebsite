@@ -36,7 +36,7 @@ class _RightSide extends State<RightSide> {
   Widget userProjects() {
     String useremail = FirebaseAuth.instance.currentUser!.email!;
     return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-      const Text("Your Projects",
+      const Text("Ihre Projekte",
           style: TextStyle(
               fontWeight: FontWeight.bold, color: Colors.white, fontSize: 30)),
       FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
@@ -102,7 +102,7 @@ class _RightSide extends State<RightSide> {
           MaterialButton(
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
               child:
-                  const Text("Sign Out", style: TextStyle(color: Colors.white)),
+                  const Text("Abmelden", style: TextStyle(color: Colors.white)),
               color: Colors.pink,
               shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(20))),
@@ -126,7 +126,7 @@ class _RightSide extends State<RightSide> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const Text("Forgot Password",
+        const Text("Passwort vergessen",
             style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
@@ -139,7 +139,7 @@ class _RightSide extends State<RightSide> {
                   padding: MaterialStateProperty.all(
                       const EdgeInsets.symmetric(vertical: 4))),
               onPressed: () => setState(() => currentState = SIGNIN),
-              child: const Text("Back to Sign In",
+              child: const Text("Zurück zur Anmeldung",
                   style: TextStyle(color: Colors.white, fontSize: 16))),
         ),
         const SizedBox(height: 20),
@@ -158,7 +158,7 @@ class _RightSide extends State<RightSide> {
         ),
         const SizedBox(height: 20),
         MyBlueButton(
-          "Send password by email",
+          "Passwort an Email versenden",
           onPressed: () {
             waitDialog(context);
             FirebaseAuth.instance
@@ -183,7 +183,7 @@ class _RightSide extends State<RightSide> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const Text("Sign In",
+        const Text("Anmelden",
             style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
@@ -191,12 +191,12 @@ class _RightSide extends State<RightSide> {
         const SizedBox(height: 0),
         Row(
           children: [
-            const Text("I do not have an account!",
+            const Text("Ich habe keinen Account!",
                 maxLines: 4,
                 style: TextStyle(color: Colors.white, fontSize: 16)),
             TextButton(
                 onPressed: () => setState(() => currentState = SIGNUP),
-                child: const Text("Sign Up",
+                child: const Text("Registrieren",
                     style: TextStyle(color: Colors.white, fontSize: 16)))
           ],
         ),
@@ -220,7 +220,7 @@ class _RightSide extends State<RightSide> {
                 padding: const EdgeInsets.all(20),
                 child: CupertinoTextField.borderless(
                   obscureText: true,
-                  placeholder: "Password",
+                  placeholder: "Passwort",
                   controller: passwController,
                   prefix: const Icon(
                     CupertinoIcons.lock,
@@ -230,11 +230,11 @@ class _RightSide extends State<RightSide> {
               ),
               TextButton(
                   onPressed: () => setState(() => currentState = FPASS),
-                  child: const Text("Forgot Password?",
+                  child: const Text("Passwort vergessen?",
                       style: TextStyle(color: Colors.blue, fontSize: 14)))
             ])),
         const SizedBox(height: 20),
-        MyBlueButton("Sign In", onPressed: () {
+        MyBlueButton("Anmelden", onPressed: () {
           waitDialog(context);
           FirebaseAuth.instance
               .signInWithEmailAndPassword(
@@ -260,7 +260,7 @@ class _RightSide extends State<RightSide> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const Text("Sign Up",
+        const Text("Registrieren",
             style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
@@ -268,12 +268,12 @@ class _RightSide extends State<RightSide> {
         const SizedBox(height: 0),
         Row(
           children: [
-            const Text("Already have an account?",
+            const Text("Habe bereits einen Account?",
                 maxLines: 4,
                 style: TextStyle(color: Colors.white, fontSize: 16)),
             TextButton(
                 onPressed: () => setState(() => currentState = SIGNIN),
-                child: const Text("Sign In",
+                child: const Text("Anmelden",
                     style: TextStyle(color: Colors.white, fontSize: 16)))
           ],
         ),
@@ -297,7 +297,7 @@ class _RightSide extends State<RightSide> {
                 padding: const EdgeInsets.all(20),
                 child: CupertinoTextField.borderless(
                   obscureText: true,
-                  placeholder: "Password",
+                  placeholder: "Passwort",
                   controller: passwController,
                   prefix: const Icon(
                     CupertinoIcons.lock,
@@ -307,7 +307,7 @@ class _RightSide extends State<RightSide> {
               )
             ])),
         const SizedBox(height: 20),
-        MyBlueButton("Sign Up", onPressed: (() {
+        MyBlueButton("Registrieren", onPressed: (() {
           waitDialog(context);
           FirebaseAuth.instance
               .createUserWithEmailAndPassword(
