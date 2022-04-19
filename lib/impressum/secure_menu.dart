@@ -27,7 +27,8 @@ class SecureMenu extends StatelessWidget {
                 children: [
                   Image.asset("assets/imprint.png",
                       color: Colors.white, width: 18, height: 15),
-                  const Text("Imprint", style: TextStyle(color: Colors.white)),
+                  const Text("Impressum",
+                      style: TextStyle(color: Colors.white)),
                 ],
               )),
           const SizedBox(width: 20),
@@ -45,7 +46,7 @@ class SecureMenu extends StatelessWidget {
                   Icon(Icons.privacy_tip_rounded,
                       color: Colors.white, size: 16),
                   SizedBox(width: 4),
-                  Text("Privacy", style: TextStyle(color: Colors.white)),
+                  Text("Datenschutz", style: TextStyle(color: Colors.white)),
                 ],
               )),
           const SizedBox(width: 20),
@@ -61,8 +62,7 @@ class SecureMenu extends StatelessWidget {
                 children: const [
                   Icon(Icons.policy, color: Colors.white, size: 16),
                   SizedBox(width: 4),
-                  Text("Terms and Conditions",
-                      style: TextStyle(color: Colors.white)),
+                  Text("AGB", style: TextStyle(color: Colors.white)),
                 ],
               )),
         ],

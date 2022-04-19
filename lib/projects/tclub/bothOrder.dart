@@ -202,7 +202,7 @@ class _BothOrderState extends State<BothOrder> {
         ),
         MaterialButton(
             padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
-            child: const Text("Proceed to payment",
+            child: const Text("Fortfahren zur Bezahlung",
                 style: TextStyle(color: Colors.white)),
             color: Colors.blue,
             shape: const RoundedRectangleBorder(
@@ -232,7 +232,7 @@ class _BothOrderState extends State<BothOrder> {
         const SizedBox(height: 20),
         MaterialButton(
             padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
-            child: const Text("Buy now", style: TextStyle(color: Colors.white)),
+            child: const Text("Jetzt bestellen", style: TextStyle(color: Colors.white)),
             color: Colors.blue,
             shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(20))),

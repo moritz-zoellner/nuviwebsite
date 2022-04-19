@@ -64,11 +64,11 @@ class MenuBar extends StatelessWidget {
                   physics: NeverScrollableScrollPhysics(),
                   isScrollable: true,
                   tabs: [
-                    Tab(text: "Home"),
-                    Tab(text: "Products"),
+                    Tab(text: "Startseite"),
+                    Tab(text: "Produkte"),
                     Tab(text: "Blog"),
-                    Tab(text: "About Us"),
-                    Tab(text: "Contact"),
+                    Tab(text: "Über uns"),
+                    Tab(text: "Kontakt"),
                   ])
             ]),
       ),

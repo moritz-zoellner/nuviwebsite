@@ -27,7 +27,7 @@ class TermsDescription extends StatelessWidget {
                                                 Navigator.pop(context),
                                             icon: const Icon(Icons.close)),
                                         const SizedBox(width: 20),
-                                        const Text("Terms",
+                                        const Text("AGB",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 30)),
