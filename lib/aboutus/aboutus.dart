@@ -15,8 +15,7 @@ class AboutUsScreen extends StatelessWidget {
             constraints: const BoxConstraints(minHeight: 400),
             child: Column(children: [
               Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 60, vertical: 40),
+                  padding: const EdgeInsets.all(20),
                   child: Wrap(spacing: 20, children: [
                     const SizedBox(width: 400, child: AboutNoviDescription()),
                     const SizedBox(width: 400, child: OurHistoryDescription()),

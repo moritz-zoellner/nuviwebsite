@@ -104,8 +104,7 @@ class _CourtOrderState extends State<CourtOrder> {
                       child: CupertinoTextField.borderless(
                         placeholder: "Email",
                         controller: emailCon,
-                      ),
-                    )
+                      ))
                   : const SizedBox.shrink(),
               notLoggedIn
                   ? Padding(
@@ -187,7 +186,8 @@ class _CourtOrderState extends State<CourtOrder> {
               Padding(
                 padding: const EdgeInsets.all(20),
                 child: CupertinoTextField.borderless(
-                  placeholder: "Namen der Plätze (\"1,2,3,4,5,6,7,M\")",
+                  placeholder:
+                      "Namen der Plätze mit Komma abgetrennt: 1,2,3,4,5,6,7,M",
                   controller: allCourts,
                 ),
               ),
@@ -207,13 +207,19 @@ class _CourtOrderState extends State<CourtOrder> {
             shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(20))),
             onPressed: () {
-              if (clubNameCon.text.isEmpty) return;
-              if (passwCon.text.isEmpty && notLoggedIn) return;
-              if (emailCon.text.isEmpty && notLoggedIn) return;
-              if (phoneCon.text.isEmpty) return;
-              if (hoursPerWeek.text.isEmpty) return;
-              if (allCourts.text.isEmpty) return;
-              if (clubLogoCon.text.isEmpty) return;
+              try {
+                if (clubNameCon.text.isEmpty) return;
+                if (passwCon.text.isEmpty && notLoggedIn) return;
+                if (emailCon.text.isEmpty && notLoggedIn) return;
+                if (phoneCon.text.isEmpty) return;
+                if (hoursPerWeek.text.isEmpty) return;
+                int.parse(hoursPerWeek.text);
+                if (allCourts.text.isEmpty) return;
+                if (clubLogoCon.text.isEmpty) return;
+              } catch (e) {
+                myCustomError(context, "Kontrolliere deine Angaben");
+                return;
+              }
 
               setState(() => currentState = 1);
             }),

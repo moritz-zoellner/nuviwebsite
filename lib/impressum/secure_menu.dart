@@ -11,7 +11,7 @@ class SecureMenu extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 4, left: 4, right: 4),
       child: OverflowBar(
-        alignment: MainAxisAlignment.center,
+        alignment: MainAxisAlignment.end,
         overflowAlignment: OverflowBarAlignment.start,
         children: [
           TextButton(
@@ -25,10 +25,8 @@ class SecureMenu extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Image.asset("assets/imprint.png",
-                      color: Colors.white, width: 18, height: 15),
-                  const Text("Impressum",
+                children: const [
+                  Text("§ Impressum",
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(color: Colors.white)),

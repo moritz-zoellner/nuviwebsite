@@ -22,6 +22,7 @@ class HomeScreen extends StatelessWidget {
             ]);
       } else {
         page = Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Row(mainAxisAlignment: MainAxisAlignment.center, children: const [
               Expanded(child: LeftSide()),
@@ -33,14 +34,11 @@ class HomeScreen extends StatelessWidget {
           ],
         );
       }
-      return SingleChildScrollView(
-        child: Center(
+      return Center(
+        child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 40),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(minHeight: 400),
-              child: page,
-            ),
+            padding: const EdgeInsets.all(20),
+            child: page,
           ),
         ),
       );

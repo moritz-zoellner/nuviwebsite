@@ -86,13 +86,12 @@ class _MembershipManagementState extends State<MembershipManagement> {
                         ])),
               )
             ],
-        body: Expanded(
-            child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: ClipRRect(
-                    borderRadius: const BorderRadius.all(Radius.circular(20)),
-                    child: MyTable(
-                        widget.projectInfo.id, editUsers, addUser, fields)))));
+        body: Padding(
+            padding: const EdgeInsets.all(20),
+            child: ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(20)),
+                child: MyTable(
+                    widget.projectInfo.id, editUsers, addUser, fields))));
   }
 }
 

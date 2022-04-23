@@ -1,5 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:noviwebsite/contact/contact.dart';
 import 'package:noviwebsite/firebase_options.dart';
 import 'package:noviwebsite/aboutus/aboutus.dart';
@@ -7,15 +9,29 @@ import 'package:noviwebsite/blog/blog.dart';
 import 'package:noviwebsite/home/home.dart';
 import 'package:noviwebsite/projects/projects.dart';
 import 'package:noviwebsite/styling.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 const String corpName = "Novi";
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(const MaterialApp(
+  runApp(MaterialApp(
+    theme: ThemeData(
+        textTheme: GoogleFonts.latoTextTheme(),
+        bottomNavigationBarTheme: BottomNavigationBarThemeData(
+            selectedItemColor: Colors.pink,
+            unselectedItemColor: Colors.grey.shade400)),
+    localeResolutionCallback: (
+      Locale? locale,
+      Iterable<Locale> supportedLocales,
+    ) {
+      return locale;
+    },
     title: corpName,
-    home: MyApp(),
+    home: const MyApp(),
+    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    supportedLocales: AppLocalizations.supportedLocales,
   ));
 }
 
