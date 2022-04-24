@@ -101,54 +101,6 @@ class _BusinessPlanDescriptionState extends State<BusinessPlanDescription> {
             const SizedBox(height: 20),
             Stepper(
               controlsBuilder: (context, onStepContinue) {
-                if (_currentstate == 1) {
-                  return Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: MaterialButton(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 32, vertical: 24),
-                            child: Text("Projekt-Fortschritt",
-                                style: TextStyle(
-                                    color: (isButtonDisabled == true)
-                                        ? Colors.pink
-                                        : Colors.grey)),
-                            color: Colors.white,
-                            mouseCursor: SystemMouseCursors.forbidden,
-                            shape: const RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20))),
-                            onPressed:
-                                (isButtonDisabled == true) ? () {} : () {}),
-                      ),
-                    ],
-                  );
-                }
-                if (_currentstate == 2) {
-                  return Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: MaterialButton(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 32, vertical: 24),
-                            child: Text("Dokument",
-                                style: TextStyle(
-                                    color: (isButtonDisabled == true)
-                                        ? Colors.pink
-                                        : Colors.grey)),
-                            color: Colors.white,
-                            mouseCursor: SystemMouseCursors.forbidden,
-                            shape: const RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20))),
-                            onPressed:
-                                (isButtonDisabled == true) ? () {} : () {}),
-                      ),
-                    ],
-                  );
-                }
                 return const SizedBox.shrink();
               },
               steps: [
@@ -246,7 +198,10 @@ class ChatDescription extends StatelessWidget {
                           decoration:
                               const BoxDecoration(color: Colors.white70),
                           constraints: const BoxConstraints(
-                              maxHeight: 400, maxWidth: 600, minHeight: 300),
+                            maxHeight: 400,
+                            maxWidth: 600,
+                            minHeight: 300,
+                          ),
                           child: SingleChildScrollView(
                               child: Column(
                             mainAxisSize: MainAxisSize.min,
@@ -263,8 +218,11 @@ class ChatDescription extends StatelessWidget {
                                       padding: const EdgeInsets.all(10),
                                       decoration: BoxDecoration(
                                           color: Colors.blue.shade200,
-                                          borderRadius:
-                                              BorderRadius.circular(20)),
+                                          borderRadius: const BorderRadius.only(
+                                              topRight: Radius.circular(20),
+                                              bottomLeft: Radius.circular(20),
+                                              bottomRight:
+                                                  Radius.circular(20))),
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -274,8 +232,11 @@ class ChatDescription extends StatelessWidget {
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
+                                          SizedBox(
+                                            height: 4,
+                                          ),
                                           Text(
-                                              "Hallo und herzlich Willkommen, wie können wir dir helfen"),
+                                              "Hallo und herzlich Willkommen, wie können wir dir helfen?"),
                                         ],
                                       )),
                                 );
@@ -295,8 +256,11 @@ class ChatDescription extends StatelessWidget {
                                       padding: const EdgeInsets.all(10),
                                       decoration: BoxDecoration(
                                           color: Colors.blue.shade200,
-                                          borderRadius:
-                                              BorderRadius.circular(20)),
+                                          borderRadius: const BorderRadius.only(
+                                              topRight: Radius.circular(20),
+                                              bottomLeft: Radius.circular(20),
+                                              bottomRight:
+                                                  Radius.circular(20))),
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -305,19 +269,26 @@ class ChatDescription extends StatelessWidget {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Text(
-                                                mes["sender"],
-                                                style: const TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
+                                              Flexible(
+                                                child: Text(
+                                                  mes["sender"],
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
                                               ),
-                                              Text(
-                                                mes["time"].toString(),
-                                                style: const TextStyle(
-                                                    fontSize: 12,
-                                                    color: Colors.grey),
+                                              Flexible(
+                                                child: Text(
+                                                  mes["time"].toString(),
+                                                  style: TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.grey[800]),
+                                                ),
                                               ),
                                             ],
+                                          ),
+                                          const SizedBox(
+                                            height: 4,
                                           ),
                                           Text(mes["content"]),
                                         ],
@@ -335,8 +306,10 @@ class ChatDescription extends StatelessWidget {
                                       padding: const EdgeInsets.all(10),
                                       decoration: BoxDecoration(
                                           color: Colors.pink.shade200,
-                                          borderRadius:
-                                              BorderRadius.circular(20)),
+                                          borderRadius: const BorderRadius.only(
+                                              bottomRight: Radius.circular(20),
+                                              topLeft: Radius.circular(20),
+                                              bottomLeft: Radius.circular(20))),
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -345,19 +318,26 @@ class ChatDescription extends StatelessWidget {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Text(
-                                                mes["sender"],
-                                                style: const TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
+                                              Flexible(
+                                                child: Text(
+                                                  mes["sender"],
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
                                               ),
-                                              Text(
-                                                mes["time"].toString(),
-                                                style: const TextStyle(
-                                                    fontSize: 12,
-                                                    color: Colors.grey),
+                                              Flexible(
+                                                child: Text(
+                                                  mes["time"].toString(),
+                                                  style: TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.grey[800]),
+                                                ),
                                               ),
                                             ],
+                                          ),
+                                          const SizedBox(
+                                            height: 4,
                                           ),
                                           Text(mes["content"]),
                                         ],
@@ -384,15 +364,23 @@ class ChatDescription extends StatelessWidget {
                                 .add({
                               "sender": "You",
                               "time":
-                                  "${DateTime.now().hour}:${DateTime.now().minute}",
+                                  "Datum: ${DateTime.now().day}.${DateTime.now().month}.${DateTime.now().year} Uhrzeit:${DateTime.now().hour}:${DateTime.now().minute}",
                               "content": messageController.text,
                               "index": messages.length
                             });
                             messageController.clear();
                           },
+                          prefix: IconButton(
+                            onPressed: () {},
+                            icon: const Icon(
+                              Icons.upload_file,
+                            ),
+                            tooltip: "Hochladen",
+                          ),
                           suffix: IconButton(
-                              onPressed: () {
-                                // send to Firebase
+                            onPressed: () {
+                              // send to Firebase
+                              if (messageController.text != "") {
                                 FirebaseFirestore.instance
                                     .collection("apps")
                                     .doc(uid)
@@ -400,14 +388,19 @@ class ChatDescription extends StatelessWidget {
                                     .add({
                                   "sender": "You",
                                   "time":
-                                      "${DateTime.now().hour}:${DateTime.now().minute}",
+                                      "Datum: ${DateTime.now().day}.${DateTime.now().month}.${DateTime.now().year} Uhrzeit:${DateTime.now().hour}:${DateTime.now().minute}",
                                   "content": messageController.text,
                                   "index": messages.length
                                 });
                                 messageController.clear();
-                              },
-                              icon: const Icon(Icons.send_rounded)),
-                          placeholder: "Write a message"))
+                              }
+                            },
+                            icon: const Icon(
+                              Icons.send_rounded,
+                            ),
+                            tooltip: "Senden",
+                          ),
+                          placeholder: "Schreibe eine Nachricht"))
                 ]);
           }),
     );
