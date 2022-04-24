@@ -103,54 +103,6 @@ class _BusinessPlanDescriptionState extends State<BusinessPlanDescription> {
             const SizedBox(height: 20),
             Stepper(
               controlsBuilder: (context, onStepContinue) {
-                if (_currentstate == 1) {
-                  return Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: MaterialButton(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 32, vertical: 24),
-                            child: Text("Projekt-Fortschritt",
-                                style: TextStyle(
-                                    color: (isButtonDisabled == true)
-                                        ? Colors.pink
-                                        : Colors.grey)),
-                            color: Colors.white,
-                            mouseCursor: SystemMouseCursors.forbidden,
-                            shape: const RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20))),
-                            onPressed:
-                                (isButtonDisabled == true) ? () {} : () {}),
-                      ),
-                    ],
-                  );
-                }
-                if (_currentstate == 2) {
-                  return Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: MaterialButton(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 32, vertical: 24),
-                            child: Text("Dokument",
-                                style: TextStyle(
-                                    color: (isButtonDisabled == true)
-                                        ? Colors.pink
-                                        : Colors.grey)),
-                            color: Colors.white,
-                            mouseCursor: SystemMouseCursors.forbidden,
-                            shape: const RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20))),
-                            onPressed:
-                                (isButtonDisabled == true) ? () {} : () {}),
-                      ),
-                    ],
-                  );
-                }
                 return const SizedBox.shrink();
               },
               steps: [
@@ -217,195 +169,242 @@ class ChatDescription extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TextEditingController messageController = TextEditingController();
-    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-        stream: FirebaseFirestore.instance
-            .collection("apps")
-            .doc(uid)
-            .collection("messages")
-            .orderBy("index")
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          List<DocumentSnapshot<Map<String, dynamic>>> messages =
-              snapshot.data!.docs;
-          return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const Text("Chat",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 40,
-                        color: Colors.white)),
-                const SizedBox(height: 20),
-                ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: Container(
-                        padding: const EdgeInsets.only(bottom: 10),
-                        decoration: const BoxDecoration(color: Colors.white70),
-                        constraints: const BoxConstraints(
-                            maxHeight: 400, maxWidth: 600, minHeight: 300),
-                        child: SingleChildScrollView(
-                            child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: List.generate(messages.length + 1, (i) {
-                            if (i == 0) {
-                              return Align(
-                                alignment: Alignment.centerLeft,
-                                child: Container(
-                                    constraints:
-                                        const BoxConstraints(maxWidth: 400),
-                                    margin: const EdgeInsets.only(
-                                        top: 10, left: 10, right: 10),
-                                    padding: const EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                        color: Colors.blue.shade200,
-                                        borderRadius:
-                                            BorderRadius.circular(20)),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: const [
-                                        Text(
-                                          "Admin",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text(
-                                            "Hallo und herzlich Willkommen, wie können wir dir helfen"),
-                                      ],
-                                    )),
-                              );
-                            }
-                            int index = i - 1;
-                            Map<String, dynamic> mes = messages[index].data()!;
+    return SingleChildScrollView(
+      child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+          stream: FirebaseFirestore.instance
+              .collection("apps")
+              .doc(uid)
+              .collection("messages")
+              .orderBy("index")
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            List<DocumentSnapshot<Map<String, dynamic>>> messages =
+                snapshot.data!.docs;
+            return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text("Chat",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 40,
+                          color: Colors.white)),
+                  const SizedBox(height: 20),
+                  ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Container(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          decoration:
+                              const BoxDecoration(color: Colors.white70),
+                          constraints: const BoxConstraints(
+                            maxHeight: 400,
+                            maxWidth: 600,
+                            minHeight: 300,
+                          ),
+                          child: SingleChildScrollView(
+                              child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: List.generate(messages.length + 1, (i) {
+                              if (i == 0) {
+                                return Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Container(
+                                      constraints:
+                                          const BoxConstraints(maxWidth: 400),
+                                      margin: const EdgeInsets.only(
+                                          top: 10, left: 10, right: 10),
+                                      padding: const EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                          color: Colors.blue.shade200,
+                                          borderRadius: const BorderRadius.only(
+                                              topRight: Radius.circular(20),
+                                              bottomLeft: Radius.circular(20),
+                                              bottomRight:
+                                                  Radius.circular(20))),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: const [
+                                          Text(
+                                            "Admin",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          SizedBox(
+                                            height: 4,
+                                          ),
+                                          Text(
+                                              "Hallo und herzlich Willkommen, wie können wir dir helfen?"),
+                                        ],
+                                      )),
+                                );
+                              }
+                              int index = i - 1;
+                              Map<String, dynamic> mes =
+                                  messages[index].data()!;
 
-                            if (mes["sender"] == "Admin") {
-                              return Align(
-                                alignment: Alignment.centerLeft,
-                                child: Container(
-                                    constraints:
-                                        const BoxConstraints(maxWidth: 400),
-                                    margin: const EdgeInsets.only(
-                                        top: 10, left: 10, right: 10),
-                                    padding: const EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                        color: Colors.blue.shade200,
-                                        borderRadius:
-                                            BorderRadius.circular(20)),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              mes["sender"],
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(
-                                              mes["time"].toString(),
-                                              style: const TextStyle(
-                                                  fontSize: 12,
-                                                  color: Colors.grey),
-                                            ),
-                                          ],
-                                        ),
-                                        Text(mes["content"]),
-                                      ],
-                                    )),
-                              );
-                            } else {
-                              return Align(
-                                alignment: Alignment.centerRight,
-                                child: Container(
-                                    constraints: const BoxConstraints(
-                                      maxWidth: 400,
-                                    ),
-                                    margin: const EdgeInsets.only(
-                                        top: 10, left: 10, right: 10),
-                                    padding: const EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                        color: Colors.pink.shade200,
-                                        borderRadius:
-                                            BorderRadius.circular(20)),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              mes["sender"],
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(
-                                              mes["time"].toString(),
-                                              style: const TextStyle(
-                                                  fontSize: 12,
-                                                  color: Colors.grey),
-                                            ),
-                                          ],
-                                        ),
-                                        Text(mes["content"]),
-                                      ],
-                                    )),
-                              );
-                            }
-                          }),
-                        )))),
-                const SizedBox(height: 20),
-                Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                        color: Colors.white70,
-                        borderRadius: BorderRadius.circular(20)),
-                    constraints: const BoxConstraints(maxWidth: 600),
-                    child: CupertinoTextField.borderless(
-                        controller: messageController,
-                        onEditingComplete: () {
-                          // send to Firebase
-                          FirebaseFirestore.instance
-                              .collection("apps")
-                              .doc(uid)
-                              .collection("messages")
-                              .add({
-                            "sender": "You",
-                            "time":
-                                "${DateTime.now().hour}:${DateTime.now().minute}",
-                            "content": messageController.text,
-                            "index": messages.length
-                          });
-                          messageController.clear();
-                        },
-                        suffix: IconButton(
+                              if (mes["sender"] == "Admin") {
+                                return Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Container(
+                                      constraints:
+                                          const BoxConstraints(maxWidth: 400),
+                                      margin: const EdgeInsets.only(
+                                          top: 10, left: 10, right: 10),
+                                      padding: const EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                          color: Colors.blue.shade200,
+                                          borderRadius: const BorderRadius.only(
+                                              topRight: Radius.circular(20),
+                                              bottomLeft: Radius.circular(20),
+                                              bottomRight:
+                                                  Radius.circular(20))),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Flexible(
+                                                child: Text(
+                                                  mes["sender"],
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                              ),
+                                              Flexible(
+                                                child: Text(
+                                                  mes["time"].toString(),
+                                                  style: TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.grey[800]),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(
+                                            height: 4,
+                                          ),
+                                          Text(mes["content"]),
+                                        ],
+                                      )),
+                                );
+                              } else {
+                                return Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Container(
+                                      constraints: const BoxConstraints(
+                                        maxWidth: 400,
+                                      ),
+                                      margin: const EdgeInsets.only(
+                                          top: 10, left: 10, right: 10),
+                                      padding: const EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                          color: Colors.pink.shade200,
+                                          borderRadius: const BorderRadius.only(
+                                              bottomRight: Radius.circular(20),
+                                              topLeft: Radius.circular(20),
+                                              bottomLeft: Radius.circular(20))),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Flexible(
+                                                child: Text(
+                                                  mes["sender"],
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                              ),
+                                              Flexible(
+                                                child: Text(
+                                                  mes["time"].toString(),
+                                                  style: TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.grey[800]),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(
+                                            height: 4,
+                                          ),
+                                          Text(mes["content"]),
+                                        ],
+                                      )),
+                                );
+                              }
+                            }),
+                          )))),
+                  const SizedBox(height: 20),
+                  Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                          color: Colors.white70,
+                          borderRadius: BorderRadius.circular(20)),
+                      constraints: const BoxConstraints(maxWidth: 600),
+                      child: CupertinoTextField.borderless(
+                          controller: messageController,
+                          onEditingComplete: () {
+                            // send to Firebase
+                            FirebaseFirestore.instance
+                                .collection("apps")
+                                .doc(uid)
+                                .collection("messages")
+                                .add({
+                              "sender": "You",
+                              "time":
+                                  "Datum: ${DateTime.now().day}.${DateTime.now().month}.${DateTime.now().year} Uhrzeit:${DateTime.now().hour}:${DateTime.now().minute}",
+                              "content": messageController.text,
+                              "index": messages.length
+                            });
+                            messageController.clear();
+                          },
+                          prefix: IconButton(
+                            onPressed: () {},
+                            icon: const Icon(
+                              Icons.upload_file,
+                            ),
+                            tooltip: "Hochladen",
+                          ),
+                          suffix: IconButton(
                             onPressed: () {
                               // send to Firebase
-                              FirebaseFirestore.instance
-                                  .collection("apps")
-                                  .doc(uid)
-                                  .collection("messages")
-                                  .add({
-                                "sender": "You",
-                                "time":
-                                    "${DateTime.now().hour}:${DateTime.now().minute}",
-                                "content": messageController.text,
-                                "index": messages.length
-                              });
-                              messageController.clear();
+                              if (messageController.text != "") {
+                                FirebaseFirestore.instance
+                                    .collection("apps")
+                                    .doc(uid)
+                                    .collection("messages")
+                                    .add({
+                                  "sender": "You",
+                                  "time":
+                                      "Datum: ${DateTime.now().day}.${DateTime.now().month}.${DateTime.now().year} Uhrzeit:${DateTime.now().hour}:${DateTime.now().minute}",
+                                  "content": messageController.text,
+                                  "index": messages.length
+                                });
+                                messageController.clear();
+                              }
                             },
-                            icon: const Icon(Icons.send_rounded)),
-                        placeholder: "Write a message"))
-              ]);
-        });
+                            icon: const Icon(
+                              Icons.send_rounded,
+                            ),
+                            tooltip: "Senden",
+                          ),
+                          placeholder: "Schreibe eine Nachricht"))
+                ]);
+          }),
+    );
   }
 }
