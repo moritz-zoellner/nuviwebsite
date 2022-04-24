@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:noviwebsite/impressum/secure_menu.dart';
 import 'package:noviwebsite/management/empty.dart';
 import 'package:noviwebsite/styling.dart';
 
@@ -117,7 +118,9 @@ class _RightSide extends State<RightSide> {
                 });
               }),
         ],
-      )
+      ),
+      const SizedBox(height: 20),
+      const SecureMenu(),
     ]);
   }
 
@@ -176,7 +179,9 @@ class _RightSide extends State<RightSide> {
                           context, e.toString().split("]").last.trim());
                     });
                   },
-                )
+                ),
+                const SizedBox(height: 20),
+                const SecureMenu(),
               ],
             )));
   }
@@ -259,7 +264,9 @@ class _RightSide extends State<RightSide> {
 
                     myCustomError(context, e.toString().split("]").last.trim());
                   });
-                })
+                }),
+                const SizedBox(height: 20),
+                const SecureMenu(),
               ],
             )));
   }
@@ -342,7 +349,9 @@ class _RightSide extends State<RightSide> {
                 myCustomError(
                     context, e.message.toString().split("]").last.trim());
               });
-            }))
+            })),
+            const SizedBox(height: 20),
+            const SecureMenu(),
           ],
         ),
       ),

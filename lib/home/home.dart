@@ -16,9 +16,7 @@ class HomeScreen extends StatelessWidget {
             children: const [
               LeftSide(),
               SizedBox(height: 40),
-              RightSide(),
-              SizedBox(height: 40),
-              SecureMenu()
+              RightSide()
             ]);
       } else {
         page = Column(
@@ -29,8 +27,7 @@ class HomeScreen extends StatelessWidget {
               SizedBox(width: 40),
               Expanded(child: RightSide())
             ]),
-            const SizedBox(height: 40),
-            const SecureMenu()
+            
           ],
         );
       }

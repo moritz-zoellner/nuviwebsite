@@ -272,7 +272,7 @@ class _CourtOrderState extends State<CourtOrder> {
       "useremail": FirebaseAuth.instance.currentUser!.email,
       "logo": clubLogoCon.text,
       "courts": courts,
-      "h/week": hoursPerWeek.text,
+      "h_per_week": hoursPerWeek.text,
       "phone": phoneCon.text,
       "abo": "Courtmanagment",
       "description": "Tclub, Courtmanagment",

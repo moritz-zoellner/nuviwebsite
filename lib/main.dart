@@ -77,16 +77,13 @@ class MenuBar extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                     fontSize: 30)),
-            TabBar(
-                physics: NeverScrollableScrollPhysics(),
-                isScrollable: true,
-                tabs: [
-                  Tab(text: "Startseite"),
-                  Tab(text: "Produkte"),
-                  Tab(text: "Blog"),
-                  Tab(text: "Über uns"),
-                  Tab(text: "Kontakt"),
-                ])
+            TabBar(isScrollable: true, tabs: [
+              Tab(text: "Startseite"),
+              Tab(text: "Produkte"),
+              Tab(text: "Blog"),
+              Tab(text: "Über uns"),
+              Tab(text: "Kontakt"),
+            ])
           ]),
     );
   }
