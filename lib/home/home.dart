@@ -16,33 +16,28 @@ class HomeScreen extends StatelessWidget {
             children: const [
               LeftSide(),
               SizedBox(height: 40),
-              RightSide(),
+              RightSide()
             ]);
       } else {
-        page = Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
+        page = Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: const [
               Expanded(child: LeftSide()),
               SizedBox(width: 40),
               Expanded(child: RightSide())
-            ]);
+            ]),
+            
+          ],
+        );
       }
-      return Stack(
-        alignment: Alignment.bottomCenter,
-        children: [
-          Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(minHeight: 400),
-              child: SingleChildScrollView(
-                child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 60, vertical: 40),
-                    child: page),
-              ),
-            ),
+      return Center(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: page,
           ),
-          const SecureMenu()
-        ],
+        ),
       );
     });
   }

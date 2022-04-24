@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:noviwebsite/styling.dart';
 
 class PrivateProject extends StatelessWidget {
   const PrivateProject(this.name, this.uid, this.businessplan, {Key? key})
@@ -10,33 +11,32 @@ class PrivateProject extends StatelessWidget {
   final int? businessplan;
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        MyAppBar(name),
-        Center(
-            child: ConstrainedBox(
-                constraints: const BoxConstraints(minHeight: 400),
-                child: SingleChildScrollView(
-                    child: Column(children: [
-                  Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 60, vertical: 40),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            (businessplan == -1)
-                                ? const SizedBox.shrink()
-                                : Expanded(
-                                    child:
-                                        BusinessPlanDescription(businessplan)),
-                            const SizedBox(width: 40),
-                            Expanded(child: Center(child: ChatDescription(uid)))
-                          ])),
-                ]))))
+    return NestedScrollView(
+      headerSliverBuilder: (c, b) => [
+        SliverToBoxAdapter(child: MyAppBar(name)),
       ],
+      body: Center(
+          child: SingleChildScrollView(
+              child: Column(children: [
+        Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 40),
+            child: (businessplan != -1)
+                ? OverflowBar(
+                    spacing: 40,
+                    alignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ConstrainedBox(
+                          constraints: const BoxConstraints(maxWidth: 600),
+                          child: BusinessPlanDescription(businessplan)),
+                      ConstrainedBox(
+                          constraints: const BoxConstraints(maxWidth: 600),
+                          child: ChatDescription(uid)),
+                    ],
+                  )
+                : ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 600),
+                    child: ChatDescription(uid))),
+      ]))),
     );
   }
 }
@@ -59,13 +59,15 @@ class MyAppBar extends StatelessWidget {
                   IconButton(
                       onPressed: () => Navigator.pop(context),
                       icon: const Icon(Icons.arrow_back_ios_new_rounded,
-                          color: Colors.blue)),
+                          color: Colors.white)),
                   const SizedBox(width: 20),
-                  Text(name,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          fontSize: 30)),
+                  Flexible(
+                    child: Text(name,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 30)),
+                  ),
                 ],
               ),
             ]));

@@ -267,7 +267,7 @@ class _BothOrderState extends State<BothOrder> {
       "useremail": FirebaseAuth.instance.currentUser!.email,
       "logo": clubLogoCon.text,
       "courts": courts,
-      "h/week": hoursPerWeek.text,
+      "h_per_week": hoursPerWeek.text,
       "phone": phoneCon.text,
       "abo": "Bothmanagment",
       "description": "Tclub, Court- & Membership management",

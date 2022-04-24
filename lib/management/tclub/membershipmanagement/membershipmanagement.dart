@@ -26,67 +26,72 @@ class _MembershipManagementState extends State<MembershipManagement> {
   List<ChangedField> fields = [];
   @override
   Widget build(BuildContext context) {
-    return Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Padding(
-              padding: const EdgeInsets.only(top: 20, left: 20, right: 40),
-              child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        IconButton(
-                            onPressed: () => Navigator.pop(context),
-                            icon: const Icon(Icons.arrow_back_ios_new_rounded,
-                                color: Colors.white)),
-                        const SizedBox(width: 20),
-                        Text(widget.projectInfo["appname"],
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                                fontSize: 30)),
-                      ],
-                    ),
-                    const SizedBox(width: 20),
-                    Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                      const ExportTableButton(),
-                      (editUsers)
-                          ? IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  fields = [];
-                                  editUsers = false;
-                                  addUser = false;
-                                });
-                              },
-                              tooltip: "Nicht speichern",
-                              icon:
-                                  const Icon(Icons.close, color: Colors.white))
-                          : const SizedBox.shrink(),
-                      EditTableButton(
-                          widget.projectInfo.id,
-                          editUsers,
-                          addUser,
-                          () => setState(() {
-                                fields = [];
-                                editUsers = !editUsers;
-                                addUser = false;
-                              }),
-                          fields),
-                    ])
-                  ])),
-          Expanded(
-              child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: ClipRRect(
-                      borderRadius: const BorderRadius.all(Radius.circular(20)),
-                      child: MyTable(
-                          widget.projectInfo.id, editUsers, addUser, fields))))
-        ]);
+    return NestedScrollView(
+        headerSliverBuilder: (c, b) => [
+              SliverToBoxAdapter(
+                child: Padding(
+                    padding:
+                        const EdgeInsets.only(top: 20, left: 20, right: 40),
+                    child: OverflowBar(
+                        alignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  icon: const Icon(
+                                      Icons.arrow_back_ios_new_rounded,
+                                      color: Colors.white)),
+                              const SizedBox(width: 20),
+                              Flexible(
+                                child: Text(widget.projectInfo["appname"],
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                        fontSize: 30)),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(width: 20),
+                          Row(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                const ExportTableButton(),
+                                (editUsers)
+                                    ? IconButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            fields = [];
+                                            editUsers = false;
+                                            addUser = false;
+                                          });
+                                        },
+                                        tooltip: "Nicht speichern",
+                                        icon: const Icon(Icons.close,
+                                            color: Colors.white))
+                                    : const SizedBox.shrink(),
+                                EditTableButton(
+                                    widget.projectInfo.id,
+                                    editUsers,
+                                    addUser,
+                                    () => setState(() {
+                                          fields = [];
+                                          editUsers = !editUsers;
+                                          addUser = false;
+                                        }),
+                                    fields),
+                              ])
+                        ])),
+              )
+            ],
+        body: Padding(
+            padding: const EdgeInsets.all(20),
+            child: ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(20)),
+                child: MyTable(
+                    widget.projectInfo.id, editUsers, addUser, fields))));
   }
 }
 
