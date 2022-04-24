@@ -10,24 +10,29 @@ class LeftSide extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          Text("Ihre Ideen zur Realität programmieren lassen",
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 40,
-                  color: Colors.white)),
-          SizedBox(height: 20),
-          Text(
-              "Checken Sie unsere bereits entwickelten Anwendungen.\nWollen Sie etwas Für sich oder Ihr Unternehmen? Wir entwickeln Apps für Web, IOS and Android auf Anfrage.",
-              maxLines: 4,
-              style: TextStyle(color: Colors.white, fontSize: 16)),
-          SizedBox(height: 20),
-          CreateAppButton(),
-          SizedBox(height: 20),
-        ]);
+    return Center(
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        constraints: const BoxConstraints(maxWidth: 500),
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: const [
+              Text("Wir verwirklichen Ihre Ideen",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 40,
+                      color: Colors.white)),
+              SizedBox(height: 20),
+              Text(
+                  "Checken Sie unsere bereits entwickelten Anwendungen.\nWollen Sie etwas Für sich oder Ihr Unternehmen? Wir entwickeln Apps für Web, IOS and Android auf Anfrage.",
+                  maxLines: 4,
+                  style: TextStyle(color: Colors.white, fontSize: 16)),
+              SizedBox(height: 20),
+              CreateAppButton(),
+            ]),
+      ),
+    );
   }
 }
 
@@ -109,9 +114,12 @@ class CreateAppDialog extends StatelessWidget {
                                 onPressed: () => Navigator.pop(context),
                                 icon: const Icon(Icons.close)),
                             const SizedBox(width: 20),
-                            const Text("App erstellen",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 30)),
+                            const Flexible(
+                              child: Text("App erstellen",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 30)),
+                            ),
                           ],
                         ),
                         notLoggedIn
@@ -208,6 +216,14 @@ class CreateAppDialog extends StatelessWidget {
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(20))),
                             onPressed: () {
+                              if (appNameController.text.isEmpty ||
+                                  dreamController.text.isEmpty ||
+                                  dreamController.text.length < 50) {
+                                myCustomError(context,
+                                    "Die Eingabefelder dürfen nicht leer sein und/oder schreibe ein bisschen mehr über das Projekt");
+                                return;
+                              }
+
                               void writeApp() {
                                 waitDialog(context);
                                 FirebaseFirestore.instance

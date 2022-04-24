@@ -13,7 +13,7 @@ class TClub extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         const SizedBox(height: 20),
-        Row(
+        OverflowBar(
           children: [
             const Text("Unsere Lösung",
                 style: TextStyle(
@@ -204,7 +204,8 @@ class Tile extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
             shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(20))),
-            child: const Text("Jetzt bestellen", style: TextStyle(color: Colors.white)),
+            child: const Text("Jetzt bestellen",
+                style: TextStyle(color: Colors.white)),
             onPressed: onOrder)
       ],
     ));
