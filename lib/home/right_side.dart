@@ -37,9 +37,23 @@ class _RightSide extends State<RightSide> {
   Widget userProjects() {
     String useremail = FirebaseAuth.instance.currentUser!.email!;
     return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-      const Text("Ihre Projekte",
-          style: TextStyle(
-              fontWeight: FontWeight.bold, color: Colors.white, fontSize: 30)),
+      Row(
+        children: [
+          const Text("Ihre Projekte",
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  fontSize: 30)),
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(
+              Icons.help_outline_rounded,
+              color: Colors.white,
+            ),
+            tooltip: "Maximal 5 Projekte ",
+          )
+        ],
+      ),
       FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
           future: FirebaseFirestore.instance
               .collection("apps")

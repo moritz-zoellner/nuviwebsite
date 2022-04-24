@@ -49,10 +49,33 @@ class CreateAppButton extends StatelessWidget {
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(20))),
         onPressed: () {
-          showGeneralDialog(
-              barrierColor: Colors.black26,
-              context: context,
-              pageBuilder: (context, a1, a2) => const CreateAppDialog());
+          if (FirebaseAuth.instance.currentUser == null) {
+            showGeneralDialog(
+                barrierColor: Colors.black26,
+                context: context,
+                pageBuilder: (context, a1, a2) => const CreateAppDialog());
+            return;
+          }
+          String useremail = FirebaseAuth.instance.currentUser!.email!;
+
+          FirebaseFirestore.instance
+              .collection("apps")
+              .where("useremail", isEqualTo: useremail)
+              .get()
+              .catchError((e) {
+            myCustomError(context, "Fehler aufgetreten " + e.toString());
+          }).then(
+            (value) {
+              if (value.docs.length < 5) {
+                showGeneralDialog(
+                    barrierColor: Colors.black26,
+                    context: context,
+                    pageBuilder: (context, a1, a2) => const CreateAppDialog());
+              } else {
+                myCustomError(context, "Du hast dein Projektlimit erreicht!");
+              }
+            },
+          );
         });
   }
 }
@@ -67,6 +90,7 @@ class CreateAppDialog extends StatelessWidget {
     TextEditingController passwController = TextEditingController();
     TextEditingController dreamController = TextEditingController();
     TextEditingController appNameController = TextEditingController();
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(20),
