@@ -1,6 +1,12 @@
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:noviwebsite/styling.dart';
 
 class PrivateProject extends StatelessWidget {
   const PrivateProject(this.name, this.uid, this.businessplan, {Key? key})
@@ -160,10 +166,16 @@ class _BusinessPlanDescriptionState extends State<BusinessPlanDescription> {
   }
 }
 
-class ChatDescription extends StatelessWidget {
+class ChatDescription extends StatefulWidget {
   final String uid;
+
   const ChatDescription(this.uid, {Key? key}) : super(key: key);
 
+  @override
+  State<ChatDescription> createState() => _ChatDescriptionState();
+}
+
+class _ChatDescriptionState extends State<ChatDescription> {
   @override
   Widget build(BuildContext context) {
     TextEditingController messageController = TextEditingController();
@@ -171,7 +183,7 @@ class ChatDescription extends StatelessWidget {
       child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
           stream: FirebaseFirestore.instance
               .collection("apps")
-              .doc(uid)
+              .doc(widget.uid)
               .collection("messages")
               .orderBy("index")
               .snapshots(),
@@ -339,7 +351,11 @@ class ChatDescription extends StatelessWidget {
                                           const SizedBox(
                                             height: 4,
                                           ),
-                                          Text(mes["content"]),
+                                          (!snapshot.hasData)
+                                              ? const Center(
+                                                  child:
+                                                      CircularProgressIndicator())
+                                              : Text(mes["content"]),
                                         ],
                                       )),
                                 );
@@ -359,7 +375,7 @@ class ChatDescription extends StatelessWidget {
                             // send to Firebase
                             FirebaseFirestore.instance
                                 .collection("apps")
-                                .doc(uid)
+                                .doc(widget.uid)
                                 .collection("messages")
                                 .add({
                               "sender": "You",
@@ -371,7 +387,37 @@ class ChatDescription extends StatelessWidget {
                             messageController.clear();
                           },
                           prefix: IconButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              FilePickerResult? result =
+                                  await FilePicker.platform.pickFiles(
+                                      type: FileType.custom,
+                                      allowedExtensions: ["pdf", "jpg"]);
+
+                              if (result != null) {
+                                String fileName = result.files.first.name;
+                                Uint8List? fileBytes = result.files.first.bytes;
+                                if (result.files.first.size > 5000000) {
+                                  myCustomError(context, "Maximal 5MB");
+                                  return;
+                                }
+                                await FirebaseStorage.instance
+                                    .ref('uploads/${widget.uid}/$fileName')
+                                    .putData(fileBytes!);
+
+                                FirebaseFirestore.instance
+                                    .collection("apps")
+                                    .doc(widget.uid)
+                                    .collection("messages")
+                                    .add({
+                                  "sender": "You",
+                                  "time":
+                                      "Datum: ${DateTime.now().day}.${DateTime.now().month}.${DateTime.now().year} Uhrzeit:${DateTime.now().hour}:${DateTime.now().minute}",
+                                  "content":
+                                      "Sie haben folgende Datei hochgeladen: $fileName",
+                                  "index": messages.length
+                                });
+                              }
+                            },
                             icon: const Icon(
                               Icons.upload_file,
                             ),
@@ -383,7 +429,7 @@ class ChatDescription extends StatelessWidget {
                               if (messageController.text != "") {
                                 FirebaseFirestore.instance
                                     .collection("apps")
-                                    .doc(uid)
+                                    .doc(widget.uid)
                                     .collection("messages")
                                     .add({
                                   "sender": "You",

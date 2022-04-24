@@ -39,6 +39,8 @@ dependencies:
   firebase_auth: ^3.3.13
   url_launcher: ^6.0.20
   horizontal_data_table: ^3.6.1+1
+  file_picker: ^4.5.1
+  firebase_storage: ^10.2.13
 
 dev_dependencies:
   flutter_test:
