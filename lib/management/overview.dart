@@ -414,7 +414,7 @@ class _ChatDescriptionState extends State<ChatDescription> {
                                   "time":
                                       "Datum: ${DateTime.now().day}.${DateTime.now().month}.${DateTime.now().year} Uhrzeit:${DateTime.now().hour}:${DateTime.now().minute}",
                                   "content":
-                                      "Sie haben folgende Datei hochgeladen: $fileName",
+                                      "Datei hochgeladen: $fileName",
                                   "index": messages.length
                                 });
                               }

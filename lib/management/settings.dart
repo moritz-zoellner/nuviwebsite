@@ -3,29 +3,46 @@ import 'package:flutter/material.dart';
 import 'package:noviwebsite/main.dart';
 import 'package:noviwebsite/management/overview.dart';
 import 'package:noviwebsite/styling.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:file_picker/file_picker.dart';
+import 'dart:typed_data';
 
-class TclubCourtProjectSettings extends StatelessWidget {
+class TclubCourtProjectSettings extends StatefulWidget {
   final DocumentSnapshot<Map<String, dynamic>> projectInfo;
   const TclubCourtProjectSettings(this.projectInfo, {Key? key})
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    TextEditingController appNameCon =
-        TextEditingController(text: projectInfo["appname"]);
-    TextEditingController logoCon =
-        TextEditingController(text: projectInfo["logo"]);
+  State<TclubCourtProjectSettings> createState() =>
+      _TclubCourtProjectSettingsState();
+}
 
-    List<dynamic> courtsList = projectInfo["courts"];
+class _TclubCourtProjectSettingsState extends State<TclubCourtProjectSettings> {
+  bool logoDownloaded = true;
+
+  @override
+  Widget build(BuildContext context) {
+    Uint8List? logoBytes;
+    String? filename;
+    TextEditingController appNameCon =
+        TextEditingController(text: widget.projectInfo["appname"]);
+    TextEditingController logoCon =
+        TextEditingController(text: widget.projectInfo["logo"]);
+
+    if (logoCon.text == "") {
+      logoDownloaded = false;
+    }
+
+    List<dynamic> courtsList = widget.projectInfo["courts"];
     courtsList.removeAt(0);
     String courts = courtsList.toString();
     TextEditingController courtsCon = TextEditingController(
         text:
             courts.replaceAll('[', '').replaceAll(']', '').replaceAll(' ', ''));
     TextEditingController hperweekCon =
-        TextEditingController(text: projectInfo["h_per_week"]);
+        TextEditingController(text: widget.projectInfo["h_per_week"]);
     TextEditingController phoneCon =
-        TextEditingController(text: projectInfo["phone"]);
+        TextEditingController(text: widget.projectInfo["phone"]);
     return NestedScrollView(
         headerSliverBuilder: (c, b) => [
               const SliverToBoxAdapter(child: MyAppBar("Optionen")),
@@ -53,10 +70,79 @@ class TclubCourtProjectSettings extends StatelessWidget {
                                     label: Text("App Name")),
                                 controller: appNameCon),
                             const SizedBox(height: 20),
-                            TextField(
-                              decoration:
-                                  const InputDecoration(label: Text("Logo")),
-                              controller: logoCon,
+                            Row(
+                              children: [
+                                Flexible(
+                                  child: TextField(
+                                    decoration: const InputDecoration(
+                                        label: Text("Logo")),
+                                    controller: logoCon,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 8,
+                                ),
+                                (logoDownloaded == true)
+                                    ? MaterialButton(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 32, vertical: 24),
+                                        child: const Text("Logo löschen",
+                                            style:
+                                                TextStyle(color: Colors.white)),
+                                        color: Colors.pink,
+                                        shape: const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(20))),
+                                        onPressed: () async {
+                                          logoBytes = null;
+                                          filename = null;
+                                          FirebaseFirestore.instance
+                                              .collection("apps")
+                                              .doc(widget.projectInfo.id)
+                                              .update({"logo": ""});
+                                          setState(
+                                              () => logoDownloaded = false);
+                                        })
+                                    : MaterialButton(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 32, vertical: 24),
+                                        child: const Text("Logo Hochladen",
+                                            style:
+                                                TextStyle(color: Colors.white)),
+                                        color: Colors.pink,
+                                        shape: const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(20))),
+                                        onPressed: () async {
+                                          FilePickerResult? result =
+                                              await FilePicker.platform
+                                                  .pickFiles(
+                                                      type: FileType.custom,
+                                                      allowedExtensions: [
+                                                "pdf",
+                                                "jpg",
+                                                "png",
+                                                "jpeg"
+                                              ]);
+
+                                          if (result != null) {
+                                            String fileName =
+                                                result.files.first.name;
+                                            Uint8List? fileBytes =
+                                                result.files.first.bytes;
+                                            if (result.files.first.size >
+                                                5000000) {
+                                              myCustomError(
+                                                  context, "Maximal 5MB");
+                                              return;
+                                            }
+                                            logoBytes = fileBytes;
+                                            filename = fileName;
+                                            setState(
+                                                () => logoDownloaded = true);
+                                          }
+                                        }),
+                              ],
                             ),
                             const SizedBox(height: 20),
                             TextField(
@@ -80,37 +166,68 @@ class TclubCourtProjectSettings extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 20),
-                      MyBlueButton("Änderungen speichern", onPressed: () {
-                        waitDialog(context);
-                        List<String> list = courtsCon.text.split(",");
-                        list.insert(0, "");
-                        FirebaseFirestore.instance
-                            .collection("apps")
-                            .doc(projectInfo.id)
-                            .update({
-                          "appname": appNameCon.text,
-                          "logo": logoCon.text,
-                          "courts": list,
-                          "h_per_week": hperweekCon.text,
-                          "phone": phoneCon.text,
-                        }).then((value) {
-                          closeDialog(context);
-                          Navigator.pushReplacement(
-                            context,
-                            PageRouteBuilder(
-                              pageBuilder: (context, animation1, animation2) =>
-                                  const MyApp(),
-                              transitionsBuilder: (c, a1, a2, w) =>
-                                  FadeTransition(opacity: a1, child: w),
-                            ),
-                          );
-                          myCustomError(
-                              context, "Änderungen wurden gespeichert");
-                        }).catchError((e) {
-                          closeDialog(context);
-                          myCustomError(context, e.toString());
-                        });
-                      }),
+                      MyBlueButton(
+                        "Änderungen speichern",
+                        onPressed: () {
+                          waitDialog(context);
+                          List<String> list = courtsCon.text.split(",");
+                          list.insert(0, "");
+                          FirebaseFirestore.instance
+                              .collection("apps")
+                              .doc(widget.projectInfo.id)
+                              .update({
+                            "appname": appNameCon.text,
+                            "courts": list,
+                            "h_per_week": hperweekCon.text,
+                            "phone": phoneCon.text,
+                          }).then((value) {
+                            closeDialog(context);
+                            FirebaseStorage.instance
+                                .ref(
+                                    'uploads/${widget.projectInfo.id}/$filename')
+                                .putData(logoBytes!)
+                                .catchError((error) {
+                              closeDialog(context);
+
+                              myCustomError(
+                                  context, "Fehler beim Hochladen des Logos");
+                            }).then((p0) {
+                              closeDialog(context);
+                              p0.ref.getDownloadURL().catchError((e) {
+                                myCustomError(
+                                    context, "Kann das Logo nicht finden");
+                              }).then((logoRef) {
+                                FirebaseFirestore.instance
+                                    .collection("apps")
+                                    .doc(widget.projectInfo.id)
+                                    .update({"logo": logoRef}).catchError((e) {
+                                  myCustomError(context,
+                                      "Update von Firestore hat nicht funktioniert");
+                                }).then((value) {
+                                  myCustomError(
+                                      context, "Erfolgreiche Bestellung");
+
+                                  Navigator.pushReplacement(
+                                    context,
+                                    PageRouteBuilder(
+                                      pageBuilder:
+                                          (context, animation1, animation2) =>
+                                              const MyApp(),
+                                      transitionsBuilder: (c, a1, a2, w) =>
+                                          FadeTransition(opacity: a1, child: w),
+                                    ),
+                                  );
+                                  myCustomError(
+                                      context, "Änderungen wurden gespeichert");
+                                }).catchError((e) {
+                                  closeDialog(context);
+                                  myCustomError(context, e.toString());
+                                });
+                              });
+                            });
+                          });
+                        },
+                      ),
                       const SizedBox(height: 20),
                       const Text(
                         "Weitere Optionen",
@@ -122,7 +239,7 @@ class TclubCourtProjectSettings extends StatelessWidget {
                         waitDialog(context);
                         FirebaseFirestore.instance
                             .collection("apps")
-                            .doc(projectInfo.id)
+                            .doc(widget.projectInfo.id)
                             .delete()
                             .then((value) {
                           closeDialog(context);
