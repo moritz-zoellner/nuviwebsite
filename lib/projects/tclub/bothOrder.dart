@@ -4,23 +4,27 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:noviwebsite/main.dart';
 import 'package:noviwebsite/styling.dart';
+import 'package:file_picker/file_picker.dart';
+import 'dart:typed_data';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class BothOrder extends StatefulWidget {
   const BothOrder({Key? key}) : super(key: key);
-
   @override
   State<BothOrder> createState() => _BothOrderState();
 }
 
 class _BothOrderState extends State<BothOrder> {
+  bool logoDownloaded = false;
   TextEditingController emailCon = TextEditingController();
   TextEditingController passwCon = TextEditingController();
 
   TextEditingController phoneCon = TextEditingController();
   TextEditingController clubNameCon = TextEditingController();
-  TextEditingController clubLogoCon = TextEditingController();
   TextEditingController allCourts = TextEditingController();
   TextEditingController hoursPerWeek = TextEditingController();
+  Uint8List? logoBytes;
+  String? filename;
   int currentState = 0;
   @override
   Widget build(BuildContext context) {
@@ -120,7 +124,7 @@ class _BothOrderState extends State<BothOrder> {
               Padding(
                 padding: const EdgeInsets.all(20),
                 child: CupertinoTextField.borderless(
-                  placeholder: "Phonenumber",
+                  placeholder: "Telefonnummer",
                   controller: phoneCon,
                 ),
               ),
@@ -134,7 +138,7 @@ class _BothOrderState extends State<BothOrder> {
         ),
         const Padding(
           padding: EdgeInsets.all(20),
-          child: Text("Club information",
+          child: Text("Club Informationen",
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -151,17 +155,68 @@ class _BothOrderState extends State<BothOrder> {
               Padding(
                 padding: const EdgeInsets.all(20),
                 child: CupertinoTextField.borderless(
-                  placeholder: "Club name",
+                  placeholder: "Clubname",
                   controller: clubNameCon,
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: CupertinoTextField.borderless(
-                  placeholder: "Club logo",
-                  controller: clubLogoCon,
-                ),
-              ),
+              (logoDownloaded == false)
+                  ? Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: MaterialButton(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 32, vertical: 24),
+                          child: const Text("Logo Hochladen",
+                              style: TextStyle(color: Colors.white)),
+                          color: Colors.pink,
+                          shape: const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20))),
+                          onPressed: () async {
+                            FilePickerResult? result = await FilePicker.platform
+                                .pickFiles(
+                                    type: FileType.custom,
+                                    allowedExtensions: [
+                                  "pdf",
+                                  "jpg",
+                                  "png",
+                                  "jpeg"
+                                ]);
+
+                            if (result != null) {
+                              String fileName = result.files.first.name;
+                              Uint8List? fileBytes = result.files.first.bytes;
+                              if (result.files.first.size > 5000000) {
+                                myCustomError(context, "Maximal 5MB");
+                                return;
+                              }
+                              logoBytes = fileBytes;
+                              filename = fileName;
+                              setState(() => logoDownloaded = true);
+                            }
+                          }),
+                    )
+                  : Padding(
+                      padding: EdgeInsets.all(20),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("$filename wurde hochgeladen"),
+                            MaterialButton(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 32, vertical: 24),
+                                child: const Text("Logo löschen",
+                                    style: TextStyle(color: Colors.white)),
+                                color: Colors.pink,
+                                shape: const RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20))),
+                                onPressed: () async {
+                                  logoBytes = null;
+                                  filename = null;
+                                  setState(() => logoDownloaded = false);
+                                }),
+                          ]),
+                    )
             ],
           )),
         ),
@@ -214,7 +269,6 @@ class _BothOrderState extends State<BothOrder> {
               if (phoneCon.text.isEmpty) return;
               if (hoursPerWeek.text.isEmpty) return;
               if (allCourts.text.isEmpty) return;
-              if (clubLogoCon.text.isEmpty) return;
 
               setState(() => currentState = 1);
             }),
@@ -232,7 +286,8 @@ class _BothOrderState extends State<BothOrder> {
         const SizedBox(height: 20),
         MaterialButton(
             padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
-            child: const Text("Jetzt bestellen", style: TextStyle(color: Colors.white)),
+            child: const Text("Jetzt bestellen",
+                style: TextStyle(color: Colors.white)),
             color: Colors.blue,
             shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(20))),
@@ -261,27 +316,48 @@ class _BothOrderState extends State<BothOrder> {
   void doneWithFuture() {
     List<String> courts = allCourts.text.split(",");
     courts.insert(0, "");
+
     FirebaseFirestore.instance.collection("apps").add({
       "projectfamily": "Tclub",
       "appname": clubNameCon.text,
       "useremail": FirebaseAuth.instance.currentUser!.email,
-      "logo": clubLogoCon.text,
       "courts": courts,
       "h_per_week": hoursPerWeek.text,
       "phone": phoneCon.text,
       "abo": "Bothmanagment",
       "description": "Tclub, Court- & Membership management",
     }).then((value) {
-      closeDialog(context);
-      myCustomError(context, "Erfolgreiche Bestellung");
-      Navigator.pushReplacement(
-        context,
-        PageRouteBuilder(
-          pageBuilder: (context, animation1, animation2) => const MyApp(),
-          transitionsBuilder: (c, a1, a2, w) =>
-              FadeTransition(opacity: a1, child: w),
-        ),
-      );
+      FirebaseStorage.instance
+          .ref('uploads/${value.id}/$filename')
+          .putData(logoBytes!)
+          .catchError((error) {
+        closeDialog(context);
+
+        myCustomError(context, "Fehler beim Hochladen des Logos");
+      }).then((p0) {
+        closeDialog(context);
+        p0.ref.getDownloadURL().catchError((e) {
+          myCustomError(context, "Kann das Logo nicht finden");
+        }).then((logoRef) {
+          FirebaseFirestore.instance
+              .collection("apps")
+              .doc(value.id)
+              .update({"logo": logoRef}).catchError((e) {
+            myCustomError(
+                context, "Update von Firestore hat nicht funktioniert");
+          }).then((value) {
+            myCustomError(context, "Erfolgreiche Bestellung");
+            Navigator.pushReplacement(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (context, animation1, animation2) => const MyApp(),
+                transitionsBuilder: (c, a1, a2, w) =>
+                    FadeTransition(opacity: a1, child: w),
+              ),
+            );
+          });
+        });
+      });
     }).catchError((e, s) {
       closeDialog(context);
       myCustomError(context, e.toString().split("]").last.trim());
