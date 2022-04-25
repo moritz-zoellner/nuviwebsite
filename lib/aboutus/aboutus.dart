@@ -9,14 +9,13 @@ class AboutUsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return SingleChildScrollView(
+      child: Center(
         child: ConstrainedBox(
             constraints: const BoxConstraints(minHeight: 400),
-            child: SingleChildScrollView(
-                child: Column(children: [
+            child: Column(children: [
               Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 60, vertical: 40),
+                  padding: const EdgeInsets.all(20),
                   child: Wrap(spacing: 20, children: [
                     const SizedBox(width: 400, child: AboutNoviDescription()),
                     const SizedBox(width: 400, child: OurHistoryDescription()),
@@ -33,6 +32,8 @@ class AboutUsScreen extends StatelessWidget {
                       ],
                     ),
                   ])),
-            ]))));
+            ])),
+      ),
+    );
   }
 }

@@ -13,9 +13,9 @@ class TClub extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         const SizedBox(height: 20),
-        Row(
+        OverflowBar(
           children: [
-            const Text("Our Solutions",
+            const Text("Unsere Lösung",
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
@@ -37,7 +37,7 @@ class TClub extends StatelessWidget {
         LayoutBuilder(builder: (context, constraints) {
           List<Widget> widgets = [
             Tile(
-                "Courtmanagement",
+                "Plätzeverwaltung",
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: const [
@@ -68,7 +68,7 @@ class TClub extends StatelessWidget {
             }),
             const SizedBox(height: 20, width: 20),
             Tile(
-                "Membershipmanagement",
+                "Mitgliederverwaltung",
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: const [
@@ -101,7 +101,7 @@ class TClub extends StatelessWidget {
             }),
             const SizedBox(height: 20, width: 20),
             Tile(
-                "Court- & Membershipmanagement",
+                "Plätze- & Mitgliederverwaltung",
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: const [
@@ -204,7 +204,8 @@ class Tile extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
             shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(20))),
-            child: const Text("Buy now", style: TextStyle(color: Colors.white)),
+            child: const Text("Jetzt bestellen",
+                style: TextStyle(color: Colors.white)),
             onPressed: onOrder)
       ],
     ));

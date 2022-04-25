@@ -18,7 +18,7 @@ class AboutUsTile extends StatelessWidget {
             padding: const EdgeInsets.all(20),
             child: ClipRRect(
               child: Image.asset(
-                'assets/Vadim1.jpg',
+                'assets/denis_bild.jpeg',
                 fit: BoxFit.cover,
               ),
               borderRadius: const BorderRadius.all(Radius.circular(150)),
@@ -103,7 +103,8 @@ class DenisDescription extends StatelessWidget {
         Row(children: const [
           Flexible(
             child: Text(
-              "Professioneller Blunt Roller. Du denkst Sexy Boy? Hab nicht mal ein riesen Coq. Macht sogar straighte Frauen zu lesben. Kein bisschen Ahnung von Programmieren und Leben.",
+              //"Professioneller Blunt Roller. Du denkst Sexy Boy? Hab nicht mal ein riesen Coq. Macht sogar straighte Frauen zu lesben. Kein bisschen Ahnung von Programmieren und Leben.",
+              "Bachelor of Science in Computer Science",
               style: TextStyle(color: Colors.white),
             ),
           ),

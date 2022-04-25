@@ -4,6 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:noviwebsite/main.dart';
 import 'package:noviwebsite/styling.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:file_picker/file_picker.dart';
+import 'dart:typed_data';
 
 class MembershipOrder extends StatefulWidget {
   const MembershipOrder({Key? key}) : super(key: key);
@@ -13,6 +16,7 @@ class MembershipOrder extends StatefulWidget {
 }
 
 class _MembershipOrderState extends State<MembershipOrder> {
+  bool logoDownloaded = false;
   int currentState = 0;
 
   TextEditingController emailCon = TextEditingController();
@@ -20,6 +24,8 @@ class _MembershipOrderState extends State<MembershipOrder> {
   TextEditingController phoneCon = TextEditingController();
   TextEditingController clubNameCon = TextEditingController();
   TextEditingController clubLogoCon = TextEditingController();
+  Uint8List? logoBytes;
+  String? filename;
 
   @override
   Widget build(BuildContext context) {
@@ -154,13 +160,64 @@ class _MembershipOrderState extends State<MembershipOrder> {
                   controller: clubNameCon,
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: CupertinoTextField.borderless(
-                  placeholder: "Club logo",
-                  controller: clubLogoCon,
-                ),
-              ),
+              (logoDownloaded == false)
+                  ? Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: MaterialButton(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 32, vertical: 24),
+                          child: const Text("Logo Hochladen",
+                              style: TextStyle(color: Colors.white)),
+                          color: Colors.pink,
+                          shape: const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20))),
+                          onPressed: () async {
+                            FilePickerResult? result = await FilePicker.platform
+                                .pickFiles(
+                                    type: FileType.custom,
+                                    allowedExtensions: [
+                                  "pdf",
+                                  "jpg",
+                                  "png",
+                                  "jpeg"
+                                ]);
+
+                            if (result != null) {
+                              String fileName = result.files.first.name;
+                              Uint8List? fileBytes = result.files.first.bytes;
+                              if (result.files.first.size > 5000000) {
+                                myCustomError(context, "Maximal 5MB");
+                                return;
+                              }
+                              logoBytes = fileBytes;
+                              filename = fileName;
+                              setState(() => logoDownloaded = true);
+                            }
+                          }),
+                    )
+                  : Padding(
+                      padding: EdgeInsets.all(20),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("$filename wurde hochgeladen"),
+                            MaterialButton(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 32, vertical: 24),
+                                child: const Text("Logo löschen",
+                                    style: TextStyle(color: Colors.white)),
+                                color: Colors.pink,
+                                shape: const RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20))),
+                                onPressed: () async {
+                                  logoBytes = null;
+                                  filename = null;
+                                  setState(() => logoDownloaded = false);
+                                }),
+                          ]),
+                    )
             ],
           )),
         ),
@@ -181,7 +238,6 @@ class _MembershipOrderState extends State<MembershipOrder> {
               if (passwCon.text.isEmpty && notLoggedIn) return;
               if (emailCon.text.isEmpty && notLoggedIn) return;
               if (phoneCon.text.isEmpty) return;
-              if (clubLogoCon.text.isEmpty) return;
               setState(() => currentState = 1);
             }),
       ],
@@ -229,21 +285,41 @@ class _MembershipOrderState extends State<MembershipOrder> {
       "projectfamily": "Tclub",
       "appname": clubNameCon.text,
       "useremail": FirebaseAuth.instance.currentUser!.email,
-      "logo": clubLogoCon.text,
       "phone": phoneCon.text,
       "abo": "Membershipmanagment",
-      "description": "Tclub, Membershipmanagment"
+      "description": "Tclub, Membershipmanagement",
     }).then((value) {
-      closeDialog(context);
-      myCustomError(context, "Erfolgreiche Bestellung");
-      Navigator.pushReplacement(
-        context,
-        PageRouteBuilder(
-          pageBuilder: (context, animation1, animation2) => const MyApp(),
-          transitionsBuilder: (c, a1, a2, w) =>
-              FadeTransition(opacity: a1, child: w),
-        ),
-      );
+      FirebaseStorage.instance
+          .ref('uploads/${value.id}/$filename')
+          .putData(logoBytes!)
+          .catchError((error) {
+        closeDialog(context);
+
+        myCustomError(context, "Fehler beim Hochladen des Logos");
+      }).then((p0) {
+        closeDialog(context);
+        p0.ref.getDownloadURL().catchError((e) {
+          myCustomError(context, "Kann das Logo nicht finden");
+        }).then((logoRef) {
+          FirebaseFirestore.instance
+              .collection("apps")
+              .doc(value.id)
+              .update({"logo": logoRef}).catchError((e) {
+            myCustomError(
+                context, "Update von Firestore hat nicht funktioniert");
+          }).then((value) {
+            myCustomError(context, "Erfolgreiche Bestellung");
+            Navigator.pushReplacement(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (context, animation1, animation2) => const MyApp(),
+                transitionsBuilder: (c, a1, a2, w) =>
+                    FadeTransition(opacity: a1, child: w),
+              ),
+            );
+          });
+        });
+      });
     }).catchError((e, s) {
       closeDialog(context);
       myCustomError(context, e.toString().split("]").last.trim());
