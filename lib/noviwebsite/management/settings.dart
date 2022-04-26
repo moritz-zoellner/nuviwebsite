@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:noviwebsite/main.dart';
-import 'package:noviwebsite/management/overview.dart';
+import 'package:noviwebsite/noviwebsite/management/overview.dart';
 import 'package:noviwebsite/styling.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:file_picker/file_picker.dart';
@@ -32,14 +32,7 @@ class _TclubCourtProjectSettingsState extends State<TclubCourtProjectSettings> {
     if (logoCon.text == "") {
       logoDownloaded = false;
     }
-    if (logoDownloaded == false) {
-      logoCon.text = "";
-    }
-    if (logoDownloaded == true) {
-      setState(() {
-        logoCon.text = widget.projectInfo["logo"];
-      });
-    }
+
     List<dynamic> courtsList = widget.projectInfo["courts"];
     courtsList.removeAt(0);
     String courts = courtsList.toString();
@@ -103,18 +96,12 @@ class _TclubCourtProjectSettingsState extends State<TclubCourtProjectSettings> {
                                         onPressed: () async {
                                           logoBytes = null;
                                           filename = null;
-                                          waitDialog(context);
                                           FirebaseFirestore.instance
                                               .collection("apps")
                                               .doc(widget.projectInfo.id)
-                                              .update({"logo": ""}).then(
-                                                  (value) {
-                                            closeDialog(context);
-                                          });
-
-                                          setState(() {
-                                            logoDownloaded = false;
-                                          });
+                                              .update({"logo": ""});
+                                          setState(
+                                              () => logoDownloaded = false);
                                         })
                                     : MaterialButton(
                                         padding: const EdgeInsets.symmetric(
@@ -151,39 +138,10 @@ class _TclubCourtProjectSettingsState extends State<TclubCourtProjectSettings> {
                                             }
                                             logoBytes = fileBytes;
                                             filename = fileName;
-
-                                            FirebaseStorage.instance
-                                                .ref(
-                                                    'uploads/${widget.projectInfo.id}/$filename')
-                                                .putData(logoBytes!)
-                                                .catchError((error) {
-                                              myCustomError(context,
-                                                  "Fehler beim Hochladen des Logos");
-                                            }).then((p0) {
-                                              p0.ref
-                                                  .getDownloadURL()
-                                                  .catchError((e) {
-                                                myCustomError(context,
-                                                    "Kann das Logo nicht finden");
-                                              }).then((logoRef) {
-                                                waitDialog(context);
-                                                FirebaseFirestore.instance
-                                                    .collection("apps")
-                                                    .doc(widget.projectInfo.id)
-                                                    .update({
-                                                  "logo": logoRef
-                                                }).catchError((e) {
-                                                  myCustomError(context,
-                                                      "Update von Firestore hat nicht funktioniert");
-                                                });
-                                                closeDialog(context);
-                                              });
-                                            });
-                                            setState(() {
-                                              logoDownloaded = true;
-                                            });
+                                            setState(
+                                                () => logoDownloaded = true);
                                           }
-                                        })
+                                        }),
                               ],
                             ),
                             const SizedBox(height: 20),

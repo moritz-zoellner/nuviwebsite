@@ -1,13 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:noviwebsite/management/settings/private_settings.dart';
-import 'package:noviwebsite/management/settings/tclub_both_settings.dart';
-import 'package:noviwebsite/management/settings/tclub_court_settings.dart';
-import 'package:noviwebsite/management/settings/tclub_member_settings.dart';
-import 'package:noviwebsite/management/tclub/courtmanagement/courtmanagement.dart';
-import 'package:noviwebsite/management/tclub/membershipmanagement/membershipmanagement.dart';
+import 'package:noviwebsite/noviwebsite/management/settings.dart';
+import 'package:noviwebsite/noviwebsite/management/tclub/courtmanagement/courtmanagement.dart';
+import 'package:noviwebsite/noviwebsite/management/tclub/membershipmanagement/membershipmanagement.dart';
 import 'package:noviwebsite/styling.dart';
-import 'package:noviwebsite/management/overview.dart';
+import 'package:noviwebsite/noviwebsite/management/overview.dart';
 
 class EmptyProject extends StatefulWidget {
   final DocumentSnapshot<Map<String, dynamic>> projectInfo;
