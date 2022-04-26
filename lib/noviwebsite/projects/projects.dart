@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:noviwebsite/projects/tclub/tclub.dart';
-import 'package:noviwebsite/projects/tcount/tcount.dart';
+import 'package:noviwebsite/noviwebsite/projects/tclub/tclub.dart';
+import 'package:noviwebsite/noviwebsite/projects/tcount/tcount.dart';
 import 'package:noviwebsite/styling.dart';
 
 class ProjectsScreen extends StatefulWidget {
@@ -14,7 +14,7 @@ class Project extends StatelessWidget {
   final String title;
   final String content;
   final Widget child;
-  const Project(this.title, this.content, this.child);
+  const Project(this.title, this.content, this.child, {Key? key}): super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -173,54 +173,50 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
   }
 
   Widget projectList() {
-    return Center(
-      child: SingleChildScrollView(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: List.generate(
-                tabs.length,
-                (index) => Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 600),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Flexible(
-                            child: Text(tabs[index].title,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                    fontSize: 24)),
-                          ),
-                          const SizedBox(height: 10),
-                          NoviTile(
-                            SizedBox(
-                              height: 50,
-                              child: Text(tabs[index].content,
-                                  maxLines: 3, overflow: TextOverflow.ellipsis),
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          MaterialButton(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 32, vertical: 24),
-                              color: Colors.blue,
-                              shape: const RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(20))),
-                              child: const Text("Weiteres",
-                                  style: TextStyle(color: Colors.white)),
-                              onPressed: () =>
-                                  setState(() => currentTab = index)),
-                        ],
+    return SingleChildScrollView(
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: GridView(
+            shrinkWrap: true,
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                mainAxisExtent: 270, maxCrossAxisExtent: 1000),
+            children: List.generate(
+              tabs.length,
+              (index) => Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Flexible(
+                        child: Text(tabs[index].title,
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                fontSize: 24)),
                       ),
-                    )),
-              ),
+                      const SizedBox(height: 10),
+                      NoviTile(
+                        SizedBox(
+                          height: 50,
+                          child: Text(tabs[index].content,
+                              maxLines: 3, overflow: TextOverflow.ellipsis),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      MaterialButton(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 32, vertical: 24),
+                          color: Colors.blue,
+                          shape: const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20))),
+                          child: const Text("Weiteres",
+                              style: TextStyle(color: Colors.white)),
+                          onPressed: () => setState(() => currentTab = index)),
+                    ],
+                  )),
             ),
           ),
         ),
