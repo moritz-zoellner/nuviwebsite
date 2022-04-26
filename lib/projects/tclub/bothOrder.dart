@@ -72,7 +72,7 @@ class _BothOrderState extends State<BothOrder> {
                                           ],
                                         ),
                                         currentState == 0
-                                            ? infoWidget()
+                                            ? infoWidget(context)
                                             : currentState == 1
                                                 ? paymentWidget()
                                                 : const Center(
@@ -84,7 +84,7 @@ class _BothOrderState extends State<BothOrder> {
                     )))));
   }
 
-  Widget infoWidget() {
+  Widget infoWidget(context) {
     bool notLoggedIn = FirebaseAuth.instance.currentUser == null;
 
     return Column(
@@ -263,14 +263,18 @@ class _BothOrderState extends State<BothOrder> {
             shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(20))),
             onPressed: () {
-              if (clubNameCon.text.isEmpty) return;
-              if (passwCon.text.isEmpty && notLoggedIn) return;
-              if (emailCon.text.isEmpty && notLoggedIn) return;
-              if (phoneCon.text.isEmpty) return;
-              if (hoursPerWeek.text.isEmpty) return;
-              if (allCourts.text.isEmpty) return;
-
-              setState(() => currentState = 1);
+              String validInput = inputControl(
+                  clubName: clubNameCon.text,
+                  email: (notLoggedIn) ? emailCon.text : null,
+                  passw: (notLoggedIn) ? passwCon.text : null,
+                  phone: phoneCon.text,
+                  hoursPerWeek: hoursPerWeek.text,
+                  allCourts: allCourts.text);
+              if (validInput == "valid") {
+                setState(() => currentState = 1);
+              } else {
+                myCustomError(context, validInput);
+              }
             }),
       ],
     );

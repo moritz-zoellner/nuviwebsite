@@ -72,7 +72,7 @@ class _CourtOrderState extends State<CourtOrder> {
                                           ],
                                         ),
                                         currentState == 0
-                                            ? infoWidget()
+                                            ? infoWidget(context)
                                             : currentState == 1
                                                 ? paymentWidget()
                                                 : const Center(
@@ -84,7 +84,7 @@ class _CourtOrderState extends State<CourtOrder> {
                     )))));
   }
 
-  Widget infoWidget() {
+  Widget infoWidget(context) {
     bool notLoggedIn = FirebaseAuth.instance.currentUser == null;
 
     return Column(
@@ -263,20 +263,21 @@ class _CourtOrderState extends State<CourtOrder> {
             shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(20))),
             onPressed: () {
-              try {
-                if (clubNameCon.text.isEmpty) return;
-                if (passwCon.text.isEmpty && notLoggedIn) return;
-                if (emailCon.text.isEmpty && notLoggedIn) return;
-                if (phoneCon.text.isEmpty) return;
-                if (hoursPerWeek.text.isEmpty) return;
-                int.parse(hoursPerWeek.text);
-                if (allCourts.text.isEmpty) return;
-              } catch (e) {
-                myCustomError(context, "Kontrolliere deine Angaben");
-                return;
-              }
+              String validInput;
 
-              setState(() => currentState = 1);
+              validInput = inputControl(
+                  clubName: clubNameCon.text,
+                  email: (notLoggedIn) ? emailCon.text : null,
+                  passw: (notLoggedIn) ? passwCon.text : null,
+                  phone: phoneCon.text,
+                  hoursPerWeek: hoursPerWeek.text,
+                  allCourts: allCourts.text);
+
+              if (validInput == "valid") {
+                setState(() => currentState = 1);
+              } else {
+                myCustomError(context, validInput);
+              }
             }),
       ],
     );

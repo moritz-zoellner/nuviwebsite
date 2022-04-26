@@ -263,21 +263,33 @@ class _RightSide extends State<RightSide> {
                     ])),
                 const SizedBox(height: 20),
                 MyBlueButton("Anmelden", onPressed: () {
-                  waitDialog(context);
-                  FirebaseAuth.instance
-                      .signInWithEmailAndPassword(
+                  if (inputControl(
                           email: emailController.text,
-                          password: passwController.text)
-                      .then((value) {
-                    closeDialog(context);
+                          passw: passwController.text) ==
+                      "valid") {
+                    waitDialog(context);
+                    FirebaseAuth.instance
+                        .signInWithEmailAndPassword(
+                            email: emailController.text,
+                            password: passwController.text)
+                        .then((value) {
+                      closeDialog(context);
 
-                    myCustomError(context, "Nutzer erfolgreich angemeldet");
-                    setState(() => currentState = LOGGED_IN);
-                  }).catchError((e, s) {
-                    closeDialog(context);
+                      myCustomError(context, "Nutzer erfolgreich angemeldet");
+                      setState(() => currentState = LOGGED_IN);
+                    }).catchError((e, s) {
+                      closeDialog(context);
 
-                    myCustomError(context, e.toString().split("]").last.trim());
-                  });
+                      myCustomError(
+                          context, e.toString().split("]").last.trim());
+                    });
+                  } else {
+                    myCustomError(
+                        context,
+                        inputControl(
+                            email: emailController.text,
+                            passw: passwController.text));
+                  }
                 }),
                 const SizedBox(height: 20),
                 const SecureMenu(),
@@ -345,24 +357,35 @@ class _RightSide extends State<RightSide> {
                 ])),
             const SizedBox(height: 20),
             MyBlueButton("Registrieren", onPressed: (() {
-              waitDialog(context);
-              FirebaseAuth.instance
-                  .createUserWithEmailAndPassword(
+              if (inputControl(
                       email: emailController.text,
-                      password: passwController.text)
-                  .then((value) {
-                closeDialog(context);
+                      passw: passwController.text) ==
+                  "valid") {
+                waitDialog(context);
+                FirebaseAuth.instance
+                    .createUserWithEmailAndPassword(
+                        email: emailController.text,
+                        password: passwController.text)
+                    .then((value) {
+                  closeDialog(context);
 
-                myCustomError(context, "Nutzer erfolgreich registriert");
-                setState(() {
-                  currentState = LOGGED_IN;
+                  myCustomError(context, "Nutzer erfolgreich registriert");
+                  setState(() {
+                    currentState = LOGGED_IN;
+                  });
+                }).catchError((e) {
+                  closeDialog(context);
+
+                  myCustomError(
+                      context, e.message.toString().split("]").last.trim());
                 });
-              }).catchError((e) {
-                closeDialog(context);
-
+              } else {
                 myCustomError(
-                    context, e.message.toString().split("]").last.trim());
-              });
+                    context,
+                    inputControl(
+                        email: emailController.text,
+                        passw: passwController.text));
+              }
             })),
             const SizedBox(height: 20),
             const SecureMenu(),

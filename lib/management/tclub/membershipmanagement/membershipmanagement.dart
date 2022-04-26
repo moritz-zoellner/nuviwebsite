@@ -1,7 +1,12 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:noviwebsite/management/tclub/membershipmanagement/table.dart';
 import 'package:noviwebsite/styling.dart';
+import 'dart:html' as html;
 
 class MembershipManagement extends StatefulWidget {
   final DocumentSnapshot<Map<String, dynamic>> projectInfo;
@@ -58,7 +63,7 @@ class _MembershipManagementState extends State<MembershipManagement> {
                               mainAxisSize: MainAxisSize.min,
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                const ExportTableButton(),
+                                ExportTableButton(widget.projectInfo.id),
                                 (editUsers)
                                     ? IconButton(
                                         onPressed: () {
@@ -188,7 +193,8 @@ class EditTableButton extends StatelessWidget {
 }
 
 class ExportTableButton extends StatelessWidget {
-  const ExportTableButton({Key? key}) : super(key: key);
+  final String uid;
+  const ExportTableButton(this.uid, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -196,9 +202,91 @@ class ExportTableButton extends StatelessWidget {
       onPressed: () {
         // TODO: export table
         // differnet ways on different platforms... :(
+        generateCSV();
+        //downloadFile("assets/denis_bild.jpeg");
       },
       icon: const Icon(Icons.import_export_rounded, color: Colors.white),
       tooltip: "CSV Datei exportieren",
     );
+  }
+
+  void downloadFile(String url) {
+    html.AnchorElement anchorElement = html.AnchorElement(href: url);
+    anchorElement.download = url;
+    anchorElement.click();
+  }
+
+  void generateCSV() async {
+    // 17 Attribute
+    List<String> rowHeader = [
+      "Uid",
+      "Email",
+      "Nachname",
+      "Vorname",
+      "Geburtstag",
+      "Geburtsort",
+      "Straße",
+      "PLZ",
+      "Wohnort",
+      "Telefon",
+      "Abo",
+      "Geldinstitut",
+      "IBAN",
+      "Kontoinhaber",
+      "Beitrag",
+      "Zahlungsmethode",
+      "Bezahlt"
+    ];
+
+    List<List<dynamic>> rows = [];
+
+    var collection = FirebaseFirestore.instance
+        .collection("tclub")
+        .doc(uid)
+        .collection("users");
+    var querySnapshot = await collection.get();
+    var list = querySnapshot.docs;
+    // var snapshot = FirebaseFirestore.instance
+    //     .collection("tclub")
+    //     .doc(uid)
+    //     .collection("users").g;
+
+    // var list = await snapshot.get().docs;
+
+    rows.add(rowHeader);
+
+    for (int i = 0; i < list.length; i++) {
+      List<dynamic> dataRow = [];
+      for (int j = 0; j < rowHeader.length; j++) {
+        if (j == 0) {
+          dataRow.add(list[i].id);
+        } else {
+          Map<String, dynamic> data = list[i].data();
+          if (data[rowHeader[j]] == null) {
+            dataRow.add("keine Angabe");
+          } else {
+            dataRow.add(data[rowHeader[j]]);
+          }
+        }
+      }
+      rows.add(dataRow);
+    }
+    String csv = const ListToCsvConverter().convert(rows);
+
+    final bytes = utf8.encode(csv);
+//NOTE THAT HERE WE USED HTML PACKAGE
+    final blob = html.Blob([bytes]);
+//It will create downloadable object
+    final url = html.Url.createObjectUrlFromBlob(blob);
+//It will create anchor to download the file
+    final anchor = html.document.createElement('a') as html.AnchorElement
+      ..href = url
+      ..style.display = 'none'
+      ..download = 'yourcsvname.csv';
+//finally add the csv anchor to body
+    html.document.body!.children.add(anchor);
+// Cause download by calling this function
+    anchor.click();
+    html.Url.revokeObjectUrl(url);
   }
 }
