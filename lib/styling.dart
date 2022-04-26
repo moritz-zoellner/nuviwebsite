@@ -33,6 +33,7 @@ void closeDialog(context) {
 void myCustomError(context, content) {
   ScaffoldMessenger.of(context).clearSnackBars();
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      behavior: SnackBarBehavior.floating,
       content: Text(content),
       action: SnackBarAction(
           label: "Verstanden",
@@ -91,4 +92,77 @@ class ProjectCheckMark extends StatelessWidget {
       ]),
     );
   }
+}
+
+String inputControl(
+    {String? email,
+    String? passw,
+    String? clubName,
+    String? phone,
+    String? hoursPerWeek,
+    String? allCourts}) {
+  if (email != null) {
+    if (invalidMailAdress(email)) {
+      return "Ungültige E-Mail Adresse";
+    }
+  }
+
+  if (passw != null) {
+    if (invalidPW(passw)) {
+      return "Ungültiges Passwort";
+    }
+  }
+
+  if (clubName != null) {
+    if (clubName.isEmpty) {
+      return "Clubname darf nicht leer sein";
+    }
+  }
+
+  if (phone != null) {
+    if (invalidPhoneNumber(phone)) {
+      return "Ungültige Telefonnummer";
+    }
+  }
+
+  if (hoursPerWeek != null) {
+    if (!isNumber(hoursPerWeek)) {
+      return "Ungültige wöchentliche Stundenanzahl";
+    }
+  }
+
+  if (allCourts != null) {
+    if (allCourts.isEmpty) {
+      return "Plätzenamen dürfen nicht leer sein";
+    }
+  }
+
+  return "valid";
+}
+
+bool invalidMailAdress(String data) {
+  return !RegExp(
+          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+      .hasMatch(data);
+}
+
+bool invalidPW(String data) {
+  if (data.length >= 6) {
+    return false;
+  }
+  return true;
+}
+
+bool isNumber(String data) => double.tryParse(data) != null;
+bool invalidPhoneNumber(String data) {
+  data = data.replaceAll(" ", "");
+  if (data.isEmpty) {
+    return true;
+  }
+  for (var i = 0; i < data.length; i++) {
+    if (!(isNumber(data[i]) || data[i] == '+')) {
+      return true;
+    }
+  }
+  return false;
 }
