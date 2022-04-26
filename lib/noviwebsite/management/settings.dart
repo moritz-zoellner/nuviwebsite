@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:noviwebsite/main.dart';
-import 'package:noviwebsite/management/overview.dart';
+import 'package:noviwebsite/noviwebsite/management/overview.dart';
 import 'package:noviwebsite/styling.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:file_picker/file_picker.dart';
