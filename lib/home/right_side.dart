@@ -111,26 +111,60 @@ class _RightSide extends State<RightSide> {
                         )));
           })),
       const SizedBox(height: 20),
+      const Text("Einstellungen",
+          style: TextStyle(
+              fontWeight: FontWeight.bold, color: Colors.white, fontSize: 30)),
+      const SizedBox(height: 20),
       Row(
-        mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          MaterialButton(
-              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
-              child:
-                  const Text("Abmelden", style: TextStyle(color: Colors.white)),
-              color: Colors.pink,
-              shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(20))),
-              onPressed: () {
-                waitDialog(context);
-                FirebaseAuth.instance.signOut().then((value) {
-                  closeDialog(context);
-                  setState(() => currentState = SIGNIN);
-                }).catchError((e) {
-                  closeDialog(context);
-                  myCustomError(context, e.toString().split("]").last.trim());
-                });
-              }),
+          Expanded(
+            child: MaterialButton(
+                elevation: 0,
+                focusElevation: 0,
+                hoverElevation: 0,
+                highlightElevation: 0,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
+                child: const Text("Abmelden",
+                    style: TextStyle(color: Colors.white)),
+                color: Colors.white30,
+                shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(20))),
+                onPressed: () {
+                  waitDialog(context);
+                  FirebaseAuth.instance.signOut().then((value) {
+                    closeDialog(context);
+                    setState(() => currentState = SIGNIN);
+                  }).catchError((e) {
+                    closeDialog(context);
+                    myCustomError(context, e.toString().split("]").last.trim());
+                  });
+                }),
+          ),
+          const SizedBox(width: 20),
+          Expanded(
+            child: MaterialButton(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
+                child: const Text("Account löschen",
+                    style: TextStyle(color: Colors.white)),
+                color: Colors.pink,
+                shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(20))),
+                onPressed: () {
+                  myCustomError(context,
+                      "Dieses Feature ist noch in der Entwicklung. Wenn Sie kündigen wollen, kontaktieren Sie uns per Email. vadime.novikau@novicorp.de");
+                  //waitDialog(context);
+                  // delete all Projects from store, storage
+                  // FirebaseAuth.instance.currentUser!.delete().then((value) {
+                  //   closeDialog(context);
+                  //   setState(() => currentState = SIGNUP);
+                  // }).catchError((e) {
+                  //   closeDialog(context);
+                  //   myCustomError(context, e.toString().split("]").last.trim());
+                  // });
+                }),
+          ),
         ],
       ),
       const SizedBox(height: 20),

@@ -15,7 +15,6 @@ class BothOrder extends StatefulWidget {
 }
 
 class _BothOrderState extends State<BothOrder> {
-  bool logoDownloaded = false;
   TextEditingController emailCon = TextEditingController();
   TextEditingController passwCon = TextEditingController();
 
@@ -23,9 +22,10 @@ class _BothOrderState extends State<BothOrder> {
   TextEditingController clubNameCon = TextEditingController();
   TextEditingController allCourts = TextEditingController();
   TextEditingController hoursPerWeek = TextEditingController();
-  Uint8List? logoBytes;
-  String? filename;
   int currentState = 0;
+
+  Uint8List? logoBytes;
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -74,7 +74,7 @@ class _BothOrderState extends State<BothOrder> {
                                         currentState == 0
                                             ? infoWidget(context)
                                             : currentState == 1
-                                                ? paymentWidget()
+                                                ? paymentWidget(context)
                                                 : const Center(
                                                     child:
                                                         CircularProgressIndicator()),
@@ -149,76 +149,50 @@ class _BothOrderState extends State<BothOrder> {
           decoration: BoxDecoration(
               color: Colors.grey.shade100,
               borderRadius: const BorderRadius.all(Radius.circular(20))),
-          child: (Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Row(
             children: [
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: CupertinoTextField.borderless(
-                  placeholder: "Clubname",
-                  controller: clubNameCon,
-                ),
-              ),
-              (logoDownloaded == false)
-                  ? Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: MaterialButton(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 32, vertical: 24),
-                          child: const Text("Logo Hochladen",
-                              style: TextStyle(color: Colors.white)),
-                          color: Colors.pink,
-                          shape: const RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20))),
-                          onPressed: () async {
-                            FilePickerResult? result = await FilePicker.platform
-                                .pickFiles(
-                                    type: FileType.custom,
-                                    allowedExtensions: [
-                                  "pdf",
-                                  "jpg",
-                                  "png",
-                                  "jpeg"
-                                ]);
+              Container(
+                child: TextButton(
+                    style: ButtonStyle(
+                        shape: MaterialStateProperty.all(
+                            const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20))))),
+                    child: const Text("Ändern"),
+                    onPressed: () async {
+                      FilePickerResult? result = await FilePicker.platform
+                          .pickFiles(
+                              type: FileType.custom,
+                              allowedExtensions: ["png"]);
 
-                            if (result != null) {
-                              String fileName = result.files.first.name;
-                              Uint8List? fileBytes = result.files.first.bytes;
-                              if (result.files.first.size > 5000000) {
-                                myCustomError(context, "Maximal 5MB");
-                                return;
-                              }
-                              logoBytes = fileBytes;
-                              filename = fileName;
-                              setState(() => logoDownloaded = true);
-                            }
-                          }),
-                    )
-                  : Padding(
-                      padding: EdgeInsets.all(20),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text("$filename wurde hochgeladen"),
-                            MaterialButton(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 32, vertical: 24),
-                                child: const Text("Logo löschen",
-                                    style: TextStyle(color: Colors.white)),
-                                color: Colors.pink,
-                                shape: const RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(20))),
-                                onPressed: () async {
-                                  logoBytes = null;
-                                  filename = null;
-                                  setState(() => logoDownloaded = false);
-                                }),
-                          ]),
-                    )
+                      if (result != null) {
+                        Uint8List? fileBytes = result.files.first.bytes;
+                        if (result.files.first.size > 5000000) {
+                          myCustomError(context, "Maximal 5MB");
+                          return;
+                        }
+                        setState(() {
+                          logoBytes = fileBytes;
+                        });
+                      }
+                    }),
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(20)),
+                    color: Colors.grey.shade200,
+                    image: logoBytes == null
+                        ? null
+                        : DecorationImage(image: MemoryImage(logoBytes!))),
+              ),
+              const SizedBox(width: 20),
+              Flexible(
+                child: TextField(
+                    decoration: const InputDecoration(label: Text("Club name")),
+                    controller: clubNameCon),
+              ),
             ],
-          )),
+          ),
         ),
         const Padding(
           padding: EdgeInsets.all(20),
@@ -280,7 +254,7 @@ class _BothOrderState extends State<BothOrder> {
     );
   }
 
-  Widget paymentWidget() =>
+  Widget paymentWidget(context) =>
       Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         const Padding(
             padding: EdgeInsets.all(20),
@@ -295,7 +269,7 @@ class _BothOrderState extends State<BothOrder> {
             color: Colors.blue,
             shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(20))),
-            onPressed: () {
+            onPressed: () async {
               waitDialog(context);
               bool notLoggedIn = FirebaseAuth.instance.currentUser == null;
 
@@ -303,16 +277,28 @@ class _BothOrderState extends State<BothOrder> {
                 FirebaseAuth.instance
                     .createUserWithEmailAndPassword(
                         email: emailCon.text, password: passwCon.text)
-                    .then((value) => doneWithFuture())
                     .catchError((e, s) {
                   closeDialog(context);
                   myCustomError(context, e.toString().split("]").last.trim());
                   setState(() {
                     currentState = 1;
                   });
-                });
+                }).then((value) => doneWithFuture());
               } else {
-                doneWithFuture();
+                if ((await FirebaseFirestore.instance
+                            .collection("apps")
+                            .where("useremail",
+                                isEqualTo:
+                                    FirebaseAuth.instance.currentUser!.email!)
+                            .get())
+                        .docs
+                        .length <
+                    5) {
+                  doneWithFuture();
+                } else {
+                  myCustomError(context, "Zu viele Projekte");
+                  closeDialog(context);
+                }
               }
             })
       ]);
@@ -320,7 +306,6 @@ class _BothOrderState extends State<BothOrder> {
   void doneWithFuture() {
     List<String> courts = allCourts.text.split(",");
     courts.insert(0, "");
-
     FirebaseFirestore.instance.collection("apps").add({
       "projectfamily": "Tclub",
       "appname": clubNameCon.text,
@@ -330,43 +315,43 @@ class _BothOrderState extends State<BothOrder> {
       "phone": phoneCon.text,
       "abo": "Bothmanagment",
       "description": "Tclub, Court- & Membership management",
-    }).then((value) {
-      FirebaseStorage.instance
-          .ref('uploads/${value.id}/$filename')
-          .putData(logoBytes!)
-          .catchError((error) {
-        closeDialog(context);
-
-        myCustomError(context, "Fehler beim Hochladen des Logos");
-      }).then((p0) {
-        closeDialog(context);
-        p0.ref.getDownloadURL().catchError((e) {
-          myCustomError(context, "Kann das Logo nicht finden");
-        }).then((logoRef) {
-          FirebaseFirestore.instance
-              .collection("apps")
-              .doc(value.id)
-              .update({"logo": logoRef}).catchError((e) {
-            myCustomError(
-                context, "Update von Firestore hat nicht funktioniert");
-          }).then((value) {
-            myCustomError(context, "Erfolgreiche Bestellung");
-            Navigator.pushReplacement(
-              context,
-              PageRouteBuilder(
-                pageBuilder: (context, animation1, animation2) => const MyApp(),
-                transitionsBuilder: (c, a1, a2, w) =>
-                    FadeTransition(opacity: a1, child: w),
-              ),
-            );
-          });
-        });
-      });
     }).catchError((e, s) {
       closeDialog(context);
       myCustomError(context, e.toString().split("]").last.trim());
       setState(() {
         currentState = 1;
+      });
+    }).then((value) {
+      if (logoBytes == null) {
+        closeDialog(context);
+        myCustomError(context, "Erfolgreiche Bestellung");
+        Navigator.pushReplacement(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (context, animation1, animation2) => const MyApp(),
+              transitionsBuilder: (c, a1, a2, w) =>
+                  FadeTransition(opacity: a1, child: w),
+            ));
+        return;
+      }
+      FirebaseStorage.instance
+          .ref('uploads')
+          .child(value.id)
+          .child('logo.png')
+          .putData(logoBytes!)
+          .catchError((error) {
+        closeDialog(context);
+        myCustomError(context, "Fehler beim Hochladen des Logos");
+      }).then((p0) {
+        closeDialog(context);
+        myCustomError(context, "Erfolgreiche Bestellung");
+        Navigator.pushReplacement(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (context, animation1, animation2) => const MyApp(),
+              transitionsBuilder: (c, a1, a2, w) =>
+                  FadeTransition(opacity: a1, child: w),
+            ));
       });
     });
   }

@@ -178,8 +178,8 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            child: Wrap(
+              alignment: WrapAlignment.spaceEvenly,
               children: List.generate(
                 tabs.length,
                 (index) => Padding(

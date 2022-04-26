@@ -29,7 +29,7 @@ class _TclubCourtProjectSettingsState extends State<TclubCourtProjectSettings> {
         .child('logo.png')
         .getData()
         .catchError((e) {
-      myCustomError(context, e.toString());
+      //myCustomError(context, e.toString());
     }).then((value) {
       setState(() {
         logoBytes = value;

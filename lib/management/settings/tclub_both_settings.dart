@@ -30,7 +30,7 @@ class _TclubBothProjectSettingsState extends State<TclubBothProjectSettings> {
         .child('logo.png')
         .getData()
         .catchError((e) {
-      myCustomError(context, e.toString());
+      //   myCustomError(context, e.toString());
     }).then((value) {
       setState(() {
         logoBytes = value;
