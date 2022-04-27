@@ -14,21 +14,25 @@ class Project extends StatelessWidget {
   final String title;
   final String content;
   final Widget child;
-  const Project(this.title, this.content, this.child);
+  final List<String> screenshots;
+  const Project(this.title, this.content, this.child, this.screenshots);
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
       if (constraints.maxWidth < 800) {
-        return Column(
-            children: [DetailWidget(content), const ScreenShotWidget(), child]);
+        return Column(children: [
+          DetailWidget(content),
+          ScreenShotWidget(screenshots),
+          child
+        ]);
       }
       return Column(
         children: [
           Row(mainAxisSize: MainAxisSize.min, children: [
             Flexible(child: DetailWidget(content)),
             const SizedBox(width: 20),
-            const Flexible(child: ScreenShotWidget())
+            Flexible(child: ScreenShotWidget(screenshots))
           ]),
           child
         ],
@@ -38,7 +42,9 @@ class Project extends StatelessWidget {
 }
 
 class ScreenShotWidget extends StatelessWidget {
-  const ScreenShotWidget({Key? key}) : super(key: key);
+  final List<String> screenshots;
+
+  const ScreenShotWidget(this.screenshots, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -52,22 +58,25 @@ class ScreenShotWidget extends StatelessWidget {
                 color: Colors.white,
                 fontSize: 24)),
         const SizedBox(height: 20),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: List.generate(
-              3,
-              (index) => Flexible(
-                    child: Container(
-                      height: 240,
-                      decoration: BoxDecoration(
-                          image: const DecorationImage(
-                              fit: BoxFit.cover,
-                              image: AssetImage("entry_image.webp"
-                                  //"https://appradar.com/wp-content/uploads/nyt-cooking-apple-screenshots-1024x768.png",
-                                  )),
-                          borderRadius: BorderRadius.circular(20)),
-                    ),
-                  )),
+        SizedBox(
+          height: 240,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: List.generate(
+                screenshots.length,
+                (index) => Flexible(
+                      child: Container(
+                        margin: const EdgeInsets.only(left: 10, right: 10),
+                        height: 240,
+                        width: 110,
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: AssetImage(screenshots[index])),
+                            borderRadius: BorderRadius.circular(10)),
+                      ),
+                    )),
+          ),
         )
       ],
     );
@@ -129,15 +138,21 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
 
   List<Project> tabs = [
     const Project(
-      "Tclub",
-      "Eine App für Tennisclubs, welche die Verwaltung von Plätzen und Mitgliedern übernimmt. Dadurch werden viele Vorgänge sowohl für Spieler als auch für Organisatoren drastisch vereinfacht. Tclub ist DER Schritt in Richtung Digitalisierung für Tennisclubs. Einfach. Innovativ. Günstig. Die zentralisierte Verwaltung von Benutzerdaten garantiert einen sicheren und zuverlässigen Umgang und ermöglicht auch anstrebenden Tennisspielern einen komfortablen und schnellen Einstieg in den ersten Club.",
-      TClub(),
-    ),
+        "Tclub",
+        "Eine App für Tennisclubs, welche die Verwaltung von Plätzen und Mitgliedern übernimmt. Dadurch werden viele Vorgänge sowohl für Spieler als auch für Organisatoren drastisch vereinfacht. Tclub ist DER Schritt in Richtung Digitalisierung für Tennisclubs. Einfach. Innovativ. Günstig. Die zentralisierte Verwaltung von Benutzerdaten garantiert einen sicheren und zuverlässigen Umgang und ermöglicht auch anstrebenden Tennisspielern einen komfortablen und schnellen Einstieg in den ersten Club.",
+        TClub(), [
+      "screenshots/tclub/courts.png",
+      "screenshots/tclub/profil.png",
+      "screenshots/tclub/dialog.png"
+    ]),
     const Project(
-      "Tcount",
-      "Eine App für das mitzählen des Spielstandes. Mit vielen anschaulichen Statistiken kann eine besonders gute Auswertung des Spiels vorgenommen werden.",
-      Tcount(),
-    )
+        "Tcount",
+        "Eine App für das mitzählen des Spielstandes. Mit vielen anschaulichen Statistiken kann eine besonders gute Auswertung des Spiels vorgenommen werden.",
+        Tcount(), [
+      // "screenshots/tclub/courts.png",
+      // "screenshots/tclub/profil.png",
+      // "screenshots/tclub/dialog.png"
+    ])
   ];
 
   @override

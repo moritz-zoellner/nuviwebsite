@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:noviwebsite/main.dart';
 import 'package:noviwebsite/styling.dart';
@@ -24,6 +23,8 @@ class _MembershipOrderState extends State<MembershipOrder> {
   int currentState = 0;
 
   Uint8List? logoBytes;
+
+  List<List<TextEditingController>> aboControllers = [];
 
   @override
   Widget build(BuildContext context) {
@@ -105,15 +106,16 @@ class _MembershipOrderState extends State<MembershipOrder> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(20),
-                      child: CupertinoTextField.borderless(
-                        placeholder: "Email",
+                      child: TextField(
+                        decoration: const InputDecoration(label: Text("Email")),
                         controller: emailCon,
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(20),
-                      child: CupertinoTextField.borderless(
-                        placeholder: "Password",
+                      child: TextField(
+                        decoration:
+                            const InputDecoration(label: Text("Password")),
                         controller: passwCon,
                       ),
                     )
@@ -186,6 +188,72 @@ class _MembershipOrderState extends State<MembershipOrder> {
         ),
         const Padding(
           padding: EdgeInsets.all(20),
+          child: Text("Abos und Preise",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              )),
+        ),
+        Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+                color: Colors.grey.shade100,
+                borderRadius: const BorderRadius.all(Radius.circular(20))),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: List.generate(
+                aboControllers.length + 1,
+                (index) => (index == aboControllers.length)
+                    ? IconButton(
+                        tooltip: "Abo hinzufügen",
+                        icon: const Icon(Icons.add_circle_outline),
+                        onPressed: () {
+                          setState(() {
+                            aboControllers.add([
+                              TextEditingController(),
+                              TextEditingController()
+                            ]);
+                          });
+                        },
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.only(bottom: 20),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            IconButton(
+                              tooltip: "Abo entfernen",
+                              icon: const Icon(Icons.remove_circle_outline,
+                                  color: Colors.red),
+                              onPressed: () {
+                                setState(() {
+                                  aboControllers.removeAt(index);
+                                });
+                              },
+                            ),
+                            const SizedBox(width: 20),
+                            Flexible(
+                              child: TextField(
+                                  decoration:
+                                      const InputDecoration(label: Text("Abo")),
+                                  controller: aboControllers[index][0]),
+                            ),
+                            const SizedBox(width: 20),
+                            Flexible(
+                              child: TextField(
+                                  decoration: const InputDecoration(
+                                      suffixIcon: Icon(Icons.euro),
+                                      label: Text("Preis")),
+                                  controller: aboControllers[index][1]),
+                            ),
+                            const SizedBox(width: 20),
+                          ],
+                        ),
+                      ),
+              ),
+            )),
+        const Padding(
+          padding: EdgeInsets.all(20),
           child: Text(
               "Um die App einzurichten und auf Ihren Verein anzupassen benötigen wir die Angabe Ihres Vereinsnamens und ein Logo, welches wir hinterlegen sollen"),
         ),
@@ -198,10 +266,11 @@ class _MembershipOrderState extends State<MembershipOrder> {
                 borderRadius: BorderRadius.all(Radius.circular(20))),
             onPressed: () {
               String validInput = inputControl(
-                clubName: clubNameCon.text,
-                email: (notLoggedIn) ? emailCon.text : null,
-                passw: (notLoggedIn) ? passwCon.text : null,
-              );
+                  clubName: clubNameCon.text,
+                  email: (notLoggedIn) ? emailCon.text : null,
+                  passw: (notLoggedIn) ? passwCon.text : null,
+                  aboList: aboControllers);
+
               if (validInput == "valid") {
                 setState(() => currentState = 1);
               } else {
@@ -261,12 +330,17 @@ class _MembershipOrderState extends State<MembershipOrder> {
       ]);
 
   void doneWithFuture() {
+    Map<String, String> aboMap = {};
+    for (List<TextEditingController> cons in aboControllers) {
+      aboMap.putIfAbsent(cons[0].text, () => cons[1].text);
+    }
     FirebaseFirestore.instance.collection("apps").add({
       "projectfamily": "Tclub",
       "appname": clubNameCon.text,
       "useremail": FirebaseAuth.instance.currentUser!.email,
       "abo": "Membershipmanagment",
       "description": "Tclub, Membershipmanagement",
+      "abos": aboMap,
     }).catchError((e, s) {
       closeDialog(context);
       myCustomError(context, e.toString().split("]").last.trim());

@@ -100,6 +100,7 @@ String inputControl(
     String? clubName,
     String? phone,
     String? hoursPerWeek,
+    List<List<TextEditingController>>? aboList,
     String? allCourts}) {
   if (email != null) {
     if (invalidMailAdress(email)) {
@@ -136,6 +137,22 @@ String inputControl(
       return "Plätzenamen dürfen nicht leer sein";
     }
   }
+  if (aboList != null) {
+    if (aboList.isEmpty) {
+      return "Es müssen Abos und deren Preise exestieren";
+    } else {
+      for (List<TextEditingController> cons in aboList) {
+        if (cons[0].text.isEmpty) {
+          return "Die Felder dürfen nicht leer sein";
+        }
+        if (cons[1].text.isEmpty) {
+          return "Die Felder dürfen nicht leer sein";
+        } else if (!isNumber(cons[1].text)) {
+          return "Die Preise müssen Zahlen sein";
+        }
+      }
+    }
+  }
 
   return "valid";
 }
@@ -153,7 +170,10 @@ bool invalidPW(String data) {
   return true;
 }
 
-bool isNumber(String data) => double.tryParse(data) != null;
+bool isNumber(String data) {
+  return double.tryParse(data.replaceAll(",", ".")) != null;
+}
+
 bool invalidPhoneNumber(String data) {
   data = data.replaceAll(" ", "");
   if (data.isEmpty) {
