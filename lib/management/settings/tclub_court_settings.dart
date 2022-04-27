@@ -50,8 +50,6 @@ class _TclubCourtProjectSettingsState extends State<TclubCourtProjectSettings> {
             courts.replaceAll('[', '').replaceAll(']', '').replaceAll(' ', ''));
     TextEditingController hperweekCon =
         TextEditingController(text: widget.projectInfo["h_per_week"]);
-    TextEditingController phoneCon =
-        TextEditingController(text: widget.projectInfo["phone"]);
     return NestedScrollView(
         headerSliverBuilder: (c, b) =>
             [const SliverToBoxAdapter(child: MyAppBar("Optionen"))],
@@ -137,12 +135,6 @@ class _TclubCourtProjectSettingsState extends State<TclubCourtProjectSettings> {
                                   label: Text("Stunden Pro Woche")),
                               controller: hperweekCon,
                             ),
-                            const SizedBox(height: 20),
-                            TextField(
-                              decoration: const InputDecoration(
-                                  label: Text("Kontaktnummer")),
-                              controller: phoneCon,
-                            ),
                           ],
                         ),
                       ),
@@ -160,7 +152,6 @@ class _TclubCourtProjectSettingsState extends State<TclubCourtProjectSettings> {
                             "appname": appNameCon.text,
                             "courts": list,
                             "h_per_week": hperweekCon.text,
-                            "phone": phoneCon.text,
                           }).catchError((e) {
                             closeDialog(context);
                             myCustomError(context, e.toString());

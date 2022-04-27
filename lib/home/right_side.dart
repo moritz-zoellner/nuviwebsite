@@ -65,6 +65,14 @@ class _RightSide extends State<RightSide> {
             }
             List<DocumentSnapshot<Map<String, dynamic>>> list =
                 snapshot.data!.docs;
+            if (list.isEmpty) {
+              return const Center(
+                  child: Text("Sie haben derzeit keine laufenden Projekte",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: 30)));
+            }
             return Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: List.generate(
@@ -146,8 +154,8 @@ class _RightSide extends State<RightSide> {
             child: MaterialButton(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
-                child: const Text("Account löschen",
-                    style: TextStyle(color: Colors.white)),
+                child: const Text("Konto löschen",
+                    style: TextStyle(color: Color.fromARGB(255, 39, 30, 30))),
                 color: Colors.pink,
                 shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(20))),

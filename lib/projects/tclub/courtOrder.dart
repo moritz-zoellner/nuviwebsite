@@ -18,7 +18,6 @@ class _CourtOrderState extends State<CourtOrder> {
   TextEditingController emailCon = TextEditingController();
   TextEditingController passwCon = TextEditingController();
 
-  TextEditingController phoneCon = TextEditingController();
   TextEditingController clubNameCon = TextEditingController();
   TextEditingController allCourts = TextEditingController();
   TextEditingController hoursPerWeek = TextEditingController();
@@ -94,24 +93,23 @@ class _CourtOrderState extends State<CourtOrder> {
           child: Text("Contact information",
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         ),
-        Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-              color: Colors.grey.shade100,
-              borderRadius: const BorderRadius.all(Radius.circular(20))),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              notLoggedIn
-                  ? Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: TextField(
-                        decoration: const InputDecoration(label: Text("Email")),
-                        controller: emailCon,
-                      ))
-                  : const SizedBox.shrink(),
-              notLoggedIn
-                  ? Padding(
+        notLoggedIn
+            ? Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                    color: Colors.grey.shade100,
+                    borderRadius: const BorderRadius.all(Radius.circular(20))),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: TextField(
+                          decoration:
+                              const InputDecoration(label: Text("Email")),
+                          controller: emailCon,
+                        )),
+                    Padding(
                       padding: const EdgeInsets.all(20),
                       child: TextField(
                         decoration:
@@ -119,17 +117,10 @@ class _CourtOrderState extends State<CourtOrder> {
                         controller: passwCon,
                       ),
                     )
-                  : const SizedBox.shrink(),
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: TextField(
-                  decoration: const InputDecoration(label: Text("Phonenumber")),
-                  controller: phoneCon,
+                  ],
                 ),
-              ),
-            ],
-          ),
-        ),
+              )
+            : const SizedBox.shrink(),
         const Padding(
           padding: EdgeInsets.all(20),
           child: Text(
@@ -245,7 +236,6 @@ class _CourtOrderState extends State<CourtOrder> {
                   clubName: clubNameCon.text,
                   email: (notLoggedIn) ? emailCon.text : null,
                   passw: (notLoggedIn) ? passwCon.text : null,
-                  phone: phoneCon.text,
                   hoursPerWeek: hoursPerWeek.text,
                   allCourts: allCourts.text);
 
@@ -317,7 +307,6 @@ class _CourtOrderState extends State<CourtOrder> {
       "useremail": FirebaseAuth.instance.currentUser!.email,
       "courts": courts,
       "h_per_week": hoursPerWeek.text,
-      "phone": phoneCon.text,
       "abo": "Courtmanagment",
       "description": "Tclub, Courtmanagement",
     }).catchError((e, s) {

@@ -31,7 +31,7 @@ class _TclubMemberProjectSettingsState
         .child('logo.png')
         .getData()
         .catchError((e) {
-     // myCustomError(context, e.toString());
+      // myCustomError(context, e.toString());
     }).then((value) {
       setState(() {
         logoBytes = value;
@@ -43,8 +43,6 @@ class _TclubMemberProjectSettingsState
   Widget build(BuildContext context) {
     TextEditingController appNameCon =
         TextEditingController(text: widget.projectInfo["appname"]);
-    TextEditingController phoneCon =
-        TextEditingController(text: widget.projectInfo["phone"]);
     return NestedScrollView(
         headerSliverBuilder: (c, b) => [
               const SliverToBoxAdapter(child: MyAppBar("Optionen")),
@@ -119,12 +117,6 @@ class _TclubMemberProjectSettingsState
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 20),
-                            TextField(
-                              decoration: const InputDecoration(
-                                  label: Text("Kontaktnummer")),
-                              controller: phoneCon,
-                            ),
                           ],
                         ),
                       ),
@@ -136,7 +128,6 @@ class _TclubMemberProjectSettingsState
                             .doc(widget.projectInfo.id)
                             .update({
                           "appname": appNameCon.text,
-                          "phone": phoneCon.text,
                         }).catchError((e) {
                           closeDialog(context);
                           myCustomError(context, e.toString());

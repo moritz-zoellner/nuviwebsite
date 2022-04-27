@@ -186,11 +186,7 @@ class _CourtManagementState extends State<CourtManagement> {
                                 physics: const NeverScrollableScrollPhysics(),
                                 children: List.generate(DAYS_FOREWARD, (day) {
                                   return GridView.builder(
-                                      padding: const EdgeInsets.only(
-                                          bottom: 10,
-                                          top: 10,
-                                          left: 10,
-                                          right: 10),
+                                      padding: const EdgeInsets.all(10),
                                       shrinkWrap: true,
                                       scrollDirection: Axis.horizontal,
                                       itemCount: 33 * courts.length,
@@ -200,7 +196,7 @@ class _CourtManagementState extends State<CourtManagement> {
                                               crossAxisSpacing: 10,
                                               crossAxisCount: courts.length),
                                       itemBuilder: (context, index) {
-                                        if (currentIndex == index) {}
+                                        //if (currentIndex == index) {}
                                         if (index < courts.length) {
                                           return MyGridItem(
                                               text: courts[index]);
@@ -365,9 +361,10 @@ class MyGridItem extends StatelessWidget {
         highlightElevation: 0,
         color: color,
         disabledColor: color,
+        padding: const EdgeInsets.all(2),
         child: Text(text,
             overflow: TextOverflow.clip,
-            maxLines: 1,
+            maxLines: 2,
             style: const TextStyle(fontSize: 16)));
   }
 }

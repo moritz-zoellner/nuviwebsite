@@ -19,7 +19,6 @@ class _MembershipOrderState extends State<MembershipOrder> {
   TextEditingController emailCon = TextEditingController();
   TextEditingController passwCon = TextEditingController();
 
-  TextEditingController phoneCon = TextEditingController();
   TextEditingController clubNameCon = TextEditingController();
   TextEditingController clubLogoCon = TextEditingController();
   int currentState = 0;
@@ -95,42 +94,33 @@ class _MembershipOrderState extends State<MembershipOrder> {
           child: Text("Contact information",
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         ),
-        Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-              color: Colors.grey.shade100,
-              borderRadius: const BorderRadius.all(Radius.circular(20))),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              notLoggedIn
-                  ? Padding(
+        notLoggedIn
+            ? Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                    color: Colors.grey.shade100,
+                    borderRadius: const BorderRadius.all(Radius.circular(20))),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
                       padding: const EdgeInsets.all(20),
                       child: CupertinoTextField.borderless(
                         placeholder: "Email",
                         controller: emailCon,
                       ),
-                    )
-                  : const SizedBox.shrink(),
-              notLoggedIn
-                  ? Padding(
+                    ),
+                    Padding(
                       padding: const EdgeInsets.all(20),
                       child: CupertinoTextField.borderless(
                         placeholder: "Password",
                         controller: passwCon,
                       ),
                     )
-                  : const SizedBox.shrink(),
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: CupertinoTextField.borderless(
-                  placeholder: "Phone number",
-                  controller: phoneCon,
+                  ],
                 ),
-              ),
-            ],
-          ),
-        ),
+              )
+            : const SizedBox.shrink(),
         const Padding(
           padding: EdgeInsets.all(20),
           child: Text(
@@ -211,7 +201,6 @@ class _MembershipOrderState extends State<MembershipOrder> {
                 clubName: clubNameCon.text,
                 email: (notLoggedIn) ? emailCon.text : null,
                 passw: (notLoggedIn) ? passwCon.text : null,
-                phone: phoneCon.text,
               );
               if (validInput == "valid") {
                 setState(() => currentState = 1);
@@ -276,7 +265,6 @@ class _MembershipOrderState extends State<MembershipOrder> {
       "projectfamily": "Tclub",
       "appname": clubNameCon.text,
       "useremail": FirebaseAuth.instance.currentUser!.email,
-      "phone": phoneCon.text,
       "abo": "Membershipmanagment",
       "description": "Tclub, Membershipmanagement",
     }).catchError((e, s) {
