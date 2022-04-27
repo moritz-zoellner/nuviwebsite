@@ -25,6 +25,8 @@ class _BothOrderState extends State<BothOrder> {
 
   Uint8List? logoBytes;
 
+  List<List<TextEditingController>> aboControllers = [];
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -219,6 +221,77 @@ class _BothOrderState extends State<BothOrder> {
           child: Text(
               "Die Platzbuchung- und Verwaltung kann von Ihnen individuell Angepasst werden. Hier können Sie angeben, wie viele Plätze auf Ihrem Tennisgelände vorhanden sind, und wie diese Bezeichnet werden. Außerdem können Sie darüber entscheiden, wie viele Stunden pro Woche jeder Spiele zur Verfügung haben soll"),
         ),
+        const Padding(
+          padding: EdgeInsets.all(20),
+          child: Text("Abos und Preise",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              )),
+        ),
+        Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+                color: Colors.grey.shade100,
+                borderRadius: const BorderRadius.all(Radius.circular(20))),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: List.generate(
+                aboControllers.length + 1,
+                (index) => (index == aboControllers.length)
+                    ? IconButton(
+                        tooltip: "Abo hinzufügen",
+                        icon: const Icon(Icons.add_circle_outline),
+                        onPressed: () {
+                          setState(() {
+                            aboControllers.add([
+                              TextEditingController(),
+                              TextEditingController()
+                            ]);
+                          });
+                        },
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.only(bottom: 20),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            IconButton(
+                              tooltip: "Abo entfernen",
+                              icon: const Icon(Icons.remove_circle_outline,
+                                  color: Colors.red),
+                              onPressed: () {
+                                setState(() {
+                                  aboControllers.removeAt(index);
+                                });
+                              },
+                            ),
+                            const SizedBox(width: 20),
+                            Flexible(
+                              child: TextField(
+                                  decoration:
+                                      const InputDecoration(label: Text("Abo")),
+                                  controller: aboControllers[index][0]),
+                            ),
+                            const SizedBox(width: 20),
+                            Flexible(
+                              child: TextField(
+                                  decoration: const InputDecoration(
+                                      suffixIcon: Icon(Icons.euro),
+                                      label: Text("Preis")),
+                                  controller: aboControllers[index][1]),
+                            ),
+                            const SizedBox(width: 20),
+                          ],
+                        ),
+                      ),
+              ),
+            )),
+        const Padding(
+          padding: EdgeInsets.all(20),
+          child: Text(
+              "Um die App einzurichten und auf Ihren Verein anzupassen benötigen wir die Angabe Ihres Vereinsnamens und ein Logo, welches wir hinterlegen sollen"),
+        ),
         MaterialButton(
             padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
             child: const Text("Fortfahren zur Bezahlung",
@@ -232,7 +305,8 @@ class _BothOrderState extends State<BothOrder> {
                   email: (notLoggedIn) ? emailCon.text : null,
                   passw: (notLoggedIn) ? passwCon.text : null,
                   hoursPerWeek: hoursPerWeek.text,
-                  allCourts: allCourts.text);
+                  allCourts: allCourts.text,
+                  aboList: aboControllers);
               if (validInput == "valid") {
                 setState(() => currentState = 1);
               } else {
@@ -293,6 +367,10 @@ class _BothOrderState extends State<BothOrder> {
       ]);
 
   void doneWithFuture() {
+    Map<String, String> aboMap = {};
+    for (List<TextEditingController> cons in aboControllers) {
+      aboMap.putIfAbsent(cons[0].text, () => cons[1].text);
+    }
     List<String> courts = allCourts.text.split(",");
     courts.insert(0, "");
     FirebaseFirestore.instance.collection("apps").add({
@@ -303,6 +381,7 @@ class _BothOrderState extends State<BothOrder> {
       "h_per_week": hoursPerWeek.text,
       "abo": "Bothmanagment",
       "description": "Tclub, Court- & Membership management",
+      "abos": aboMap,
     }).catchError((e, s) {
       closeDialog(context);
       myCustomError(context, e.toString().split("]").last.trim());
