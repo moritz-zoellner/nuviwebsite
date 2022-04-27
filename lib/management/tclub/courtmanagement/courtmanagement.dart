@@ -172,7 +172,7 @@ class _CourtManagementState extends State<CourtManagement> {
                       color: Colors.grey.shade50,
                       child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                           stream: FirebaseFirestore.instance
-                              .collection("tclub")
+                              .collection("apps")
                               .doc(widget.projectInfo.id)
                               .collection("courts")
                               .snapshots(),
@@ -289,7 +289,7 @@ class _CourtManagementState extends State<CourtManagement> {
                 // Deine Reservierungen
                 waitDialog(context);
                 FirebaseFirestore.instance
-                    .collection("tclub")
+                    .collection("apps")
                     .doc(widget.projectInfo.id)
                     .collection("courts")
                     .doc(courtId)
@@ -318,7 +318,7 @@ class _CourtManagementState extends State<CourtManagement> {
                     waitDialog(context);
 
                     FirebaseFirestore.instance
-                        .collection("tclub")
+                        .collection("apps")
                         .doc(widget.projectInfo.id)
                         .collection("courts")
                         .doc(courtId)

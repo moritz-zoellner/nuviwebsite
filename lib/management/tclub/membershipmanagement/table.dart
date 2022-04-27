@@ -67,7 +67,7 @@ class _TableState extends State<MyTable> {
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
       stream: FirebaseFirestore.instance
-          .collection("tclub")
+          .collection("apps")
           .doc(widget.uid)
           .collection("users")
           .snapshots(),
@@ -154,7 +154,7 @@ class _TableState extends State<MyTable> {
                                   // TODO: delete user
                                   waitDialog(context);
                                   FirebaseFirestore.instance
-                                      .collection("tclub")
+                                      .collection("apps")
                                       .doc(widget.uid)
                                       .collection("users")
                                       .doc(list[index].id)

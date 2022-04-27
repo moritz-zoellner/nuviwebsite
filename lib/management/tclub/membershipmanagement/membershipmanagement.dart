@@ -129,7 +129,7 @@ class EditTableButton extends StatelessWidget {
             waitDialog(context);
 
             FirebaseFirestore.instance
-                .collection("tclub")
+                .collection("apps")
                 .doc(projectId)
                 .collection("users")
                 .add(newUserMap)
@@ -163,7 +163,7 @@ class EditTableButton extends StatelessWidget {
                 allChangedDocs[allChangedDocs.keys.toList()[i]].toString());
             waitDialog(context);
             FirebaseFirestore.instance
-                .collection("tclub")
+                .collection("apps")
                 .doc(projectId)
                 .collection("users")
                 .doc(allChangedDocs.keys.toList()[i])
@@ -241,7 +241,7 @@ class ExportTableButton extends StatelessWidget {
     List<List<dynamic>> rows = [];
 
     var collection = FirebaseFirestore.instance
-        .collection("tclub")
+        .collection("apps")
         .doc(uid)
         .collection("users");
     var querySnapshot = await collection.get();
