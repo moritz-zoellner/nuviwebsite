@@ -17,6 +17,7 @@ class BothOrder extends StatefulWidget {
 class _BothOrderState extends State<BothOrder> {
   TextEditingController emailCon = TextEditingController();
   TextEditingController passwCon = TextEditingController();
+  TextEditingController webLink = TextEditingController();
 
   TextEditingController clubNameCon = TextEditingController();
   TextEditingController allCourts = TextEditingController();
@@ -26,6 +27,7 @@ class _BothOrderState extends State<BothOrder> {
   Uint8List? logoBytes;
 
   List<List<TextEditingController>> aboControllers = [];
+  List<TextEditingController> courtControllers = [];
 
   @override
   Widget build(BuildContext context) {
@@ -141,48 +143,62 @@ class _BothOrderState extends State<BothOrder> {
           decoration: BoxDecoration(
               color: Colors.grey.shade100,
               borderRadius: const BorderRadius.all(Radius.circular(20))),
-          child: Row(
+          child: Column(
             children: [
-              Container(
-                child: TextButton(
-                    style: ButtonStyle(
-                        shape: MaterialStateProperty.all(
-                            const RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20))))),
-                    child: const Text("Ändern"),
-                    onPressed: () async {
-                      FilePickerResult? result = await FilePicker.platform
-                          .pickFiles(
-                              type: FileType.custom,
-                              allowedExtensions: ["png"]);
+              Row(
+                children: [
+                  Container(
+                    child: TextButton(
+                        style: ButtonStyle(
+                            shape: MaterialStateProperty.all(
+                                const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(20))))),
+                        child: const Text("Ändern"),
+                        onPressed: () async {
+                          FilePickerResult? result = await FilePicker.platform
+                              .pickFiles(
+                                  type: FileType.custom,
+                                  allowedExtensions: ["png"]);
 
-                      if (result != null) {
-                        Uint8List? fileBytes = result.files.first.bytes;
-                        if (result.files.first.size > 5000000) {
-                          myCustomError(context, "Maximal 5MB");
-                          return;
-                        }
-                        setState(() {
-                          logoBytes = fileBytes;
-                        });
-                      }
-                    }),
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(20)),
-                    color: Colors.grey.shade200,
-                    image: logoBytes == null
-                        ? null
-                        : DecorationImage(image: MemoryImage(logoBytes!))),
+                          if (result != null) {
+                            Uint8List? fileBytes = result.files.first.bytes;
+                            if (result.files.first.size > 5000000) {
+                              myCustomError(context, "Maximal 5MB");
+                              return;
+                            }
+                            setState(() {
+                              logoBytes = fileBytes;
+                            });
+                          }
+                        }),
+                    width: 100,
+                    height: 100,
+                    decoration: BoxDecoration(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(20)),
+                        color: Colors.grey.shade200,
+                        image: logoBytes == null
+                            ? null
+                            : DecorationImage(image: MemoryImage(logoBytes!))),
+                  ),
+                  const SizedBox(width: 20),
+                  Flexible(
+                    child: TextField(
+                        decoration:
+                            const InputDecoration(label: Text("Club name")),
+                        controller: clubNameCon),
+                  ),
+                ],
               ),
-              const SizedBox(width: 20),
-              Flexible(
+              Padding(
+                padding: const EdgeInsets.all(20),
                 child: TextField(
-                    decoration: const InputDecoration(label: Text("Club name")),
-                    controller: clubNameCon),
-              ),
+                  decoration: const InputDecoration(
+                      label: Text("Link zur Vereinswebsite")),
+                  controller: webLink,
+                ),
+              )
             ],
           ),
         ),
@@ -206,16 +222,65 @@ class _BothOrderState extends State<BothOrder> {
                   controller: hoursPerWeek,
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: CupertinoTextField.borderless(
-                  placeholder: "Namen der Plätze (\"1,2,3,4,5,6,7,M\")",
-                  controller: allCourts,
-                ),
-              ),
             ],
           ),
         ),
+        const Padding(
+          padding: EdgeInsets.all(20),
+          child: Text("Plätze",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              )),
+        ),
+        Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+                color: Colors.grey.shade100,
+                borderRadius: const BorderRadius.all(Radius.circular(20))),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: List.generate(
+                courtControllers.length + 1,
+                (index) => (index == courtControllers.length)
+                    ? IconButton(
+                        tooltip: "Platz hinzufügen",
+                        icon: const Icon(Icons.add_circle_outline),
+                        onPressed: () {
+                          setState(() {
+                            courtControllers.add(TextEditingController());
+                          });
+                        },
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.only(bottom: 20),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            IconButton(
+                              tooltip: "Platz entfernen",
+                              icon: const Icon(Icons.remove_circle_outline,
+                                  color: Colors.red),
+                              onPressed: () {
+                                setState(() {
+                                  courtControllers.removeAt(index);
+                                });
+                              },
+                            ),
+                            const SizedBox(width: 20),
+                            Flexible(
+                              child: TextField(
+                                  decoration: InputDecoration(
+                                      label: Text(
+                                          "Platz " + (index + 1).toString())),
+                                  controller: courtControllers[index]),
+                            ),
+                            const SizedBox(width: 20),
+                          ],
+                        ),
+                      ),
+              ),
+            )),
         const Padding(
           padding: EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 20),
           child: Text(
@@ -305,7 +370,7 @@ class _BothOrderState extends State<BothOrder> {
                   email: (notLoggedIn) ? emailCon.text : null,
                   passw: (notLoggedIn) ? passwCon.text : null,
                   hoursPerWeek: hoursPerWeek.text,
-                  allCourts: allCourts.text,
+                  allCourts: courtControllers,
                   aboList: aboControllers);
               if (validInput == "valid") {
                 setState(() => currentState = 1);
@@ -371,7 +436,12 @@ class _BothOrderState extends State<BothOrder> {
     for (List<TextEditingController> cons in aboControllers) {
       aboMap.putIfAbsent(cons[0].text, () => cons[1].text);
     }
-    List<String> courts = allCourts.text.split(",");
+    List<String> courts = [];
+
+    for (TextEditingController cons in courtControllers) {
+      courts.add(cons.text);
+    }
+
     courts.insert(0, "");
     FirebaseFirestore.instance.collection("apps").add({
       "projectfamily": "Tclub",
@@ -382,6 +452,7 @@ class _BothOrderState extends State<BothOrder> {
       "abo": "Bothmanagment",
       "description": "Tclub, Court- & Membership management",
       "abos": aboMap,
+      "website": webLink.text,
     }).catchError((e, s) {
       closeDialog(context);
       myCustomError(context, e.toString().split("]").last.trim());

@@ -17,6 +17,7 @@ class MembershipOrder extends StatefulWidget {
 class _MembershipOrderState extends State<MembershipOrder> {
   TextEditingController emailCon = TextEditingController();
   TextEditingController passwCon = TextEditingController();
+  TextEditingController webLink = TextEditingController();
 
   TextEditingController clubNameCon = TextEditingController();
   TextEditingController clubLogoCon = TextEditingController();
@@ -141,50 +142,69 @@ class _MembershipOrderState extends State<MembershipOrder> {
           decoration: BoxDecoration(
               color: Colors.grey.shade100,
               borderRadius: const BorderRadius.all(Radius.circular(20))),
-          child: Row(
+          child: Column(
             children: [
-              Container(
-                child: TextButton(
-                    style: ButtonStyle(
-                        shape: MaterialStateProperty.all(
-                            const RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20))))),
-                    child: const Text("Ändern"),
-                    onPressed: () async {
-                      FilePickerResult? result = await FilePicker.platform
-                          .pickFiles(
-                              type: FileType.custom,
-                              allowedExtensions: ["png"]);
+              Row(
+                children: [
+                  Container(
+                    child: TextButton(
+                        style: ButtonStyle(
+                            shape: MaterialStateProperty.all(
+                                const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(20))))),
+                        child: const Text("Ändern"),
+                        onPressed: () async {
+                          FilePickerResult? result = await FilePicker.platform
+                              .pickFiles(
+                                  type: FileType.custom,
+                                  allowedExtensions: ["png"]);
 
-                      if (result != null) {
-                        Uint8List? fileBytes = result.files.first.bytes;
-                        if (result.files.first.size > 5000000) {
-                          myCustomError(context, "Maximal 5MB");
-                          return;
-                        }
-                        setState(() {
-                          logoBytes = fileBytes;
-                        });
-                      }
-                    }),
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(20)),
-                    color: Colors.grey.shade200,
-                    image: logoBytes == null
-                        ? null
-                        : DecorationImage(image: MemoryImage(logoBytes!))),
+                          if (result != null) {
+                            Uint8List? fileBytes = result.files.first.bytes;
+                            if (result.files.first.size > 5000000) {
+                              myCustomError(context, "Maximal 5MB");
+                              return;
+                            }
+                            setState(() {
+                              logoBytes = fileBytes;
+                            });
+                          }
+                        }),
+                    width: 100,
+                    height: 100,
+                    decoration: BoxDecoration(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(20)),
+                        color: Colors.grey.shade200,
+                        image: logoBytes == null
+                            ? null
+                            : DecorationImage(image: MemoryImage(logoBytes!))),
+                  ),
+                  const SizedBox(width: 20),
+                  Flexible(
+                    child: TextField(
+                        decoration:
+                            const InputDecoration(label: Text("Club name")),
+                        controller: clubNameCon),
+                  ),
+                ],
               ),
-              const SizedBox(width: 20),
-              Flexible(
+              Padding(
+                padding: const EdgeInsets.all(20),
                 child: TextField(
-                    decoration: const InputDecoration(label: Text("Club name")),
-                    controller: clubNameCon),
-              ),
+                  decoration: const InputDecoration(
+                      label: Text("Link zur Vereinswebsite")),
+                  controller: webLink,
+                ),
+              )
             ],
           ),
+        ),
+        const Padding(
+          padding: EdgeInsets.all(20),
+          child: Text(
+              "Um die App einzurichten und auf Ihren Verein anzupassen benötigen wir die Angabe Ihres Vereinsnamens und ein Logo, welches wir hinterlegen sollen"),
         ),
         const Padding(
           padding: EdgeInsets.all(20),
@@ -341,6 +361,7 @@ class _MembershipOrderState extends State<MembershipOrder> {
       "abo": "Membershipmanagment",
       "description": "Tclub, Membershipmanagement",
       "abos": aboMap,
+      "website": webLink.text,
     }).catchError((e, s) {
       closeDialog(context);
       myCustomError(context, e.toString().split("]").last.trim());

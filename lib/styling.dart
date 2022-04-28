@@ -101,7 +101,7 @@ String inputControl(
     String? phone,
     String? hoursPerWeek,
     List<List<TextEditingController>>? aboList,
-    String? allCourts}) {
+    List<TextEditingController>? allCourts}) {
   if (email != null) {
     if (invalidMailAdress(email)) {
       return "Ungültige E-Mail Adresse";
@@ -134,12 +134,19 @@ String inputControl(
 
   if (allCourts != null) {
     if (allCourts.isEmpty) {
-      return "Plätzenamen dürfen nicht leer sein";
+      return "Es müssen Plätze angegeben werden";
+    } else {
+      for (TextEditingController cons in allCourts) {
+        if (cons.text.isEmpty) {
+          return "Die Felder dürfen nicht leer sein";
+        }
+      }
     }
   }
+
   if (aboList != null) {
     if (aboList.isEmpty) {
-      return "Es müssen Abos und deren Preise exestieren";
+      return "Es müssen Abos und deren Preise angegeben werden";
     } else {
       for (List<TextEditingController> cons in aboList) {
         if (cons[0].text.isEmpty) {

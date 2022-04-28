@@ -20,9 +20,27 @@ class TclubBothProjectSettings extends StatefulWidget {
 
 class _TclubBothProjectSettingsState extends State<TclubBothProjectSettings> {
   Uint8List? logoBytes;
-
+  List<List<TextEditingController>> aboControllers = [];
+  List<TextEditingController> courtControllers = [];
+  List<dynamic> courtsList = [];
+  Map<dynamic, dynamic> aboList = {};
   @override
   void initState() {
+    courtsList = widget.projectInfo["courts"];
+    courtsList.removeAt(0);
+    for (int i = 0; i < courtsList.length; i++) {
+      var courts = courtsList[i];
+      courtControllers.add(TextEditingController());
+      courtControllers[i].text = courts;
+    }
+    int copyIndex = 0;
+    aboList = widget.projectInfo["abos"];
+    aboList.forEach((key, value) {
+      aboControllers.add([TextEditingController(), TextEditingController()]);
+      aboControllers[copyIndex][0].text = key;
+      aboControllers[copyIndex][1].text = value;
+      copyIndex++;
+    });
     super.initState();
     FirebaseStorage.instance
         .ref('uploads')
@@ -43,12 +61,9 @@ class _TclubBothProjectSettingsState extends State<TclubBothProjectSettings> {
     TextEditingController appNameCon =
         TextEditingController(text: widget.projectInfo["appname"]);
 
-    List<dynamic> courtsList = widget.projectInfo["courts"];
-    courtsList.removeAt(0);
-    String courts = courtsList.toString();
-    TextEditingController courtsCon = TextEditingController(
-        text:
-            courts.replaceAll('[', '').replaceAll(']', '').replaceAll(' ', ''));
+    TextEditingController webLinkCon =
+        TextEditingController(text: widget.projectInfo["website"]);
+
     TextEditingController hperweekCon =
         TextEditingController(text: widget.projectInfo["h_per_week"]);
     return NestedScrollView(
@@ -84,7 +99,9 @@ class _TclubBothProjectSettingsState extends State<TclubBothProjectSettings> {
                                                       BorderRadius.all(
                                                           Radius.circular(
                                                               20))))),
-                                      child: const Text("Ändern"),
+                                      child: logoBytes == null
+                                          ? const Text("Ändern")
+                                          : const SizedBox.shrink(),
                                       onPressed: () async {
                                         FilePickerResult? result =
                                             await FilePicker.platform.pickFiles(
@@ -127,32 +144,196 @@ class _TclubBothProjectSettingsState extends State<TclubBothProjectSettings> {
                             ),
                             const SizedBox(height: 20),
                             TextField(
-                              decoration:
-                                  const InputDecoration(label: Text("Courts")),
-                              controller: courtsCon,
+                              decoration: const InputDecoration(
+                                  label: Text("Link zur Vereinswebsite")),
+                              controller: webLinkCon,
                             ),
+                            const SizedBox(height: 20),
+                            const Padding(
+                              padding: EdgeInsets.all(20),
+                              child: Text("Plätze",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  )),
+                            ),
+                            Container(
+                                padding: const EdgeInsets.all(20),
+                                decoration: const BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20))),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: List.generate(
+                                    courtControllers.length + 1,
+                                    (index) => (index ==
+                                            courtControllers.length)
+                                        ? IconButton(
+                                            tooltip: "Platz hinzufügen",
+                                            icon: const Icon(
+                                                Icons.add_circle_outline),
+                                            onPressed: () {
+                                              setState(() {
+                                                courtControllers.add(
+                                                    TextEditingController());
+                                                courtsList.add("");
+                                              });
+                                            },
+                                          )
+                                        : Padding(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 20),
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.end,
+                                              children: [
+                                                IconButton(
+                                                  tooltip: "Platz entfernen",
+                                                  icon: const Icon(
+                                                      Icons
+                                                          .remove_circle_outline,
+                                                      color: Colors.red),
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      courtControllers
+                                                          .removeAt(index);
+                                                    });
+                                                  },
+                                                ),
+                                                const SizedBox(width: 20),
+                                                Flexible(
+                                                  child: TextField(
+                                                      decoration: InputDecoration(
+                                                          label: Text("Platz " +
+                                                              (index + 1)
+                                                                  .toString())),
+                                                      controller:
+                                                          courtControllers[
+                                                              index]),
+                                                ),
+                                                const SizedBox(width: 20),
+                                              ],
+                                            ),
+                                          ),
+                                  ),
+                                )),
                             const SizedBox(height: 20),
                             TextField(
                               decoration: const InputDecoration(
                                   label: Text("Stunden Pro Woche")),
                               controller: hperweekCon,
                             ),
-                            
+                            const Padding(
+                              padding: EdgeInsets.all(20),
+                              child: Text("Abos und Preise",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  )),
+                            ),
+                            Container(
+                                padding: const EdgeInsets.all(20),
+                                decoration: BoxDecoration(
+                                    color: Colors.grey.shade100,
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(20))),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: List.generate(
+                                    aboControllers.length + 1,
+                                    (index) => (index == aboControllers.length)
+                                        ? IconButton(
+                                            tooltip: "Abo hinzufügen",
+                                            icon: const Icon(
+                                                Icons.add_circle_outline),
+                                            onPressed: () {
+                                              setState(() {
+                                                aboControllers.add([
+                                                  TextEditingController(),
+                                                  TextEditingController()
+                                                ]);
+                                              });
+                                            },
+                                          )
+                                        : Padding(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 20),
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.end,
+                                              children: [
+                                                IconButton(
+                                                  tooltip: "Abo entfernen",
+                                                  icon: const Icon(
+                                                      Icons
+                                                          .remove_circle_outline,
+                                                      color: Colors.red),
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      aboControllers
+                                                          .removeAt(index);
+                                                    });
+                                                  },
+                                                ),
+                                                const SizedBox(width: 20),
+                                                Flexible(
+                                                  child: TextField(
+                                                      decoration:
+                                                          const InputDecoration(
+                                                              label:
+                                                                  Text("Abo")),
+                                                      controller:
+                                                          aboControllers[index]
+                                                              [0]),
+                                                ),
+                                                const SizedBox(width: 20),
+                                                Flexible(
+                                                  child: TextField(
+                                                      decoration:
+                                                          const InputDecoration(
+                                                              suffixIcon: Icon(
+                                                                  Icons.euro),
+                                                              label: Text(
+                                                                  "Preis")),
+                                                      controller:
+                                                          aboControllers[index]
+                                                              [1]),
+                                                ),
+                                                const SizedBox(width: 20),
+                                              ],
+                                            ),
+                                          ),
+                                  ),
+                                )),
                           ],
                         ),
                       ),
                       const SizedBox(height: 20),
                       MyBlueButton("Änderungen speichern", onPressed: () {
                         waitDialog(context);
-                        List<String> list = courtsCon.text.split(",");
-                        list.insert(0, "");
+
+                        Map<String, String> aboMap = {};
+                        for (List<TextEditingController> cons
+                            in aboControllers) {
+                          aboMap.putIfAbsent(cons[0].text, () => cons[1].text);
+                        }
+                        List<String> courts = [];
+
+                        for (TextEditingController cons in courtControllers) {
+                          courts.add(cons.text);
+                        }
+
+                        courts.insert(0, "");
                         FirebaseFirestore.instance
                             .collection("apps")
                             .doc(widget.projectInfo.id)
                             .update({
                           "appname": appNameCon.text,
-                          "courts": list,
+                          "courts": courts,
                           "h_per_week": hperweekCon.text,
+                          "website": webLinkCon.text,
+                          "abos": aboMap,
                         }).catchError((e) {
                           closeDialog(context);
                           myCustomError(context, e.toString());
