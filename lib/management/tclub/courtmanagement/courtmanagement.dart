@@ -100,14 +100,14 @@ class _CourtManagementState extends State<CourtManagement> {
                                                                               children: [
                                                                                 IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(Icons.close)),
                                                                                 const SizedBox(width: 20),
-                                                                                const Text("How to use", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
+                                                                                const Text("Hilfe", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
                                                                               ],
                                                                             ),
                                                                             const Padding(
                                                                               padding:
                                                                               EdgeInsets.all(20),
                                                                               child:
-                                                                              Text("Labeling", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                                                                              Text("Legende", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                                                                             ),
                                                                             SizedBox(
                                                                               height:
@@ -123,7 +123,7 @@ class _CourtManagementState extends State<CourtManagement> {
                                                                                     child: Container(
                                                                                       padding: const EdgeInsets.only(left: 10, right: 10),
                                                                                       child: const Center(
-                                                                                        child: Text("Reservations made by administrator", overflow: TextOverflow.fade, style: TextStyle(color: Colors.black)),
+                                                                                        child: Text("Deine Reservierungen", overflow: TextOverflow.fade, style: TextStyle(color: Colors.black)),
                                                                                       ),
                                                                                       decoration: BoxDecoration(
                                                                                           color: Colors.cyan.shade200,
@@ -137,7 +137,7 @@ class _CourtManagementState extends State<CourtManagement> {
                                                                                     child: Container(
                                                                                         padding: const EdgeInsets.only(left: 10, right: 10),
                                                                                         child: const Center(
-                                                                                          child: Text("Cannot Reserve", overflow: TextOverflow.fade, style: TextStyle(color: Colors.black)),
+                                                                                          child: Text("Nicht Reservierbar", overflow: TextOverflow.fade, style: TextStyle(color: Colors.black)),
                                                                                         ),
                                                                                         decoration: BoxDecoration(color: Colors.grey.shade200)),
                                                                                   ),
@@ -145,7 +145,7 @@ class _CourtManagementState extends State<CourtManagement> {
                                                                                     child: Container(
                                                                                       padding: const EdgeInsets.only(left: 10, right: 10),
                                                                                       child: const Center(
-                                                                                        child: Text("Reservations made by clubmember", overflow: TextOverflow.fade, style: TextStyle(color: Colors.black)),
+                                                                                        child: Text("Stornierbar", overflow: TextOverflow.fade, style: TextStyle(color: Colors.black)),
                                                                                       ),
                                                                                       decoration: BoxDecoration(color: Colors.pink.shade100, borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20))),
                                                                                     ),

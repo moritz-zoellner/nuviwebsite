@@ -51,11 +51,11 @@ class _EmptyProjectState extends State<EmptyProject> {
             },
             items: const [
               BottomNavigationBarItem(
-                  icon: Icon(Icons.message), label: "Overview"),
+                  icon: Icon(Icons.message), label: "Überblick"),
               BottomNavigationBarItem(
-                  icon: Icon(Icons.date_range_rounded), label: "Courts"),
+                  icon: Icon(Icons.date_range_rounded), label: "Plätze"),
               BottomNavigationBarItem(
-                  icon: Icon(Icons.settings), label: "Settings"),
+                  icon: Icon(Icons.settings), label: "Einstellungen"),
             ],
           ),
         );
@@ -117,13 +117,13 @@ class _EmptyProjectState extends State<EmptyProject> {
             },
             items: const [
               BottomNavigationBarItem(
-                  icon: Icon(Icons.message), label: "Overview"),
+                  icon: Icon(Icons.message), label: "Überblick"),
               BottomNavigationBarItem(
-                  icon: Icon(Icons.date_range_rounded), label: "Courts"),
+                  icon: Icon(Icons.date_range_rounded), label: "Plätze"),
               BottomNavigationBarItem(
-                  icon: Icon(Icons.card_membership_rounded), label: "Users"),
+                  icon: Icon(Icons.card_membership_rounded), label: "Nutzer"),
               BottomNavigationBarItem(
-                  icon: Icon(Icons.settings), label: "Settings"),
+                  icon: Icon(Icons.settings), label: "Einstellungen"),
             ],
           ),
         );
@@ -149,9 +149,9 @@ class _EmptyProjectState extends State<EmptyProject> {
           },
           items: const [
             BottomNavigationBarItem(
-                icon: Icon(Icons.message), label: "Overview"),
+                icon: Icon(Icons.message), label: "Überblick"),
             BottomNavigationBarItem(
-                icon: Icon(Icons.settings), label: "Settings"),
+                icon: Icon(Icons.settings), label: "Einstellungen"),
           ],
         ),
         child: currentIndex == 0
