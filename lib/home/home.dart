@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:noviwebsite/blog/blog.dart';
 import 'package:noviwebsite/home/left_side.dart';
 import 'package:noviwebsite/home/right_side.dart';
 import 'package:noviwebsite/impressum/secure_menu.dart';
@@ -16,18 +17,22 @@ class HomeScreen extends StatelessWidget {
             children: const [
               LeftSide(),
               SizedBox(height: 40),
-              RightSide()
+            Padding(
+                padding: EdgeInsets.all(20),
+                child: RightSide())
             ]);
       } else {
         page = Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Row(mainAxisAlignment: MainAxisAlignment.center, children: const [
               Expanded(child: LeftSide()),
               SizedBox(width: 40),
-              Expanded(child: RightSide())
+              Expanded(child: Padding(
+                padding: EdgeInsets.all(20),
+                child: RightSide()
+              ))
             ]),
-            
           ],
         );
       }

@@ -16,6 +16,7 @@ class BlogScreen extends StatelessWidget {
             List<DocumentSnapshot<Map<String, dynamic>>> list =
                 snapshot.data!.docs;
             return ListView.builder(
+                shrinkWrap: true,
                 itemCount: list.length,
                 itemBuilder: (_, index) {
                   Map<String, dynamic> post = list[index].data()!;
@@ -23,9 +24,11 @@ class BlogScreen extends StatelessWidget {
                       child: ConstrainedBox(
                           constraints: const BoxConstraints(maxWidth: 800),
                           child: Padding(
-                            padding: const EdgeInsets.only(left: 20, right: 20),
+                            padding:
+                                const EdgeInsets.only(left: 20, right: 20),
                             child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                crossAxisAlignment:
+                                    CrossAxisAlignment.start,
                                 children: [
                                   const SizedBox(height: 20),
                                   Text(post["Title"],
@@ -36,7 +39,8 @@ class BlogScreen extends StatelessWidget {
                                   const SizedBox(height: 20),
                                   NoviTile(Text(post["Content"],
                                       style: const TextStyle(
-                                          color: Colors.black, fontSize: 16))),
+                                          color: Colors.black,
+                                          fontSize: 16))),
                                   const SizedBox(height: 20),
                                 ]),
                           )));

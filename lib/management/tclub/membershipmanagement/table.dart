@@ -58,6 +58,10 @@ class _TableState extends State<MyTable> {
     "Beitrag", //
     "Zahlungsmethode", //
     "Bezahlt", //
+    "Zusatz", //
+    "Offene Stunden", //
+    "Neue Woche", //
+    "Geschlecht", //
   ];
 
   String sortQuery = "Uid";
