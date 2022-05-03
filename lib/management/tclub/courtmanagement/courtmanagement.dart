@@ -55,112 +55,114 @@ class _CourtManagementState extends State<CourtManagement> {
                                   ],
                                 ),
                               ),
-                              TabBar(
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  isScrollable: true,
-                                  tabs: List.generate(
-                                      DAYS_FOREWARD,
-                                      (index) => Tab(
-                                          text: dateToString(DateTime.now()
-                                              .add(Duration(days: index)))))),
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  IconButton(
-                                      tooltip: "Help",
-                                      onPressed: () {
-                                        showGeneralDialog(
-                                            context: context,
-                                            pageBuilder: (c, a1, a2) => Center(
-                                                child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            20),
-                                                    child: ClipRRect(
-                                                        borderRadius:
-                                                            const BorderRadius
-                                                                    .all(
-                                                                Radius.circular(
-                                                                    20)),
-                                                        child: ConstrainedBox(
-                                                            constraints:
-                                                                const BoxConstraints(
-                                                                    maxHeight:
-                                                                        600,
-                                                                    maxWidth:
-                                                                        600),
-                                                            child: Scaffold(
-                                                                body: SingleChildScrollView(
-                                                                    child: Padding(
-                                                                        padding: const EdgeInsets.all(20),
-                                                                        child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-                                                                          Row(
-                                                                            children: [
-                                                                              IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(Icons.close)),
-                                                                              const SizedBox(width: 20),
-                                                                              const Text("How to use", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
-                                                                            ],
-                                                                          ),
-                                                                          const Padding(
-                                                                            padding:
-                                                                                EdgeInsets.all(20),
-                                                                            child:
-                                                                                Text("Labeling", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                                                                          ),
-                                                                          SizedBox(
-                                                                            height:
-                                                                                100,
-                                                                            width:
-                                                                                280,
-                                                                            child:
-                                                                                Column(
-                                                                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                                                                              mainAxisAlignment: MainAxisAlignment.center,
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    TabBar(
+                                        physics: const NeverScrollableScrollPhysics(),
+                                        isScrollable: true,
+                                        tabs: List.generate(
+                                            DAYS_FOREWARD,
+                                            (index) => Tab(
+                                                text: dateToString(DateTime.now()
+                                                    .add(Duration(days: index)))))),
+                                    IconButton(
+                                        tooltip: "Help",
+                                        onPressed: () {
+                                          showGeneralDialog(
+                                              context: context,
+                                              pageBuilder: (c, a1, a2) => Center(
+                                                  child: Padding(
+                                                      padding:
+                                                      const EdgeInsets.all(
+                                                          20),
+                                                      child: ClipRRect(
+                                                          borderRadius:
+                                                          const BorderRadius
+                                                              .all(
+                                                              Radius.circular(
+                                                                  20)),
+                                                          child: ConstrainedBox(
+                                                              constraints:
+                                                              const BoxConstraints(
+                                                                  maxHeight:
+                                                                  600,
+                                                                  maxWidth:
+                                                                  600),
+                                                              child: Scaffold(
+                                                                  body: SingleChildScrollView(
+                                                                      child: Padding(
+                                                                          padding: const EdgeInsets.all(20),
+                                                                          child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+                                                                            Row(
                                                                               children: [
-                                                                                Expanded(
-                                                                                  child: Container(
-                                                                                    padding: const EdgeInsets.only(left: 10, right: 10),
-                                                                                    child: const Center(
-                                                                                      child: Text("Reservations made by administrator", overflow: TextOverflow.fade, style: TextStyle(color: Colors.black)),
-                                                                                    ),
-                                                                                    decoration: BoxDecoration(
-                                                                                        color: Colors.cyan.shade200,
-                                                                                        borderRadius: const BorderRadius.only(
-                                                                                          topLeft: Radius.circular(20),
-                                                                                          topRight: Radius.circular(20),
-                                                                                        )),
-                                                                                  ),
-                                                                                ),
-                                                                                Expanded(
-                                                                                  child: Container(
-                                                                                      padding: const EdgeInsets.only(left: 10, right: 10),
-                                                                                      child: const Center(
-                                                                                        child: Text("Cannot Reserve", overflow: TextOverflow.fade, style: TextStyle(color: Colors.black)),
-                                                                                      ),
-                                                                                      decoration: BoxDecoration(color: Colors.grey.shade200)),
-                                                                                ),
-                                                                                Expanded(
-                                                                                  child: Container(
-                                                                                    padding: const EdgeInsets.only(left: 10, right: 10),
-                                                                                    child: const Center(
-                                                                                      child: Text("Reservations made by clubmember", overflow: TextOverflow.fade, style: TextStyle(color: Colors.black)),
-                                                                                    ),
-                                                                                    decoration: BoxDecoration(color: Colors.pink.shade100, borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20))),
-                                                                                  ),
-                                                                                ),
+                                                                                IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(Icons.close)),
+                                                                                const SizedBox(width: 20),
+                                                                                const Text("How to use", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
                                                                               ],
                                                                             ),
-                                                                          ),
-                                                                        ])))))))));
-                                      },
-                                      icon: const Icon(
-                                        Icons.info_outline_rounded,
-                                        color: Colors.white,
-                                      )),
-                                  myButton()
-                                ],
-                              ),
+                                                                            const Padding(
+                                                                              padding:
+                                                                              EdgeInsets.all(20),
+                                                                              child:
+                                                                              Text("Labeling", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                                                                            ),
+                                                                            SizedBox(
+                                                                              height:
+                                                                              100,
+                                                                              width:
+                                                                              280,
+                                                                              child:
+                                                                              Column(
+                                                                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                                                children: [
+                                                                                  Expanded(
+                                                                                    child: Container(
+                                                                                      padding: const EdgeInsets.only(left: 10, right: 10),
+                                                                                      child: const Center(
+                                                                                        child: Text("Reservations made by administrator", overflow: TextOverflow.fade, style: TextStyle(color: Colors.black)),
+                                                                                      ),
+                                                                                      decoration: BoxDecoration(
+                                                                                          color: Colors.cyan.shade200,
+                                                                                          borderRadius: const BorderRadius.only(
+                                                                                            topLeft: Radius.circular(20),
+                                                                                            topRight: Radius.circular(20),
+                                                                                          )),
+                                                                                    ),
+                                                                                  ),
+                                                                                  Expanded(
+                                                                                    child: Container(
+                                                                                        padding: const EdgeInsets.only(left: 10, right: 10),
+                                                                                        child: const Center(
+                                                                                          child: Text("Cannot Reserve", overflow: TextOverflow.fade, style: TextStyle(color: Colors.black)),
+                                                                                        ),
+                                                                                        decoration: BoxDecoration(color: Colors.grey.shade200)),
+                                                                                  ),
+                                                                                  Expanded(
+                                                                                    child: Container(
+                                                                                      padding: const EdgeInsets.only(left: 10, right: 10),
+                                                                                      child: const Center(
+                                                                                        child: Text("Reservations made by clubmember", overflow: TextOverflow.fade, style: TextStyle(color: Colors.black)),
+                                                                                      ),
+                                                                                      decoration: BoxDecoration(color: Colors.pink.shade100, borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20))),
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                            ),
+                                                                          ])))))))));
+                                        },
+                                        icon: const Icon(
+                                          Icons.info_outline_rounded,
+                                          color: Colors.white,
+                                        )),
+                                    myButton()
+                                  ],
+                                ),
+                              )
                             ])),
                   )
                 ],
