@@ -25,7 +25,7 @@ class TClub extends StatelessWidget {
               width: 20,
             ),
             IconButton(
-              onPressed: () => DefaultTabController.of(context)!.animateTo(4),
+              onPressed: () => DefaultTabController.of(context)!.animateTo(2),
               icon: const Icon(
                 Icons.help_outline_rounded,
                 color: Colors.white,

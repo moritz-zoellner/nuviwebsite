@@ -2,10 +2,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:noviwebsite/contact/contact.dart';
 import 'package:noviwebsite/firebase_options.dart';
 import 'package:noviwebsite/aboutus/aboutus.dart';
-import 'package:noviwebsite/blog/blog.dart';
+import 'package:noviwebsite/aboutus/blog.dart';
 import 'package:noviwebsite/home/home.dart';
 import 'package:noviwebsite/projects/projects.dart';
 import 'package:noviwebsite/styling.dart';
@@ -22,10 +21,8 @@ void main() async {
         bottomNavigationBarTheme: BottomNavigationBarThemeData(
             selectedItemColor: Colors.pink,
             unselectedItemColor: Colors.grey.shade400)),
-    localeResolutionCallback: (
-      Locale? locale,
-      Iterable<Locale> supportedLocales
-    ) => locale,
+    localeResolutionCallback:
+        (Locale? locale, Iterable<Locale> supportedLocales) => locale,
     title: corpName,
     home: const MyApp(),
   ));
@@ -46,23 +43,19 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 5,
-      child: MyScaffold(
-          child: NestedScrollView(
-        headerSliverBuilder: (c, b) => [
-          const SliverToBoxAdapter(child: MenuBar()),
-        ],
-        body: const TabBarView(
-            physics: NeverScrollableScrollPhysics(),
-            children: [
-              HomeScreen(),
-              ProjectsScreen(),
-              BlogScreen(),
-              AboutUsScreen(),
-              KontaktFormular(),
-            ]),
-      )),
-    );
+        length: 4,
+        child: MyScaffold(
+            child: NestedScrollView(
+                headerSliverBuilder: (c, b) =>
+                    [const SliverToBoxAdapter(child: MenuBar())],
+                body: const TabBarView(
+                    physics: NeverScrollableScrollPhysics(),
+                    children: [
+                      HomeScreen(),
+                      ProjectsScreen(),
+                      BlogScreen(),
+                      AboutUsScreen(),
+                    ]))));
   }
 }
 
@@ -87,7 +80,6 @@ class MenuBar extends StatelessWidget {
               Tab(text: "Produkte"),
               Tab(text: "Blog"),
               Tab(text: "Über uns"),
-              Tab(text: "Kontakt"),
             ])
           ]),
     );

@@ -60,6 +60,9 @@ class _RightSide extends State<RightSide> {
               .where("useremail", isEqualTo: useremail)
               .get(),
           builder: ((context, snapshot) {
+            if(snapshot.hasError) {
+              return errorWidget();
+            }
             if (!snapshot.hasData) {
               return waitWidget();
             }
