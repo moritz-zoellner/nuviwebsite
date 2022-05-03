@@ -21,9 +21,18 @@ class TclubMemberProjectSettings extends StatefulWidget {
 class _TclubMemberProjectSettingsState
     extends State<TclubMemberProjectSettings> {
   Uint8List? logoBytes;
-
+  List<List<TextEditingController>> aboControllers = [];
+  Map<dynamic, dynamic> aboList = {};
   @override
   void initState() {
+    int copyIndex = 0;
+    aboList = widget.projectInfo["abos"];
+    aboList.forEach((key, value) {
+      aboControllers.add([TextEditingController(), TextEditingController()]);
+      aboControllers[copyIndex][0].text = key;
+      aboControllers[copyIndex][1].text = value;
+      copyIndex++;
+    });
     super.initState();
     FirebaseStorage.instance
         .ref('uploads')
@@ -43,6 +52,8 @@ class _TclubMemberProjectSettingsState
   Widget build(BuildContext context) {
     TextEditingController appNameCon =
         TextEditingController(text: widget.projectInfo["appname"]);
+    TextEditingController webLinkCon =
+        TextEditingController(text: widget.projectInfo["website"]);
     return NestedScrollView(
         headerSliverBuilder: (c, b) => [
               const SliverToBoxAdapter(child: MyAppBar("Optionen")),
@@ -76,7 +87,9 @@ class _TclubMemberProjectSettingsState
                                                       BorderRadius.all(
                                                           Radius.circular(
                                                               20))))),
-                                      child: const Text("Ändern"),
+                                      child: logoBytes == null
+                                          ? const Text("Ändern")
+                                          : const SizedBox.shrink(),
                                       onPressed: () async {
                                         FilePickerResult? result =
                                             await FilePicker.platform.pickFiles(
@@ -117,44 +130,162 @@ class _TclubMemberProjectSettingsState
                                 ),
                               ],
                             ),
+                            const SizedBox(height: 20),
+                            TextField(
+                              decoration: const InputDecoration(
+                                  label: Text("Link zur Vereinswebsite")),
+                              controller: webLinkCon,
+                            ),
+                            const SizedBox(height: 20),
+                            const Padding(
+                              padding: EdgeInsets.all(20),
+                              child: Text("Abos und Preise",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  )),
+                            ),
+                            Container(
+                                padding: const EdgeInsets.all(20),
+                                decoration: BoxDecoration(
+                                    color: Colors.grey.shade100,
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(20))),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: List.generate(
+                                    aboControllers.length + 1,
+                                    (index) => (index == aboControllers.length)
+                                        ? IconButton(
+                                            tooltip: "Abo hinzufügen",
+                                            icon: const Icon(
+                                                Icons.add_circle_outline),
+                                            onPressed: () {
+                                              setState(() {
+                                                aboControllers.add([
+                                                  TextEditingController(),
+                                                  TextEditingController()
+                                                ]);
+                                              });
+                                            },
+                                          )
+                                        : Padding(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 20),
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.end,
+                                              children: [
+                                                IconButton(
+                                                  tooltip: "Abo entfernen",
+                                                  icon: const Icon(
+                                                      Icons
+                                                          .remove_circle_outline,
+                                                      color: Colors.red),
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      aboControllers
+                                                          .removeAt(index);
+                                                    });
+                                                  },
+                                                ),
+                                                const SizedBox(width: 20),
+                                                Flexible(
+                                                  child: TextField(
+                                                      decoration:
+                                                          const InputDecoration(
+                                                              label:
+                                                                  Text("Abo")),
+                                                      controller:
+                                                          aboControllers[index]
+                                                              [0]),
+                                                ),
+                                                const SizedBox(width: 20),
+                                                Flexible(
+                                                  child: TextField(
+                                                      decoration:
+                                                          const InputDecoration(
+                                                              suffixIcon: Icon(
+                                                                  Icons.euro),
+                                                              label: Text(
+                                                                  "Preis")),
+                                                      controller:
+                                                          aboControllers[index]
+                                                              [1]),
+                                                ),
+                                                const SizedBox(width: 20),
+                                              ],
+                                            ),
+                                          ),
+                                  ),
+                                )),
                           ],
                         ),
                       ),
                       const SizedBox(height: 20),
                       MyBlueButton("Änderungen speichern", onPressed: () {
-                        waitDialog(context);
-                        FirebaseFirestore.instance
-                            .collection("apps")
-                            .doc(widget.projectInfo.id)
-                            .update({
-                          "appname": appNameCon.text,
-                        }).catchError((e) {
-                          closeDialog(context);
-                          myCustomError(context, e.toString());
-                        }).then((value) {
-                          FirebaseStorage.instance
-                              .ref('uploads')
-                              .child(widget.projectInfo.id)
-                              .child('logo.png')
-                              .putData(logoBytes!)
-                              .catchError((e) {
+                        String validInput = inputControl(
+                            clubName: appNameCon.text, aboList: aboControllers);
+                        if (validInput == "valid") {
+                          waitDialog(context);
+                          Map<String, String> aboMap = {};
+                          for (List<TextEditingController> cons
+                              in aboControllers) {
+                            aboMap.putIfAbsent(
+                                cons[0].text, () => cons[1].text);
+                          }
+                          FirebaseFirestore.instance
+                              .collection("apps")
+                              .doc(widget.projectInfo.id)
+                              .update({
+                            "appname": appNameCon.text,
+                            "website": webLinkCon.text,
+                            "abos": aboMap,
+                          }).catchError((e) {
                             closeDialog(context);
                             myCustomError(context, e.toString());
-                          }).then((p0) {
-                            closeDialog(context);
-                            myCustomError(
-                                context, "Änderungen wurden gespeichert");
+                          }).then((value) {
+                            if (logoBytes == null) {
+                              closeDialog(context);
+                              myCustomError(context, "Erfolgreiche Bestellung");
+                              Navigator.pushReplacement(
+                                  context,
+                                  PageRouteBuilder(
+                                    pageBuilder:
+                                        (context, animation1, animation2) =>
+                                            const MyApp(),
+                                    transitionsBuilder: (c, a1, a2, w) =>
+                                        FadeTransition(opacity: a1, child: w),
+                                  ));
+                              return;
+                            }
+                            FirebaseStorage.instance
+                                .ref('uploads')
+                                .child(widget.projectInfo.id)
+                                .child('logo.png')
+                                .putData(logoBytes!)
+                                .catchError((e) {
+                              closeDialog(context);
+                              myCustomError(context, e.toString());
+                            }).then((p0) {
+                              closeDialog(context);
+                              myCustomError(
+                                  context, "Änderungen wurden gespeichert");
+                              Navigator.pushReplacement(
+                                context,
+                                PageRouteBuilder(
+                                  pageBuilder:
+                                      (context, animation1, animation2) =>
+                                          const MyApp(),
+                                  transitionsBuilder: (c, a1, a2, w) =>
+                                      FadeTransition(opacity: a1, child: w),
+                                ),
+                              );
+                            });
                           });
-                          Navigator.pushReplacement(
-                            context,
-                            PageRouteBuilder(
-                              pageBuilder: (context, animation1, animation2) =>
-                                  const MyApp(),
-                              transitionsBuilder: (c, a1, a2, w) =>
-                                  FadeTransition(opacity: a1, child: w),
-                            ),
-                          );
-                        });
+                        } else {
+                          myCustomError(context, validInput);
+                        }
                       }),
                       const SizedBox(height: 20),
                       const Text(

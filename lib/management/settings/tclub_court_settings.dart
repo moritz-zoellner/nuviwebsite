@@ -19,9 +19,17 @@ class TclubCourtProjectSettings extends StatefulWidget {
 
 class _TclubCourtProjectSettingsState extends State<TclubCourtProjectSettings> {
   Uint8List? logoBytes;
-
+  List<TextEditingController> courtControllers = [];
+  List<dynamic> courtsList = [];
   @override
   void initState() {
+    courtsList = widget.projectInfo["courts"];
+    courtsList.removeAt(0);
+    for (int i = 0; i < courtsList.length; i++) {
+      var courts = courtsList[i];
+      courtControllers.add(TextEditingController());
+      courtControllers[i].text = courts;
+    }
     super.initState();
     FirebaseStorage.instance
         .ref('uploads')
@@ -41,13 +49,8 @@ class _TclubCourtProjectSettingsState extends State<TclubCourtProjectSettings> {
   Widget build(BuildContext context) {
     TextEditingController appNameCon =
         TextEditingController(text: widget.projectInfo["appname"]);
-
-    List<dynamic> courtsList = widget.projectInfo["courts"];
-    courtsList.removeAt(0);
-    String courts = courtsList.toString();
-    TextEditingController courtsCon = TextEditingController(
-        text:
-            courts.replaceAll('[', '').replaceAll(']', '').replaceAll(' ', ''));
+    TextEditingController webLinkCon =
+        TextEditingController(text: widget.projectInfo["website"]);
     TextEditingController hperweekCon =
         TextEditingController(text: widget.projectInfo["h_per_week"]);
     return NestedScrollView(
@@ -82,7 +85,9 @@ class _TclubCourtProjectSettingsState extends State<TclubCourtProjectSettings> {
                                                       BorderRadius.all(
                                                           Radius.circular(
                                                               20))))),
-                                      child: const Text("Ändern"),
+                                      child: logoBytes == null
+                                          ? const Text("Ändern")
+                                          : const SizedBox.shrink(),
                                       onPressed: () async {
                                         FilePickerResult? result =
                                             await FilePicker.platform.pickFiles(
@@ -125,10 +130,80 @@ class _TclubCourtProjectSettingsState extends State<TclubCourtProjectSettings> {
                             ),
                             const SizedBox(height: 20),
                             TextField(
-                              decoration:
-                                  const InputDecoration(label: Text("Courts")),
-                              controller: courtsCon,
+                              decoration: const InputDecoration(
+                                  label: Text("Link zur Vereinswebsite")),
+                              controller: webLinkCon,
                             ),
+                            const SizedBox(height: 20),
+                            const Padding(
+                              padding: EdgeInsets.all(20),
+                              child: Text("Plätze",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  )),
+                            ),
+                            Container(
+                                padding: const EdgeInsets.all(20),
+                                decoration: const BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20))),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: List.generate(
+                                    courtControllers.length + 1,
+                                    (index) => (index ==
+                                            courtControllers.length)
+                                        ? IconButton(
+                                            tooltip: "Platz hinzufügen",
+                                            icon: const Icon(
+                                                Icons.add_circle_outline),
+                                            onPressed: () {
+                                              setState(() {
+                                                courtControllers.add(
+                                                    TextEditingController());
+                                                courtsList.add("");
+                                              });
+                                            },
+                                          )
+                                        : Padding(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 20),
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.end,
+                                              children: [
+                                                IconButton(
+                                                  tooltip: "Platz entfernen",
+                                                  icon: const Icon(
+                                                      Icons
+                                                          .remove_circle_outline,
+                                                      color: Colors.red),
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      courtControllers
+                                                          .removeAt(index);
+                                                    });
+                                                  },
+                                                ),
+                                                const SizedBox(width: 20),
+                                                Flexible(
+                                                  child: TextField(
+                                                      decoration: InputDecoration(
+                                                          label: Text("Platz " +
+                                                              (index + 1)
+                                                                  .toString())),
+                                                      controller:
+                                                          courtControllers[
+                                                              index]),
+                                                ),
+                                                const SizedBox(width: 20),
+                                              ],
+                                            ),
+                                          ),
+                                  ),
+                                )),
                             const SizedBox(height: 20),
                             TextField(
                               decoration: const InputDecoration(
@@ -142,47 +217,76 @@ class _TclubCourtProjectSettingsState extends State<TclubCourtProjectSettings> {
                       MyBlueButton(
                         "Änderungen speichern",
                         onPressed: () {
-                          waitDialog(context);
-                          List<String> list = courtsCon.text.split(",");
-                          list.insert(0, "");
-                          FirebaseFirestore.instance
-                              .collection("apps")
-                              .doc(widget.projectInfo.id)
-                              .update({
-                            "appname": appNameCon.text,
-                            "courts": list,
-                            "h_per_week": hperweekCon.text,
-                          }).catchError((e) {
-                            closeDialog(context);
-                            myCustomError(context, e.toString());
-                          }).then((value) {
-                            // start -> first
-                            FirebaseStorage.instance
-                                .ref('uploads')
-                                .child(widget.projectInfo.id)
-                                .child('logo.png')
-                                .putData(logoBytes!)
-                                .catchError((e) {
+                          String validInput = inputControl(
+                            clubName: appNameCon.text,
+                            hoursPerWeek: hperweekCon.text,
+                            allCourts: courtControllers,
+                          );
+                          if (validInput == "valid") {
+                            waitDialog(context);
+                            List<String> courts = [];
+
+                            for (TextEditingController cons
+                                in courtControllers) {
+                              courts.add(cons.text);
+                            }
+                            courts.insert(0, "");
+                            FirebaseFirestore.instance
+                                .collection("apps")
+                                .doc(widget.projectInfo.id)
+                                .update({
+                              "appname": appNameCon.text,
+                              "courts": courts,
+                              "h_per_week": hperweekCon.text,
+                            }).catchError((e) {
                               closeDialog(context);
                               myCustomError(context, e.toString());
-                            }).then((p0) {
-                              // start -> second
-                              closeDialog(context);
-                              myCustomError(
-                                  context, "Änderungen wurden gespeichert");
-                              Navigator.pushReplacement(
-                                  context,
-                                  PageRouteBuilder(
+                            }).then((value) {
+                              // start -> first
+                              if (logoBytes == null) {
+                                closeDialog(context);
+                                myCustomError(
+                                    context, "Erfolgreiche Bestellung");
+                                Navigator.pushReplacement(
+                                    context,
+                                    PageRouteBuilder(
                                       pageBuilder:
                                           (context, animation1, animation2) =>
                                               const MyApp(),
                                       transitionsBuilder: (c, a1, a2, w) =>
-                                          FadeTransition(
-                                              opacity: a1, child: w)));
-                              // end -> second
+                                          FadeTransition(opacity: a1, child: w),
+                                    ));
+                                return;
+                              }
+                              FirebaseStorage.instance
+                                  .ref('uploads')
+                                  .child(widget.projectInfo.id)
+                                  .child('logo.png')
+                                  .putData(logoBytes!)
+                                  .catchError((e) {
+                                closeDialog(context);
+                                myCustomError(context, e.toString());
+                              }).then((p0) {
+                                // start -> second
+                                closeDialog(context);
+                                myCustomError(
+                                    context, "Änderungen wurden gespeichert");
+                                Navigator.pushReplacement(
+                                    context,
+                                    PageRouteBuilder(
+                                        pageBuilder:
+                                            (context, animation1, animation2) =>
+                                                const MyApp(),
+                                        transitionsBuilder: (c, a1, a2, w) =>
+                                            FadeTransition(
+                                                opacity: a1, child: w)));
+                                // end -> second
+                              });
+                              // end -> first
                             });
-                            // end -> first
-                          });
+                          } else {
+                            myCustomError(context, validInput);
+                          }
                         },
                       ),
                       const SizedBox(height: 20),

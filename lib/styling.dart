@@ -115,7 +115,7 @@ String inputControl(
   }
 
   if (clubName != null) {
-    if (clubName.isEmpty) {
+    if (clubName.trim().isEmpty) {
       return "Clubname darf nicht leer sein";
     }
   }

@@ -311,57 +311,67 @@ class _TclubBothProjectSettingsState extends State<TclubBothProjectSettings> {
                       ),
                       const SizedBox(height: 20),
                       MyBlueButton("Änderungen speichern", onPressed: () {
-                        waitDialog(context);
+                        String validInput = inputControl(
+                            clubName: appNameCon.text,
+                            hoursPerWeek: hperweekCon.text,
+                            allCourts: courtControllers,
+                            aboList: aboControllers);
+                        if (validInput == "valid") {
+                          waitDialog(context);
 
-                        Map<String, String> aboMap = {};
-                        for (List<TextEditingController> cons
-                            in aboControllers) {
-                          aboMap.putIfAbsent(cons[0].text, () => cons[1].text);
-                        }
-                        List<String> courts = [];
+                          Map<String, String> aboMap = {};
+                          for (List<TextEditingController> cons
+                              in aboControllers) {
+                            aboMap.putIfAbsent(
+                                cons[0].text, () => cons[1].text);
+                          }
+                          List<String> courts = [];
 
-                        for (TextEditingController cons in courtControllers) {
-                          courts.add(cons.text);
-                        }
+                          for (TextEditingController cons in courtControllers) {
+                            courts.add(cons.text);
+                          }
 
-                        courts.insert(0, "");
-                        FirebaseFirestore.instance
-                            .collection("apps")
-                            .doc(widget.projectInfo.id)
-                            .update({
-                          "appname": appNameCon.text,
-                          "courts": courts,
-                          "h_per_week": hperweekCon.text,
-                          "website": webLinkCon.text,
-                          "abos": aboMap,
-                        }).catchError((e) {
-                          closeDialog(context);
-                          myCustomError(context, e.toString());
-                        }).then((value) {
-                          FirebaseStorage.instance
-                              .ref('uploads')
-                              .child(widget.projectInfo.id)
-                              .child('logo.png')
-                              .putData(logoBytes!)
-                              .catchError((e) {
+                          courts.insert(0, "");
+                          FirebaseFirestore.instance
+                              .collection("apps")
+                              .doc(widget.projectInfo.id)
+                              .update({
+                            "appname": appNameCon.text,
+                            "courts": courts,
+                            "h_per_week": hperweekCon.text,
+                            "website": webLinkCon.text,
+                            "abos": aboMap,
+                          }).catchError((e) {
                             closeDialog(context);
                             myCustomError(context, e.toString());
-                          }).then((p0) {
-                            closeDialog(context);
-                            myCustomError(
-                                context, "Änderungen wurden gespeichert");
-                            Navigator.pushReplacement(
-                              context,
-                              PageRouteBuilder(
-                                pageBuilder:
-                                    (context, animation1, animation2) =>
-                                        const MyApp(),
-                                transitionsBuilder: (c, a1, a2, w) =>
-                                    FadeTransition(opacity: a1, child: w),
-                              ),
-                            );
+                          }).then((value) {
+                            FirebaseStorage.instance
+                                .ref('uploads')
+                                .child(widget.projectInfo.id)
+                                .child('logo.png')
+                                .putData(logoBytes!)
+                                .catchError((e) {
+                              closeDialog(context);
+                              myCustomError(context, e.toString());
+                            }).then((p0) {
+                              closeDialog(context);
+                              myCustomError(
+                                  context, "Änderungen wurden gespeichert");
+                              Navigator.pushReplacement(
+                                context,
+                                PageRouteBuilder(
+                                  pageBuilder:
+                                      (context, animation1, animation2) =>
+                                          const MyApp(),
+                                  transitionsBuilder: (c, a1, a2, w) =>
+                                      FadeTransition(opacity: a1, child: w),
+                                ),
+                              );
+                            });
                           });
-                        });
+                        } else {
+                          myCustomError(context, validInput);
+                        }
                       }),
                       const SizedBox(height: 20),
                       const Text(
