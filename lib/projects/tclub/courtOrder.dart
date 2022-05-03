@@ -329,16 +329,37 @@ class _CourtOrderState extends State<CourtOrder> {
               bool notLoggedIn = FirebaseAuth.instance.currentUser == null;
 
               if (notLoggedIn) {
+                //try signIn
                 FirebaseAuth.instance
-                    .createUserWithEmailAndPassword(
+                    .signInWithEmailAndPassword(
                         email: emailCon.text, password: passwCon.text)
-                    .catchError((e, s) {
-                  closeDialog(context);
-                  myCustomError(context, e.toString().split("]").last.trim());
-                  setState(() {
-                    currentState = 1;
-                  });
-                }).then((value) => doneWithFuture());
+                    .catchError((e) {
+                  FirebaseAuth.instance
+                      .createUserWithEmailAndPassword(
+                          email: emailCon.text, password: passwCon.text)
+                      .catchError((err) {
+                    closeDialog(context);
+                    myCustomError(context, e.toString().split("]").last.trim());
+                    setState(() {
+                      currentState = 1;
+                    });
+                  }).then((value) => doneWithFuture());
+                }).then((value) async {
+                  if ((await FirebaseFirestore.instance
+                              .collection("apps")
+                              .where("useremail",
+                                  isEqualTo:
+                                      FirebaseAuth.instance.currentUser!.email!)
+                              .get())
+                          .docs
+                          .length <
+                      5) {
+                    doneWithFuture();
+                  } else {
+                    myCustomError(context, "Zu viele Projekte");
+                    closeDialog(context);
+                  }
+                });
               } else {
                 if ((await FirebaseFirestore.instance
                             .collection("apps")

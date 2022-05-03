@@ -17,7 +17,8 @@ class NoviTile extends StatelessWidget {
   }
 }
 
-Widget waitWidget() => const Center(child: CircularProgressIndicator.adaptive());
+Widget waitWidget() =>
+    const Center(child: CircularProgressIndicator.adaptive());
 
 Future waitDialog(BuildContext context) {
   return showGeneralDialog(
