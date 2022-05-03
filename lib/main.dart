@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:noviwebsite/firebase_options.dart';
 import 'package:noviwebsite/aboutus/aboutus.dart';
@@ -16,6 +17,11 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(MaterialApp(
     scrollBehavior: MyCustomScrollBehavior(),
+    localizationsDelegates: [
+      GlobalMaterialLocalizations.delegate,
+      GlobalWidgetsLocalizations.delegate,
+      GlobalCupertinoLocalizations.delegate,
+    ],
     theme: ThemeData(
         textTheme: GoogleFonts.latoTextTheme(),
         bottomNavigationBarTheme: BottomNavigationBarThemeData(

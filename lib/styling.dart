@@ -23,6 +23,7 @@ Widget waitWidget()
 Widget errorWidget()
 => const Center(child: Text("Fehler aufgetreten"));
 
+
 Future waitDialog(BuildContext context) {
   return showGeneralDialog(
       context: context,
