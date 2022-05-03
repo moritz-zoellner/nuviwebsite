@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:noviwebsite/blog/blog.dart';
+import 'package:noviwebsite/aboutus/blog.dart';
 import 'package:noviwebsite/home/left_side.dart';
 import 'package:noviwebsite/home/right_side.dart';
 import 'package:noviwebsite/impressum/secure_menu.dart';
