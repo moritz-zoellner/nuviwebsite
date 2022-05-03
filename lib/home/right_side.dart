@@ -30,7 +30,7 @@ class _RightSide extends State<RightSide> {
     } else if (currentState == LOGGED_IN) {
       return userProjects();
     } else {
-      return const Center(child: CircularProgressIndicator.adaptive());
+      return waitWidget();
     }
   }
 
@@ -61,7 +61,7 @@ class _RightSide extends State<RightSide> {
               .get(),
           builder: ((context, snapshot) {
             if (!snapshot.hasData) {
-              return const Center(child: CircularProgressIndicator.adaptive());
+              return waitWidget();
             }
             List<DocumentSnapshot<Map<String, dynamic>>> list =
                 snapshot.data!.docs;

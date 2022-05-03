@@ -73,7 +73,7 @@ class _TableState extends State<MyTable> {
           .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return const Center(child: CircularProgressIndicator());
+          return waitWidget();
         }
         List<DocumentSnapshot<Map<String, dynamic>>> list = snapshot.data!.docs;
 

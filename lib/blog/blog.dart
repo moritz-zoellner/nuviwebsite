@@ -42,7 +42,7 @@ class BlogScreen extends StatelessWidget {
                           )));
                 });
           } else {
-            return const Center(child: CircularProgressIndicator());
+            return waitWidget();
           }
         });
   }

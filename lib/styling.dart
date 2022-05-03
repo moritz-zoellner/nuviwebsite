@@ -17,13 +17,15 @@ class NoviTile extends StatelessWidget {
   }
 }
 
+Widget waitWidget() => const Center(child: CircularProgressIndicator.adaptive());
+
 Future waitDialog(BuildContext context) {
   return showGeneralDialog(
       context: context,
       barrierDismissible: false,
       barrierColor: Colors.black26,
       pageBuilder: (context, a1, a2) =>
-          const Center(child: CircularProgressIndicator()));
+          const Center(child: CircularProgressIndicator.adaptive()));
 }
 
 void closeDialog(context) {
@@ -36,7 +38,7 @@ void myCustomError(context, content) {
       behavior: SnackBarBehavior.floating,
       content: Text(content),
       action: SnackBarAction(
-          label: "Verstanden",
+          label: "Ok",
           onPressed: () => ScaffoldMessenger.of(context).clearSnackBars())));
 }
 

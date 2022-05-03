@@ -190,7 +190,7 @@ class _ChatDescriptionState extends State<ChatDescription> {
               .snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
-              return const Center(child: CircularProgressIndicator());
+              return waitWidget();
             }
             List<DocumentSnapshot<Map<String, dynamic>>> messages =
                 snapshot.data!.docs;
@@ -353,9 +353,7 @@ class _ChatDescriptionState extends State<ChatDescription> {
                                             height: 4,
                                           ),
                                           (!snapshot.hasData)
-                                              ? const Center(
-                                                  child:
-                                                      CircularProgressIndicator())
+                                              ? waitWidget()
                                               : Text(mes["content"]),
                                         ],
                                       )),

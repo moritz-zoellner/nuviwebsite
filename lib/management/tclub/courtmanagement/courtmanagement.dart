@@ -180,8 +180,7 @@ class _CourtManagementState extends State<CourtManagement> {
                               .snapshots(),
                           builder: (context, snapshot) {
                             if (!snapshot.hasData) {
-                              return const Center(
-                                  child: CircularProgressIndicator());
+                              return waitWidget();
                             }
 
                             return TabBarView(

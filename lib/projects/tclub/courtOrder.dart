@@ -75,9 +75,7 @@ class _CourtOrderState extends State<CourtOrder> {
                                             ? infoWidget(context)
                                             : currentState == 1
                                                 ? paymentWidget(context)
-                                                : const Center(
-                                                    child:
-                                                        CircularProgressIndicator()),
+                                                : waitWidget(),
                                       ],
                                     ))));
                       }),

@@ -76,9 +76,7 @@ class _MembershipOrderState extends State<MembershipOrder> {
                                             ? infoWidget(context)
                                             : currentState == 1
                                                 ? paymentWidget(context)
-                                                : const Center(
-                                                    child:
-                                                        CircularProgressIndicator()),
+                                                : waitWidget(),
                                       ],
                                     ))));
                       }),
