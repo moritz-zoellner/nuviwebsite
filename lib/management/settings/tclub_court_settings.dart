@@ -19,6 +19,7 @@ class TclubCourtProjectSettings extends StatefulWidget {
 
 class _TclubCourtProjectSettingsState extends State<TclubCourtProjectSettings> {
   Uint8List? logoBytes;
+  Uint8List? beitragsOrdnung;
   List<TextEditingController> courtControllers = [];
   List<dynamic> courtsList = [];
   @override
@@ -41,6 +42,18 @@ class _TclubCourtProjectSettingsState extends State<TclubCourtProjectSettings> {
     }).then((value) {
       setState(() {
         logoBytes = value;
+      });
+    });
+    FirebaseStorage.instance
+        .ref('uploads')
+        .child(widget.projectInfo.id)
+        .child('beitragsordnung.pdf')
+        .getData()
+        .catchError((e) {
+      //   myCustomError(context, e.toString());
+    }).then((value) {
+      setState(() {
+        beitragsOrdnung = value;
       });
     });
   }
@@ -73,6 +86,7 @@ class _TclubCourtProjectSettingsState extends State<TclubCourtProjectSettings> {
                             borderRadius:
                                 BorderRadius.all(Radius.circular(20))),
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             Row(
                               children: [
@@ -210,6 +224,50 @@ class _TclubCourtProjectSettingsState extends State<TclubCourtProjectSettings> {
                                   label: Text("Stunden Pro Woche")),
                               controller: hperweekCon,
                             ),
+                            const Padding(
+                              padding: EdgeInsets.all(20),
+                              child: Text("Beitragsordnung",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  )),
+                            ),
+                            Container(
+                              child: TextButton(
+                                  style: ButtonStyle(
+                                      shape: MaterialStateProperty.all(
+                                          const RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(20))))),
+                                  child: beitragsOrdnung == null
+                                      ? const Text("Hochladen")
+                                      : const Text(
+                                          "Datei hochgeladen. Zum ändern erneut klicken"),
+                                  onPressed: () async {
+                                    FilePickerResult? result =
+                                        await FilePicker.platform.pickFiles(
+                                            type: FileType.custom,
+                                            allowedExtensions: ["pdf"]);
+
+                                    if (result != null) {
+                                      Uint8List? fileBytes =
+                                          result.files.first.bytes;
+                                      if (result.files.first.size > 5000000) {
+                                        myCustomError(context, "Maximal 5MB");
+                                        return;
+                                      }
+                                      setState(() {
+                                        beitragsOrdnung = fileBytes;
+                                      });
+                                    }
+                                  }),
+                              height: 50,
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(20)),
+                                color: Colors.grey.shade200,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -218,10 +276,10 @@ class _TclubCourtProjectSettingsState extends State<TclubCourtProjectSettings> {
                         "Änderungen speichern",
                         onPressed: () {
                           String validInput = inputControl(
-                            clubName: appNameCon.text,
-                            hoursPerWeek: hperweekCon.text,
-                            allCourts: courtControllers,
-                          );
+                              clubName: appNameCon.text,
+                              hoursPerWeek: hperweekCon.text,
+                              allCourts: courtControllers,
+                              beitragsOrdnung: beitragsOrdnung != null);
                           if (validInput == "valid") {
                             waitDialog(context);
                             List<String> courts = [];
@@ -242,12 +300,44 @@ class _TclubCourtProjectSettingsState extends State<TclubCourtProjectSettings> {
                               closeDialog(context);
                               myCustomError(context, e.toString());
                             }).then((value) {
-                              // start -> first
-                              if (logoBytes == null) {
+                              FirebaseStorage.instance
+                                  .ref('uploads')
+                                  .child(widget.projectInfo.id)
+                                  .child('beitragsordnung.pdf')
+                                  .putData(beitragsOrdnung!)
+                                  .catchError((e) {
                                 closeDialog(context);
-                                myCustomError(
-                                    context, "Erfolgreiche Bestellung");
-                                Navigator.pushReplacement(
+                                myCustomError(context, e.toString());
+                              }).then((p0) {
+                                if (logoBytes == null) {
+                                  closeDialog(context);
+                                  myCustomError(
+                                      context, "Änderungen wurden gespeichert");
+                                  Navigator.pushReplacement(
+                                      context,
+                                      PageRouteBuilder(
+                                        pageBuilder:
+                                            (context, animation1, animation2) =>
+                                                const MyApp(),
+                                        transitionsBuilder: (c, a1, a2, w) =>
+                                            FadeTransition(
+                                                opacity: a1, child: w),
+                                      ));
+                                  return;
+                                }
+                                FirebaseStorage.instance
+                                    .ref('uploads')
+                                    .child(widget.projectInfo.id)
+                                    .child('logo.png')
+                                    .putData(logoBytes!)
+                                    .catchError((e) {
+                                  closeDialog(context);
+                                  myCustomError(context, e.toString());
+                                }).then((p0) {
+                                  closeDialog(context);
+                                  myCustomError(
+                                      context, "Änderungen wurden gespeichert");
+                                  Navigator.pushReplacement(
                                     context,
                                     PageRouteBuilder(
                                       pageBuilder:
@@ -255,34 +345,10 @@ class _TclubCourtProjectSettingsState extends State<TclubCourtProjectSettings> {
                                               const MyApp(),
                                       transitionsBuilder: (c, a1, a2, w) =>
                                           FadeTransition(opacity: a1, child: w),
-                                    ));
-                                return;
-                              }
-                              FirebaseStorage.instance
-                                  .ref('uploads')
-                                  .child(widget.projectInfo.id)
-                                  .child('logo.png')
-                                  .putData(logoBytes!)
-                                  .catchError((e) {
-                                closeDialog(context);
-                                myCustomError(context, e.toString());
-                              }).then((p0) {
-                                // start -> second
-                                closeDialog(context);
-                                myCustomError(
-                                    context, "Änderungen wurden gespeichert");
-                                Navigator.pushReplacement(
-                                    context,
-                                    PageRouteBuilder(
-                                        pageBuilder:
-                                            (context, animation1, animation2) =>
-                                                const MyApp(),
-                                        transitionsBuilder: (c, a1, a2, w) =>
-                                            FadeTransition(
-                                                opacity: a1, child: w)));
-                                // end -> second
+                                    ),
+                                  );
+                                });
                               });
-                              // end -> first
                             });
                           } else {
                             myCustomError(context, validInput);
@@ -303,17 +369,51 @@ class _TclubCourtProjectSettingsState extends State<TclubCourtProjectSettings> {
                             .doc(widget.projectInfo.id)
                             .delete()
                             .then((value) {
-                          closeDialog(context);
-                          Navigator.pushReplacement(
-                            context,
-                            PageRouteBuilder(
-                              pageBuilder: (context, animation1, animation2) =>
-                                  const MyApp(),
-                              transitionsBuilder: (c, a1, a2, w) =>
-                                  FadeTransition(opacity: a1, child: w),
-                            ),
-                          );
-                          myCustomError(context, "Projekt wurde gelöscht");
+                          FirebaseStorage.instance
+                              .ref('uploads')
+                              .child(widget.projectInfo.id)
+                              .child('beitragsordnung.pdf')
+                              .delete()
+                              .catchError((error) {
+                            closeDialog(context);
+                            myCustomError(context,
+                                "Fehler beim Löschen der Beitragsordnung");
+                          }).then((p0) {
+                            if (logoBytes == null) {
+                              closeDialog(context);
+                              Navigator.pushReplacement(
+                                context,
+                                PageRouteBuilder(
+                                  pageBuilder:
+                                      (context, animation1, animation2) =>
+                                          const MyApp(),
+                                  transitionsBuilder: (c, a1, a2, w) =>
+                                      FadeTransition(opacity: a1, child: w),
+                                ),
+                              );
+                              myCustomError(context, "Projekt wurde gelöscht");
+                              return;
+                            }
+                            FirebaseStorage.instance
+                                .ref('uploads')
+                                .child(widget.projectInfo.id)
+                                .child('logo.png')
+                                .delete()
+                                .whenComplete(() {
+                              closeDialog(context);
+                              Navigator.pushReplacement(
+                                context,
+                                PageRouteBuilder(
+                                  pageBuilder:
+                                      (context, animation1, animation2) =>
+                                          const MyApp(),
+                                  transitionsBuilder: (c, a1, a2, w) =>
+                                      FadeTransition(opacity: a1, child: w),
+                                ),
+                              );
+                              myCustomError(context, "Projekt wurde gelöscht");
+                            });
+                          });
                         }).catchError((e) {
                           closeDialog(context);
                           myCustomError(context, e.toString());

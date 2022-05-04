@@ -20,6 +20,7 @@ class TclubBothProjectSettings extends StatefulWidget {
 
 class _TclubBothProjectSettingsState extends State<TclubBothProjectSettings> {
   Uint8List? logoBytes;
+  Uint8List? beitragsOrdnung;
   List<List<TextEditingController>> aboControllers = [];
   List<TextEditingController> courtControllers = [];
   List<dynamic> courtsList = [];
@@ -52,6 +53,18 @@ class _TclubBothProjectSettingsState extends State<TclubBothProjectSettings> {
     }).then((value) {
       setState(() {
         logoBytes = value;
+      });
+    });
+    FirebaseStorage.instance
+        .ref('uploads')
+        .child(widget.projectInfo.id)
+        .child('beitragsordnung.pdf')
+        .getData()
+        .catchError((e) {
+      //   myCustomError(context, e.toString());
+    }).then((value) {
+      setState(() {
+        beitragsOrdnung = value;
       });
     });
   }
@@ -87,6 +100,7 @@ class _TclubBothProjectSettingsState extends State<TclubBothProjectSettings> {
                             borderRadius:
                                 BorderRadius.all(Radius.circular(20))),
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             Row(
                               children: [
@@ -306,6 +320,50 @@ class _TclubBothProjectSettingsState extends State<TclubBothProjectSettings> {
                                           ),
                                   ),
                                 )),
+                            const Padding(
+                              padding: EdgeInsets.all(20),
+                              child: Text("Beitragsordnung",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  )),
+                            ),
+                            Container(
+                              child: TextButton(
+                                  style: ButtonStyle(
+                                      shape: MaterialStateProperty.all(
+                                          const RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(20))))),
+                                  child: beitragsOrdnung == null
+                                      ? const Text("Hochladen")
+                                      : const Text(
+                                          "Datei hochgeladen. Zum ändern erneut klicken"),
+                                  onPressed: () async {
+                                    FilePickerResult? result =
+                                        await FilePicker.platform.pickFiles(
+                                            type: FileType.custom,
+                                            allowedExtensions: ["pdf"]);
+
+                                    if (result != null) {
+                                      Uint8List? fileBytes =
+                                          result.files.first.bytes;
+                                      if (result.files.first.size > 5000000) {
+                                        myCustomError(context, "Maximal 5MB");
+                                        return;
+                                      }
+                                      setState(() {
+                                        beitragsOrdnung = fileBytes;
+                                      });
+                                    }
+                                  }),
+                              height: 50,
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(20)),
+                                color: Colors.grey.shade200,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -315,7 +373,8 @@ class _TclubBothProjectSettingsState extends State<TclubBothProjectSettings> {
                             clubName: appNameCon.text,
                             hoursPerWeek: hperweekCon.text,
                             allCourts: courtControllers,
-                            aboList: aboControllers);
+                            aboList: aboControllers,
+                            beitragsOrdnung: beitragsOrdnung != null);
                         if (validInput == "valid") {
                           waitDialog(context);
 
@@ -348,25 +407,50 @@ class _TclubBothProjectSettingsState extends State<TclubBothProjectSettings> {
                             FirebaseStorage.instance
                                 .ref('uploads')
                                 .child(widget.projectInfo.id)
-                                .child('logo.png')
-                                .putData(logoBytes!)
+                                .child('beitragsordnung.pdf')
+                                .putData(beitragsOrdnung!)
                                 .catchError((e) {
                               closeDialog(context);
                               myCustomError(context, e.toString());
                             }).then((p0) {
-                              closeDialog(context);
-                              myCustomError(
-                                  context, "Änderungen wurden gespeichert");
-                              Navigator.pushReplacement(
-                                context,
-                                PageRouteBuilder(
-                                  pageBuilder:
-                                      (context, animation1, animation2) =>
-                                          const MyApp(),
-                                  transitionsBuilder: (c, a1, a2, w) =>
-                                      FadeTransition(opacity: a1, child: w),
-                                ),
-                              );
+                              if (logoBytes == null) {
+                                closeDialog(context);
+                                myCustomError(
+                                    context, "Änderungen wurden gespeichert");
+                                Navigator.pushReplacement(
+                                    context,
+                                    PageRouteBuilder(
+                                      pageBuilder:
+                                          (context, animation1, animation2) =>
+                                              const MyApp(),
+                                      transitionsBuilder: (c, a1, a2, w) =>
+                                          FadeTransition(opacity: a1, child: w),
+                                    ));
+                                return;
+                              }
+                              FirebaseStorage.instance
+                                  .ref('uploads')
+                                  .child(widget.projectInfo.id)
+                                  .child('logo.png')
+                                  .putData(logoBytes!)
+                                  .catchError((e) {
+                                closeDialog(context);
+                                myCustomError(context, e.toString());
+                              }).then((p0) {
+                                closeDialog(context);
+                                myCustomError(
+                                    context, "Änderungen wurden gespeichert");
+                                Navigator.pushReplacement(
+                                  context,
+                                  PageRouteBuilder(
+                                    pageBuilder:
+                                        (context, animation1, animation2) =>
+                                            const MyApp(),
+                                    transitionsBuilder: (c, a1, a2, w) =>
+                                        FadeTransition(opacity: a1, child: w),
+                                  ),
+                                );
+                              });
                             });
                           });
                         } else {
@@ -380,24 +464,59 @@ class _TclubBothProjectSettingsState extends State<TclubBothProjectSettings> {
                             color: Colors.white, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 20),
-                      MyBlueButton("Projekt löschen", onPressed: () {
+                      MyBlueButton("Projekt löschen " + widget.projectInfo.id,
+                          onPressed: () {
                         waitDialog(context);
                         FirebaseFirestore.instance
                             .collection("apps")
                             .doc(widget.projectInfo.id)
                             .delete()
                             .then((value) {
-                          closeDialog(context);
-                          Navigator.pushReplacement(
-                            context,
-                            PageRouteBuilder(
-                              pageBuilder: (context, animation1, animation2) =>
-                                  const MyApp(),
-                              transitionsBuilder: (c, a1, a2, w) =>
-                                  FadeTransition(opacity: a1, child: w),
-                            ),
-                          );
-                          myCustomError(context, "Projekt wurde gelöscht");
+                          FirebaseStorage.instance
+                              .ref('uploads')
+                              .child(widget.projectInfo.id)
+                              .child('beitragsordnung.pdf')
+                              .delete()
+                              .catchError((error) {
+                            closeDialog(context);
+                            myCustomError(context,
+                                "Fehler beim Löschen der Beitragsordnung");
+                          }).then((p0) {
+                            if (logoBytes == null) {
+                              closeDialog(context);
+                              Navigator.pushReplacement(
+                                context,
+                                PageRouteBuilder(
+                                  pageBuilder:
+                                      (context, animation1, animation2) =>
+                                          const MyApp(),
+                                  transitionsBuilder: (c, a1, a2, w) =>
+                                      FadeTransition(opacity: a1, child: w),
+                                ),
+                              );
+                              myCustomError(context, "Projekt wurde gelöscht");
+                              return;
+                            }
+                            FirebaseStorage.instance
+                                .ref('uploads')
+                                .child(widget.projectInfo.id)
+                                .child('logo.png')
+                                .delete()
+                                .whenComplete(() {
+                              closeDialog(context);
+                              Navigator.pushReplacement(
+                                context,
+                                PageRouteBuilder(
+                                  pageBuilder:
+                                      (context, animation1, animation2) =>
+                                          const MyApp(),
+                                  transitionsBuilder: (c, a1, a2, w) =>
+                                      FadeTransition(opacity: a1, child: w),
+                                ),
+                              );
+                              myCustomError(context, "Projekt wurde gelöscht");
+                            });
+                          });
                         }).catchError((e) {
                           closeDialog(context);
                           myCustomError(context, e.toString());

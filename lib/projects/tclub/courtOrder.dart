@@ -24,6 +24,7 @@ class _CourtOrderState extends State<CourtOrder> {
   int currentState = 0;
 
   Uint8List? logoBytes;
+  Uint8List? beitragsOrdnung;
 
   List<TextEditingController> courtControllers = [];
 
@@ -284,6 +285,48 @@ class _CourtOrderState extends State<CourtOrder> {
           child: Text(
               "Die Platzbuchung- und Verwaltung kann von Ihnen individuell Angepasst werden. Hier können Sie angeben, wie viele Plätze auf Ihrem Tennisgelände vorhanden sind, und wie diese Bezeichnet werden. Außerdem können Sie darüber entscheiden, wie viele Stunden pro Woche jeder Spiele zur Verfügung haben soll"),
         ),
+        const Padding(
+          padding: EdgeInsets.all(20),
+          child: Text("Beitragsordnung",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              )),
+        ),
+        Container(
+          child: TextButton(
+              style: ButtonStyle(
+                  shape: MaterialStateProperty.all(const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(20))))),
+              child: beitragsOrdnung == null
+                  ? const Text("Hochladen")
+                  : const Text("Datei hochgeladen. Zum ändern erneut klicken"),
+              onPressed: () async {
+                FilePickerResult? result = await FilePicker.platform.pickFiles(
+                    type: FileType.custom, allowedExtensions: ["pdf"]);
+
+                if (result != null) {
+                  Uint8List? fileBytes = result.files.first.bytes;
+                  if (result.files.first.size > 5000000) {
+                    myCustomError(context, "Maximal 5MB");
+                    return;
+                  }
+                  setState(() {
+                    beitragsOrdnung = fileBytes;
+                  });
+                }
+              }),
+          height: 50,
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.all(Radius.circular(20)),
+            color: Colors.grey.shade200,
+          ),
+        ),
+        const Padding(
+          padding: EdgeInsets.all(20),
+          child: Text(
+              "Hier können Sie die Beitragsordnung Ihres Vereins hochladen, welche neue Mitgliedern bei der Anmeldung akzeptieren müssen"),
+        ),
         MaterialButton(
             padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
             child: const Text("Proceed to payment",
@@ -299,7 +342,8 @@ class _CourtOrderState extends State<CourtOrder> {
                   email: (notLoggedIn) ? emailCon.text : null,
                   passw: (notLoggedIn) ? passwCon.text : null,
                   hoursPerWeek: hoursPerWeek.text,
-                  allCourts: courtControllers);
+                  allCourts: courtControllers,
+                  beitragsOrdnung: beitragsOrdnung != null);
 
               if (validInput == "valid") {
                 setState(() => currentState = 1);
@@ -421,36 +465,46 @@ class _CourtOrderState extends State<CourtOrder> {
         currentState = 1;
       });
     }).then((value) {
-      if (logoBytes == null) {
-        closeDialog(context);
-        myCustomError(context, "Erfolgreiche Bestellung");
-        Navigator.pushReplacement(
-            context,
-            PageRouteBuilder(
-              pageBuilder: (context, animation1, animation2) => const MyApp(),
-              transitionsBuilder: (c, a1, a2, w) =>
-                  FadeTransition(opacity: a1, child: w),
-            ));
-        return;
-      }
       FirebaseStorage.instance
           .ref('uploads')
           .child(value.id)
-          .child('logo.png')
-          .putData(logoBytes!)
+          .child('beitragsordnung.pdf')
+          .putData(beitragsOrdnung!)
           .catchError((error) {
         closeDialog(context);
-        myCustomError(context, "Fehler beim Hochladen des Logos");
+        myCustomError(context, "Fehler beim Hochladen der Beitragsordnung");
       }).then((p0) {
-        closeDialog(context);
-        myCustomError(context, "Erfolgreiche Bestellung");
-        Navigator.pushReplacement(
-            context,
-            PageRouteBuilder(
-              pageBuilder: (context, animation1, animation2) => const MyApp(),
-              transitionsBuilder: (c, a1, a2, w) =>
-                  FadeTransition(opacity: a1, child: w),
-            ));
+        if (logoBytes == null) {
+          closeDialog(context);
+          myCustomError(context, "Erfolgreiche Bestellung");
+          Navigator.pushReplacement(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (context, animation1, animation2) => const MyApp(),
+                transitionsBuilder: (c, a1, a2, w) =>
+                    FadeTransition(opacity: a1, child: w),
+              ));
+          return;
+        }
+        FirebaseStorage.instance
+            .ref('uploads')
+            .child(value.id)
+            .child('logo.png')
+            .putData(logoBytes!)
+            .catchError((error) {
+          closeDialog(context);
+          myCustomError(context, "Fehler beim Hochladen des Logos");
+        }).then((p0) {
+          closeDialog(context);
+          myCustomError(context, "Erfolgreiche Bestellung");
+          Navigator.pushReplacement(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (context, animation1, animation2) => const MyApp(),
+                transitionsBuilder: (c, a1, a2, w) =>
+                    FadeTransition(opacity: a1, child: w),
+              ));
+        });
       });
     });
   }
