@@ -71,11 +71,12 @@ class _CourtOrderState extends State<CourtOrder> {
                                             ),
                                           ],
                                         ),
-                                        currentState == 0
+                                        paymentWidget(context)
+                                       /* currentState == 0
                                             ? infoWidget(context)
                                             : currentState == 1
                                                 ? paymentWidget(context)
-                                                : waitWidget(),
+                                                : waitWidget(),*/
                                       ],
                                     ))));
                       }),
@@ -310,17 +311,31 @@ class _CourtOrderState extends State<CourtOrder> {
     );
   }
 
-  Widget paymentWidget(context) =>
-      Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        const Padding(
-            padding: EdgeInsets.all(20),
-            child: Text("Zahlung",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold))),
+  Widget paymentWidget(context) {
+    TextEditingController name =  TextEditingController();
+    TextEditingController adresse =  TextEditingController();
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        const Text("Zahlung",
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 20),
+        TextField(
+            controller: name,
+            decoration:
+                const InputDecoration(label: Text("Name bzw. Firma des Kunden"))),
+        const SizedBox(height: 20),
+
+        TextField(
+            controller: adresse,
+            decoration: const InputDecoration(label: Text("Adresse des Kunden"))),
+        const SizedBox(height: 20),
+
         const Center(child: Text("PayPal will be available soon")),
         const SizedBox(height: 20),
         MaterialButton(
             padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
-            child: const Text("Buy now", style: TextStyle(color: Colors.white)),
+            child: const Text("Kostenpflichtig kaufen", style: TextStyle(color: Colors.white)),
             color: Colors.blue,
             shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(20))),
@@ -377,7 +392,9 @@ class _CourtOrderState extends State<CourtOrder> {
                 }
               }
             })
-      ]);
+      ]),
+    );
+  }
 
   void doneWithFuture() {
     List<String> courts = [];

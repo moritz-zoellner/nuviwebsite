@@ -7,17 +7,14 @@ import 'package:noviwebsite/firebase_options.dart';
 import 'package:noviwebsite/aboutus/aboutus.dart';
 import 'package:noviwebsite/aboutus/blog.dart';
 import 'package:noviwebsite/home/home.dart';
-import 'package:noviwebsite/projects/projects.dart';
 import 'package:noviwebsite/styling.dart';
-
-const String corpName = "Novi";
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(MaterialApp(
     scrollBehavior: MyCustomScrollBehavior(),
-    localizationsDelegates: [
+    localizationsDelegates: const [
       GlobalMaterialLocalizations.delegate,
       GlobalWidgetsLocalizations.delegate,
       GlobalCupertinoLocalizations.delegate,
@@ -29,7 +26,7 @@ void main() async {
             unselectedItemColor: Colors.grey.shade400)),
     localeResolutionCallback:
         (Locale? locale, Iterable<Locale> supportedLocales) => locale,
-    title: corpName,
+    title: "Novi Corp",
     home: const MyApp(),
   ));
 }
@@ -49,7 +46,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-        length: 4,
+        length: 3,
         child: MyScaffold(
             child: NestedScrollView(
                 headerSliverBuilder: (c, b) =>
@@ -58,7 +55,6 @@ class MyApp extends StatelessWidget {
                     physics: NeverScrollableScrollPhysics(),
                     children: [
                       HomeScreen(),
-                      ProjectsScreen(),
                       BlogScreen(),
                       AboutUsScreen(),
                     ]))));
@@ -83,8 +79,7 @@ class MenuBar extends StatelessWidget {
                     fontSize: 30)),
             TabBar(isScrollable: true, tabs: [
               Tab(text: "Startseite"),
-              Tab(text: "Produkte"),
-              Tab(text: "Blog"),
+              Tab(text: "Blog & Kontakt"),
               Tab(text: "Über uns"),
             ])
           ]),

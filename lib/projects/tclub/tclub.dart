@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:noviwebsite/projects/tclub/bothOrder.dart';
 import 'package:noviwebsite/projects/tclub/courtOrder.dart';
@@ -24,14 +23,14 @@ class TClub extends StatelessWidget {
             const SizedBox(
               width: 20,
             ),
-            IconButton(
-              onPressed: () => DefaultTabController.of(context)!.animateTo(2),
+/*            IconButton(
+              onPressed: () => Navigator.pop(context),
               icon: const Icon(
                 Icons.help_outline_rounded,
                 color: Colors.white,
               ),
               tooltip: "Beraten lassen!",
-            )
+            )*/
           ],
         ),
         const SizedBox(height: 20),
