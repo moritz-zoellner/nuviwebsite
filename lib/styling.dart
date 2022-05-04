@@ -17,12 +17,10 @@ class NoviTile extends StatelessWidget {
   }
 }
 
-Widget waitWidget()
-=> const Center(child: CircularProgressIndicator.adaptive());
+Widget waitWidget() =>
+    const Center(child: CircularProgressIndicator.adaptive());
 
-Widget errorWidget()
-=> const Center(child: Text("Fehler aufgetreten"));
-
+Widget errorWidget() => const Center(child: Text("Fehler aufgetreten"));
 
 Future waitDialog(BuildContext context) {
   return showGeneralDialog(
@@ -108,7 +106,8 @@ String inputControl(
     String? phone,
     String? hoursPerWeek,
     List<List<TextEditingController>>? aboList,
-    List<TextEditingController>? allCourts}) {
+    List<TextEditingController>? allCourts,
+    bool? beitragsOrdnung}) {
   if (email != null) {
     if (invalidMailAdress(email)) {
       return "Ungültige E-Mail Adresse";
@@ -165,6 +164,12 @@ String inputControl(
           return "Die Preise müssen Zahlen sein";
         }
       }
+    }
+  }
+
+  if (beitragsOrdnung != null) {
+    if (!beitragsOrdnung) {
+      return "Die Beitragsordnung muss hochgeladen werden";
     }
   }
 
