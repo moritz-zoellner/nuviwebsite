@@ -7,6 +7,7 @@ const int DAYS_FOREWARD = 8;
 class CourtManagement extends StatefulWidget {
   // prjectInfo.id ist die UID von dem Apps Project und übertragen auf courts
   final DocumentSnapshot<Map<String, dynamic>> projectInfo;
+
   const CourtManagement(this.projectInfo, {Key? key}) : super(key: key);
 
   @override
@@ -17,6 +18,7 @@ const int NONE = -1, DELETE = 0, SET = 1;
 
 class _CourtManagementState extends State<CourtManagement> {
   int operation = NONE, currentIndex = -1, currentDay = -1;
+
   @override
   Widget build(BuildContext context) {
     List<dynamic> courts = widget.projectInfo["courts"];
@@ -61,104 +63,123 @@ class _CourtManagementState extends State<CourtManagement> {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     TabBar(
-                                        physics: const NeverScrollableScrollPhysics(),
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
                                         isScrollable: true,
                                         tabs: List.generate(
                                             DAYS_FOREWARD,
                                             (index) => Tab(
-                                                text: dateToString(DateTime.now()
-                                                    .add(Duration(days: index)))))),
+                                                text: dateToString(
+                                                    DateTime.now().add(Duration(
+                                                        days: index)))))),
                                     IconButton(
                                         tooltip: "Help",
                                         onPressed: () {
                                           showGeneralDialog(
                                               context: context,
-                                              pageBuilder: (c, a1, a2) => Center(
-                                                  child: Padding(
-                                                      padding:
-                                                      const EdgeInsets.all(
-                                                          20),
-                                                      child: ClipRRect(
-                                                          borderRadius:
-                                                          const BorderRadius
-                                                              .all(
-                                                              Radius.circular(
-                                                                  20)),
-                                                          child: ConstrainedBox(
-                                                              constraints:
-                                                              const BoxConstraints(
-                                                                  maxHeight:
-                                                                  600,
-                                                                  maxWidth:
-                                                                  600),
-                                                              child: Scaffold(
-                                                                  body: SingleChildScrollView(
-                                                                      child: Padding(
-                                                                          padding: const EdgeInsets.all(20),
-                                                                          child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-                                                                            Row(
-                                                                              children: [
-                                                                                IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(Icons.close)),
-                                                                                const SizedBox(width: 20),
-                                                                                const Text("Hilfe", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
-                                                                              ],
-                                                                            ),
-                                                                            const Padding(
-                                                                              padding:
-                                                                              EdgeInsets.all(20),
-                                                                              child:
-                                                                              Text("Legende", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                                                                            ),
-                                                                            SizedBox(
-                                                                              height:
-                                                                              100,
-                                                                              width:
-                                                                              280,
-                                                                              child:
-                                                                              Column(
-                                                                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                                                children: [
-                                                                                  Expanded(
-                                                                                    child: Container(
-                                                                                      padding: const EdgeInsets.only(left: 10, right: 10),
-                                                                                      child: const Center(
-                                                                                        child: Text("Deine Reservierungen", overflow: TextOverflow.fade, style: TextStyle(color: Colors.black)),
-                                                                                      ),
-                                                                                      decoration: BoxDecoration(
-                                                                                          color: Colors.cyan.shade200,
-                                                                                          borderRadius: const BorderRadius.only(
-                                                                                            topLeft: Radius.circular(20),
-                                                                                            topRight: Radius.circular(20),
-                                                                                          )),
-                                                                                    ),
-                                                                                  ),
-                                                                                  Expanded(
-                                                                                    child: Container(
-                                                                                        padding: const EdgeInsets.only(left: 10, right: 10),
-                                                                                        child: const Center(
-                                                                                          child: Text("Nicht Reservierbar", overflow: TextOverflow.fade, style: TextStyle(color: Colors.black)),
+                                              pageBuilder: (c, a1, a2) =>
+                                                  Center(
+                                                      child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(20),
+                                                          child: ClipRRect(
+                                                              borderRadius:
+                                                                  const BorderRadius
+                                                                          .all(
+                                                                      Radius.circular(
+                                                                          20)),
+                                                              child: ConstrainedBox(
+                                                                  constraints: const BoxConstraints(maxHeight: 600, maxWidth: 600),
+                                                                  child: Scaffold(
+                                                                      body: SingleChildScrollView(
+                                                                          child: Padding(
+                                                                              padding: const EdgeInsets.all(20),
+                                                                              child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+                                                                                Row(
+                                                                                  children: [
+                                                                                    IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(Icons.close)),
+                                                                                    const SizedBox(width: 20),
+                                                                                    const Text("Hilfe", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
+                                                                                  ],
+                                                                                ),
+                                                                                const Padding(
+                                                                                  padding: EdgeInsets.all(20),
+                                                                                  child: Text("Legende", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                                                                                ),
+                                                                                SizedBox(
+                                                                                  height: 100,
+                                                                                  width: 280,
+                                                                                  child: Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                                                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                                                    children: [
+                                                                                      Expanded(
+                                                                                        child: Container(
+                                                                                          padding: const EdgeInsets.only(left: 10, right: 10),
+                                                                                          child: const Center(
+                                                                                            child: Text("Deine Reservierungen", overflow: TextOverflow.fade, style: TextStyle(color: Colors.black)),
+                                                                                          ),
+                                                                                          decoration: BoxDecoration(
+                                                                                              color: Colors.cyan.shade200,
+                                                                                              borderRadius: const BorderRadius.only(
+                                                                                                topLeft: Radius.circular(20),
+                                                                                                topRight: Radius.circular(20),
+                                                                                              )),
                                                                                         ),
-                                                                                        decoration: BoxDecoration(color: Colors.grey.shade200)),
-                                                                                  ),
-                                                                                  Expanded(
-                                                                                    child: Container(
-                                                                                      padding: const EdgeInsets.only(left: 10, right: 10),
-                                                                                      child: const Center(
-                                                                                        child: Text("Stornierbar", overflow: TextOverflow.fade, style: TextStyle(color: Colors.black)),
                                                                                       ),
-                                                                                      decoration: BoxDecoration(color: Colors.pink.shade100, borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20))),
-                                                                                    ),
+                                                                                      Expanded(
+                                                                                        child: Container(
+                                                                                            padding: const EdgeInsets.only(left: 10, right: 10),
+                                                                                            child: const Center(
+                                                                                              child: Text("Nicht Reservierbar", overflow: TextOverflow.fade, style: TextStyle(color: Colors.black)),
+                                                                                            ),
+                                                                                            decoration: BoxDecoration(color: Colors.grey.shade200)),
+                                                                                      ),
+                                                                                      Expanded(
+                                                                                        child: Container(
+                                                                                          padding: const EdgeInsets.only(left: 10, right: 10),
+                                                                                          child: const Center(
+                                                                                            child: Text("Stornierbar", overflow: TextOverflow.fade, style: TextStyle(color: Colors.black)),
+                                                                                          ),
+                                                                                          decoration: BoxDecoration(color: Colors.pink.shade100, borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20))),
+                                                                                        ),
+                                                                                      ),
+                                                                                    ],
                                                                                   ),
-                                                                                ],
-                                                                              ),
-                                                                            ),
-                                                                          ])))))))));
+                                                                                ),
+                                                                              ])))))))));
                                         },
                                         icon: const Icon(
                                           Icons.info_outline_rounded,
                                           color: Colors.white,
                                         )),
+                                    IconButton(
+                                        tooltip: "Alte Plätze löschen",
+                                        onPressed: () {
+                                          FirebaseFirestore.instance
+                                              .collection("apps")
+                                              .doc(widget.projectInfo.id)
+                                              .collection("courts")
+                                              .where("date",
+                                                  isLessThan: dateToString(
+                                                      DateTime.now()))
+                                              .get()
+                                              .catchError((e) => myCustomError(
+                                                  context,
+                                                  "Fehler beim Löschen der Plätze"))
+                                              .then((value) async {
+                                                for(DocumentSnapshot doc in value.docs) {
+                                                  await FirebaseFirestore.instance
+                                                      .collection("apps")
+                                                      .doc(widget.projectInfo.id)
+                                                      .collection("courts").doc(doc.id).delete();
+                                                }
+                                              myCustomError(context, "Courts gelöscht");
+                                          });
+                                        },
+                                        icon: const Icon(
+                                            Icons.auto_delete_outlined, color: Colors.white)),
                                     myButton()
                                   ],
                                 ),
@@ -347,6 +368,7 @@ class MyGridItem extends StatelessWidget {
   final String text;
   final Color? color;
   final Function()? onPressed;
+
   const MyGridItem({this.text = "", this.color, this.onPressed, Key? key})
       : super(key: key);
 

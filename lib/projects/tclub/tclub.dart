@@ -14,23 +14,20 @@ class TClub extends StatelessWidget {
       children: [
         const SizedBox(height: 20),
         OverflowBar(
-          children: [
-            const Text("Unsere Lösung",
+          children: const [
+            Text("Unsere Lösung",
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                     fontSize: 24)),
-            const SizedBox(
-              width: 20,
-            ),
+            SizedBox(width: 20),
 /*            IconButton(
               onPressed: () => Navigator.pop(context),
               icon: const Icon(
                 Icons.help_outline_rounded,
                 color: Colors.white,
               ),
-              tooltip: "Beraten lassen!",
-            )*/
+              tooltip: "Beraten lassen!")*/
           ],
         ),
         const SizedBox(height: 20),
@@ -162,6 +159,7 @@ class Tile extends StatelessWidget {
   final IconData data;
   final Widget content;
   final void Function() onOrder;
+
   const Tile(
       this.name, this.price, this.slogan, this.data, this.content, this.onOrder,
       {Key? key})
