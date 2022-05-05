@@ -47,81 +47,55 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MyScaffold(
-        child: SingleChildScrollView(
-            child: Padding(
-                padding: const EdgeInsets.all(40),
-                child: LayoutBuilder(builder: (context, constraints) {
-                  return Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        const Text("Novizon",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                                fontSize: 40)),
-                        const SizedBox(height: 80),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Flexible(
-                                flex: 3,
-                                child: Center(
-                                  child: ConstrainedBox(
-                                      constraints:
-                                          const BoxConstraints(maxWidth: 600),
-                                      child: const LeftSide()),
-                                )),
-                            const Flexible(flex: 2, child: SizedBox()),
-                          ],
-                        ),
-                        const SizedBox(height: 40),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Flexible(flex: 2, child: SizedBox()),
-                            Flexible(
-                              flex: 3,
-                              child: Center(
-                                child: ConstrainedBox(
-                                    constraints:
-                                        const BoxConstraints(maxWidth: 600),
-                                    child: const RightSide()),
-                              ),
-                            )
-                          ],
-                        ),
-                        const SizedBox(height: 40),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Flexible(
-                                flex: 3,
-                                child: Center(
-                                    child: ConstrainedBox(
-                                        constraints:
-                                            const BoxConstraints(maxWidth: 600),
-                                        child: const Projects()))),
-                            const Flexible(flex: 2, child: SizedBox()),
-                          ],
-                        ),
-                        const BlogScreen(),
-                        const AboutUsScreen(),
-                      ]);
-                }))));
-  }
-}
-
-class MenuBar extends StatelessWidget {
-  const MenuBar({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
-      child: OverflowBar(
-          overflowAlignment: OverflowBarAlignment.center,
-          alignment: MainAxisAlignment.spaceBetween,
-          children: const []),
-    );
+        child: ListView(padding: const EdgeInsets.all(40), children: [
+      const Text("Novizon",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              fontWeight: FontWeight.bold, color: Colors.white, fontSize: 40)),
+      const SizedBox(height: 80),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Flexible(
+              flex: 3,
+              child: Center(
+                child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 600),
+                    child: const LeftSide()),
+              )),
+          const Flexible(flex: 2, child: SizedBox()),
+        ],
+      ),
+      const SizedBox(height: 40),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Flexible(flex: 2, child: SizedBox()),
+          Flexible(
+            flex: 3,
+            child: Center(
+              child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 600),
+                  child: const RightSide()),
+            ),
+          )
+        ],
+      ),
+      const SizedBox(height: 40),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Flexible(
+              flex: 3,
+              child: Center(
+                  child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 600),
+                      child: const Projects()))),
+          const Flexible(flex: 2, child: SizedBox()),
+        ],
+      ),
+      const BlogScreen(),
+      const AboutUsScreen(),
+    ]));
   }
 }
