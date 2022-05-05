@@ -6,7 +6,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:noviwebsite/firebase_options.dart';
 import 'package:noviwebsite/aboutus/aboutus.dart';
 import 'package:noviwebsite/aboutus/blog.dart';
-import 'package:noviwebsite/home/home.dart';
+import 'package:noviwebsite/home/left_side.dart';
+import 'package:noviwebsite/home/right_side.dart';
 import 'package:noviwebsite/styling.dart';
 
 void main() async {
@@ -45,19 +46,68 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-        length: 3,
-        child: MyScaffold(
-            child: NestedScrollView(
-                headerSliverBuilder: (c, b) =>
-                    [const SliverToBoxAdapter(child: MenuBar())],
-                body: const TabBarView(
-                    physics: NeverScrollableScrollPhysics(),
-                    children: [
-                      HomeScreen(),
-                      BlogScreen(),
-                      AboutUsScreen(),
-                    ]))));
+    return MyScaffold(
+        child: SingleChildScrollView(
+            child: Padding(
+                padding: const EdgeInsets.all(40),
+                child: LayoutBuilder(builder: (context, constraints) {
+                  return Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        const Text("Novizon",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                fontSize: 40)),
+                        const SizedBox(height: 80),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(
+                                flex: 3,
+                                child: Center(
+                                  child: ConstrainedBox(
+                                      constraints:
+                                          const BoxConstraints(maxWidth: 600),
+                                      child: const LeftSide()),
+                                )),
+                            const Flexible(flex: 2, child: SizedBox()),
+                          ],
+                        ),
+                        const SizedBox(height: 40),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Flexible(flex: 2, child: SizedBox()),
+                            Flexible(
+                              flex: 3,
+                              child: Center(
+                                child: ConstrainedBox(
+                                    constraints:
+                                        const BoxConstraints(maxWidth: 600),
+                                    child: const RightSide()),
+                              ),
+                            )
+                          ],
+                        ),
+                        const SizedBox(height: 40),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(
+                                flex: 3,
+                                child: Center(
+                                    child: ConstrainedBox(
+                                        constraints:
+                                            const BoxConstraints(maxWidth: 600),
+                                        child: const Projects()))),
+                            const Flexible(flex: 2, child: SizedBox()),
+                          ],
+                        ),
+                        const BlogScreen(),
+                        const AboutUsScreen(),
+                      ]);
+                }))));
   }
 }
 
@@ -71,18 +121,7 @@ class MenuBar extends StatelessWidget {
       child: OverflowBar(
           overflowAlignment: OverflowBarAlignment.center,
           alignment: MainAxisAlignment.spaceBetween,
-          children: const [
-            Text("Novi Corp.",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    fontSize: 30)),
-            TabBar(isScrollable: true, tabs: [
-              Tab(text: "Startseite"),
-              Tab(text: "Blog & Kontakt"),
-              Tab(text: "Über uns"),
-            ])
-          ]),
+          children: const []),
     );
   }
 }

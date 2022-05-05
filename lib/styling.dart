@@ -76,8 +76,8 @@ class MyScaffold extends StatelessWidget {
             decoration: const BoxDecoration(
                 gradient: LinearGradient(
                     colors: [Colors.pink, Colors.blue],
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight)),
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight)),
             child: child));
   }
 }
