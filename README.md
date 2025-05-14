@@ -1,2 +1,2 @@
-# noviwebsite
-Name ist work-in-progress!
+# nuviwebsite
+Inital draft of the website for nuvisphere.de
